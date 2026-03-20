@@ -1,0 +1,19 @@
+
+mouse input
+keyboard text input
+
+make a tiled world
+player collision
+
+change back buffer max dim to a max size instead; having a 'max stride' isn't necessary.
+
+//--------------------------------------------------------------------------------
+# pc
+
+# day 2
+keyboard input to move rectangle
+draw rectangle to screen
+keyboard input
+
+# day 1
+abstract wayland to a loose wm layer
