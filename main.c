@@ -1,9 +1,11 @@
 
 #include "base/base_inc.h"
+#include "input/input_inc.h"
 #include "os/os_inc.h"
 #include "wm/wm_inc.h"
 
 #include "base/base_inc.c"
+#include "input/input_inc.c"
 #include "os/os_inc.c"
 #include "wm/wm_inc.c"
 
@@ -52,7 +54,7 @@ entry_point(Cmdline cl) {
 	Arena *arena = arena_alloc();
 	WM_Window window = wm_window_open(arena, S("Fish"));
 
-	//--------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------------
 	// event loop
 	vec2f32 offset = v2f32(0.f, 0.f);
 	for (;wm_window_is_open(window);) {
@@ -60,33 +62,32 @@ entry_point(Cmdline cl) {
 
 		Temp scr = scratch_begin(0,0);
 
-		typedef enum Action Action;
-		enum Action {
-			Action_Move_Left,
-			Action_Move_Right,
-			Action_Move_Up,
-			Action_Move_Down,
+		// typedef enum Action Action;
+		// enum Action {
+		// 	Action_Move_Left,
+		// 	Action_Move_Right,
+		// 	Action_Move_Up,
+		// 	Action_Move_Down,
+		// 	Action_Speedup,
+		// };
 
-			Action_Speedup,
-		};
+		// typedef struct Keybind Keybind;
+		// struct Keybind {
+		// 	u32 scancode;
+		// 	Action action;
+		// 	IButton btn;
+		// };
 
-		typedef struct Keybind Keybind;
-		struct Keybind {
-			u32 scancode;
-			Action action;
-			IButton btn;
-		};
-
-		Keybind keybinds[] = {
-			{ .scancode = 17, .action = Action_Move_Up },
-			{ .scancode = 30, .action = Action_Move_Left },
-			{ .scancode = 31, .action = Action_Move_Down },
-			{ .scancode = 32, .action = Action_Move_Right },
-			{ .scancode = 57, .action = Action_Speedup },
-		};
+		// Keybind keybinds[] = {
+		// 	{ .scancode = 17, .action = Action_Move_Up },
+		// 	{ .scancode = 30, .action = Action_Move_Left },
+		// 	{ .scancode = 31, .action = Action_Move_Down },
+		// 	{ .scancode = 32, .action = Action_Move_Right },
+		// 	{ .scancode = 57, .action = Action_Speedup },
+		// };
 
 		wm_consume_events();
-		IButton_Array scancodes = wm_consume_keyboard_scancodes(scr.arena);
+		// IButton_Array scancodes = wm_consume_keyboard_scancodes(scr.arena);
 		#if 0
 		for each_index(i, scancodes.count) {
 			IButton btn = scancodes.v[i];
@@ -99,31 +100,31 @@ entry_point(Cmdline cl) {
 		}
 		#endif
 
-		for each_element(j, keybinds) {
-			Keybind *keybind = keybinds + j;
-			keybind->btn = scancodes.v[keybind->scancode];
-		}
+		// for each_element(j, keybinds) {
+		// 	Keybind *keybind = keybinds + j;
+		// 	keybind->btn = scancodes.v[keybind->scancode];
+		// }
+		//
+		// vec2f32 move_dir = v2f32(0.f, 0.f);
+		// if (ibutton_down(keybinds[0].btn)) {
+		// 	move_dir.y += 1.f;
+		// }
+		// if (ibutton_down(keybinds[1].btn)) {
+		// 	move_dir.x -= 1.f;
+		// }
+		// if (ibutton_down(keybinds[2].btn)) {
+		// 	move_dir.y -= 1.f;
+		// }
+		// if (ibutton_down(keybinds[3].btn)) {
+		// 	move_dir.x += 1.f;
+		// }
+		// f32 speed = 100.f;
+		// if (ibutton_down(keybinds[4].btn)) {
+		// 	speed *= 3.f;
+		// }
+		// offset = add_2f32(offset, scale_2f32(move_dir, speed*dt));
 
-		vec2f32 move_dir = v2f32(0.f, 0.f);
-		if (ibutton_down(keybinds[0].btn)) {
-			move_dir.y += 1.f;
-		}
-		if (ibutton_down(keybinds[1].btn)) {
-			move_dir.x -= 1.f;
-		}
-		if (ibutton_down(keybinds[2].btn)) {
-			move_dir.y -= 1.f;
-		}
-		if (ibutton_down(keybinds[3].btn)) {
-			move_dir.x += 1.f;
-		}
-		f32 speed = 100.f;
-		if (ibutton_down(keybinds[4].btn)) {
-			speed *= 3.f;
-		}
-		offset = add_2f32(offset, scale_2f32(move_dir, speed*dt));
-
-		// --------------------------------------------------------------------------------
+		// -------------------------------------------------------------------------------------------------
 		// rendering
 		rawptr backbuffer_memory;
 		s64 stride;

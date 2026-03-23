@@ -7,14 +7,14 @@ os_lnx_entity_alloc(Linux_Entity_Kind kind) {
 	Linux_Entity *entity = 0;
 	defer_loop(pthread_mutex_lock(&linux_state.entity_mutex), pthread_mutex_unlock(&linux_state.entity_mutex)) {
 		entity = linux_state.entity_freelist;
-		if (entity) {
-			freelist_pop(linux_state.entity_freelist);
+		if (!check_nil(entity, nil)) {
+			asan_cure(entity, size_of(*entity));
+			linux_state.entity_freelist = linux_state.entity_freelist->next;
 		} else {
-			entity = push_array(linux_state.arena, Linux_Entity, 1);
+			entity = push_struct_no_zero(linux_state.arena, Linux_Entity);
 		}
+		memory_zero_struct(entity);
 	}
-
-	memory_zero_struct(entity);
 	entity->kind = kind;
 	return entity;
 }
@@ -25,7 +25,8 @@ os_lnx_entity_release(Linux_Entity *entity) {
 		pthread_mutex_lock(&linux_state.entity_mutex),
 		pthread_mutex_unlock(&linux_state.entity_mutex))
 	{
-		freelist_push(linux_state.entity_freelist, entity);
+		entity->next = linux_state.entity_freelist; linux_state.entity_freelist = entity;
+		asan_poison(entity, size_of(*entity));
 	}
 }
 
@@ -489,7 +490,7 @@ _linux_thread_entry_point(rawptr entity) {
 	Linux_Entity *e = (Linux_Entity*)entity;
 
 	Thread_Context tctx;
-	tctx_init_and_equip(&tctx);
+	tctx_init_and_set(&tctx);
 	tctx_set_name(e->thread.name);
 	tctx_write_this_src_loc();
 

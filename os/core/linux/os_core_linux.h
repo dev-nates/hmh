@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/sysinfo.h>
 #include <sys/sendfile.h>
+#include "sys/inotify.h"
 
 #include <limits.h>
 #include <stdlib.h>

@@ -158,7 +158,7 @@ md_node_flags_from_token_flags($md_token_flags flags) {
 
 proc b32
 md_node_is_nil($md_node *node) {
-	return check_nil(md_nil_node, node) || node->kind == $md_node_kind_nil;
+	return check_nil(node, md_nil_node) || node->kind == $md_node_kind_nil;
 }
 
 //--------------------------------------------------------------------------------

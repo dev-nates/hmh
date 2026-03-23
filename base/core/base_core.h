@@ -124,6 +124,9 @@
 # error this_function_name undefined for this compiler
 #endif
 
+#define this_file_name __FILE__
+#define this_line_number __LINE__
+
 //--------------------------------------------------------------------------------
 // asserts
 
@@ -425,6 +428,16 @@ global const u64 bit62 = (1ull<<61);
 global const u64 bit63 = (1ull<<62);
 global const u64 bit64 = (1ull<<63);
 
+// -------------------------------------------------------------------------------------------------
+// Code location
+typedef struct Source_Code_Location Source_Code_Location;
+struct Source_Code_Location {
+	cstring filename;
+	cstring procedure;
+	s64 line;
+};
+#define code_location (Source_Code_Location){this_file_name, this_function_name, this_line_number}
+
 //--------------------------------------------------------------------------------
 // basic types
 
@@ -494,42 +507,6 @@ struct Loc_Range {
 	Loc min;
 	Loc max;
 };
-
-//--------------------------------------------------------------------------------
-// input buttons
-
-/*
- * Fields:
-	 * htc: The half transition count for this frame, THIS SHOULD GET RESET AT THE END OF THE FRAME.
-   * down: Whether or not the button is down, this persists across frames.
- *
- * If the htc count is odd and 'down' is true, then the htc and down boolean
- * are 'in order' with each other meaning that 2 htcs result in the button
- * being released.
- *
- * If the htc count is even and 'down' is true then this means that they are
- * 'out of order' and a single htc results in the button being 'released'.
- */
-typedef struct IButton IButton;
-struct IButton {
-	u32 htc;
-	b32 down;
-};
-
-typedef struct IButton_Array IButton_Array;
-struct IButton_Array {
-	IButton *v;
-	s64 count;
-};
-
-proc b32
-ibutton_pressed(IButton button);
-
-proc b32
-ibutton_released(IButton button);
-
-proc b32
-ibutton_down(IButton button);
 
 //--------------------------------------------------------------------------------
 // time
@@ -783,12 +760,14 @@ proc s64 ring_read(rawptr ring_base, s64 ring_size, s64 ring_pos, rawptr dst_dat
 #define each_index(it, count) (s64 it = 0; it < (count); it += 1)
 #define each_index_rng(it, rng) (s64 it = (rng).min; it < (rng).max; it += 1)
 #define each_element(it, array) (s64 it = 0; it < array_count(array); it += 1)
-#define each_enum_val(type, it) (type it = (type)0; it < type##_count; it = (type)(it+1))
-#define each_non_zero_enum_val(type, it) (type it = (type)1; it < type##_count; it = (type)(it+1))
+#define each_enum_val(it, type) (type it = (type)0; it < type##_count; it = (type)(it+1))
+#define each_non_zero_enum_val(it, type) (type it = (type)1; it < type##_count; it = (type)(it+1))
 
-#define each_node_nz(nil, type, it, first, next) (type *it = first; !check_nil(nil, it); it = it->next)
-#define each_node(type, it, first) each_node_nz(0, type, it, first, next)
-#define each_node_reverse(type, it, first) each_node_nz(type, it, first, 0, prev)
+#define each_node_nz(it, head, type, nilv, next) (type *it = head; !check_nil(it, nilv); it = it->next)
+#define each_node_nil(it, head, type, nilv) each_node_nz(it, head, type, nilv, next)
+#define each_node(it, head, type) each_node_nz(it, head, type, nil, next)
+#define each_node_reverse_nil(it, head, type, nilv) each_node_nz(it, head, type, nilv, prev)
+#define each_node_reverse(it, head, type) each_node_nz(it, head, type, nil, prev)
 
 //--------------------------------------------------------------------------------
 // memory operations
@@ -817,65 +796,65 @@ proc s64 ring_read(rawptr ring_base, s64 ring_size, s64 ring_pos, rawptr dst_dat
 //--------------------------------------------------------------------------------
 // linked list macros
 
-#define check_nil(nil,p) ((p) == 0 || (p) == nil)
-#define set_nil(nil,p) ((p) = nil)
+#define check_nil(p,nilv) ((p) == 0 || (p) == nilv)
+#define set_nil(p,nilv) ((p) = nilv)
 
 // doubly-linked-lists
-#define dll_insert_npz(nil,f,l,p,n,next,prev) (check_nil(nil,f) ? \
-((f) = (l) = (n), set_nil(nil,(n)->next), set_nil(nil,(n)->prev)) :\
-check_nil(nil,p) ? \
-((n)->next = (f), (f)->prev = (n), (f) = (n), set_nil(nil,(n)->prev)) :\
-((p)==(l)) ? \
-((l)->next = (n), (n)->prev = (l), (l) = (n), set_nil(nil, (n)->next)) :\
-(((!check_nil(nil,p) && check_nil(nil,(p)->next)) ? (0) : ((p)->next->prev = (n))), ((n)->next = (p)->next), ((p)->next = (n)), ((n)->prev = (p))))
-#define dll_push_back_npz(nil,f,l,n,next,prev) dll_insert_npz(nil,f,l,l,n,next,prev)
-#define dll_push_front_npz(nil,f,l,n,next,prev) dll_insert_npz(nil,l,f,f,n,prev,next)
-#define dll_remove_npz(nil,f,l,n,next,prev) (((n) == (f) ? (f) = (n)->next : (0)),\
-((n) == (l) ? (l) = (l)->prev : (0)),\
-(check_nil(nil,(n)->prev) ? (0) :\
-((n)->prev->next = (n)->next)),\
-(check_nil(nil,(n)->next) ? (0) :\
-((n)->next->prev = (n)->prev)))
+// #define dll_insert_npz(nilv,f,l,p,n,next,prev) (check_nil(f, nilv) ? \
+// ((f) = (l) = (n), set_nil(nilv,(n)->next), set_nil((n)->prev), nilv) :\
+// check_nil(p,nilv) ? \
+// ((n)->next = (f), (f)->prev = (n), (f) = (n), set_nil((n)->prev, nilv)) :\
+// ((p)==(l)) ? \
+// ((l)->next = (n), (n)->prev = (l), (l) = (n), set_nil((n)->next), nilv) :\
+// (((!check_nil(p,nilv) && check_nil((p)->next),nilv) ? (0) : ((p)->next->prev = (n))), ((n)->next = (p)->next), ((p)->next = (n)), ((n)->prev = (p))))
+// #define dll_push_back_npz(nilv,f,l,n,next,prev) dll_insert_npz(nilv,f,l,l,n,next,prev)
+// #define dll_push_front_npz(nilv,f,l,n,next,prev) dll_insert_npz(nilv,l,f,f,n,prev,next)
+// #define dll_remove_npz(nilv,f,l,n,next,prev) (((n) == (f) ? (f) = (n)->next : (0)),\
+// ((n) == (l) ? (l) = (l)->prev : (0)),\
+// (check_nil((n)->prev, nilv) ? (0) :\
+// ((n)->prev->next = (n)->next)),\
+// (check_nil((n)->next, nilv) ? (0) :\
+// ((n)->next->prev = (n)->prev)))
 
 // singly-linked, doubly-headed lists (queues)
-#define sll_queue_push_nz(nil,f,l,n,next) (check_nil(nil,f)?\
-((f)=(l)=(n),set_nil(nil,(n)->next)):\
-((l)->next=(n),(l)=(n),set_nil(nil,(n)->next)))
-#define sll_queue_push_front_nz(nil,f,l,n,next) (check_nil(nil,f)?\
-((f)=(l)=(n),set_nil(nil,(n)->next)):\
-((n)->next=(f),(f)=(n)))
-#define sll_queue_pop_nz(nil,f,l,next) ((f)==(l)?\
-(set_nil(nil,f),set_nil(nil,l)):\
-((f)=(f)->next))
+// #define sll_queue_push_nz(nilv,f,l,n,next) (check_nil(f,nilv)?\
+// ((f)=(l)=(n),set_nil((n)->next, nilv)):\
+// ((l)->next=(n),(l)=(n),set_nil((n)->next, nilv)))
+// #define sll_queue_push_front_nz(nilv,f,l,n,next) (check_nil(f,nilv)?\
+// ((f)=(l)=(n),set_nil((n)->next, nilv)):\
+// ((n)->next=(f),(f)=(n)))
+// #define sll_queue_pop_nz(nilv,f,l,next) ((f)==(l)?\
+// (set_nil(f,nilv),set_nil(l,nilv)):\
+// ((f)=(f)->next))
 
 // singly-linked, singly-headed lists (stacks)
-#define sll_stack_push_n(f,n,next) ((n)->next=(f), (f)=(n))
-#define sll_stack_pop_n(f,next) ((f)=(f)->next)
+// #define sll_stack_push_n(f,n,next) ((n)->next=(f), (f)=(n))
+// #define sll_stack_pop_n(f,next) ((f)=(f)->next)
 
 // doubly-linked-list helpers
-#define dll_insert_np(f,l,p,n,next,prev) dll_insert_npz(0,f,l,p,n,next,prev)
-#define dll_push_back_np(f,l,n,next,prev) dll_push_back_npz(0,f,l,n,next,prev)
-#define dll_push_front_np(f,l,n,next,prev) dll_push_front_npz(0,f,l,n,next,prev)
-#define dll_remove_np(f,l,n,next,prev) dll_remove_npz(0,f,l,n,next,prev)
-#define dll_insert(f,l,p,n) dll_insert_npz(0,f,l,p,n,next,prev)
-#define dll_push_back(f,l,n) dll_push_back_npz(0,f,l,n,next,prev)
-#define dll_push_front(f,l,n) dll_push_front_npz(0,f,l,n,next,prev)
-#define dll_remove(f,l,n) dll_remove_npz(0,f,l,n,next,prev)
+// #define dll_insert_np(f,l,p,n,next,prev) dll_insert_npz(0,f,l,p,n,next,prev)
+// #define dll_push_back_np(f,l,n,next,prev) dll_push_back_npz(0,f,l,n,next,prev)
+// #define dll_push_front_np(f,l,n,next,prev) dll_push_front_npz(0,f,l,n,next,prev)
+// #define dll_remove_np(f,l,n,next,prev) dll_remove_npz(0,f,l,n,next,prev)
+// #define dll_insert(f,l,p,n) dll_insert_npz(0,f,l,p,n,next,prev)
+// #define dll_push_back(f,l,n) dll_push_back_npz(0,f,l,n,next,prev)
+// #define dll_push_front(f,l,n) dll_push_front_npz(0,f,l,n,next,prev)
+// #define dll_remove(f,l,n) dll_remove_npz(0,f,l,n,next,prev)
 
 // singly-linked, doubly-headed list helpers
-#define sll_queue_push_n(f,l,n,next) sll_queue_push_nz(0,f,l,n,next)
-#define sll_queue_push_front_n(f,l,n,next) sll_queue_push_front_nz(0,f,l,n,next)
-#define sll_queue_pop_n(f,l,next) sll_queue_pop_nz(0,f,l,next)
-#define sll_queue_push(f,l,n) sll_queue_push_nz(0,f,l,n,next)
-#define sll_queue_push_front(f,l,n) sll_queue_push_front_nz(0,f,l,n,next)
-#define sll_queue_pop(f,l) sll_queue_pop_nz(0,f,l,next)
+// #define sll_queue_push_n(f,l,n,next) sll_queue_push_nz(0,f,l,n,next)
+// #define sll_queue_push_front_n(f,l,n,next) sll_queue_push_front_nz(0,f,l,n,next)
+// #define sll_queue_pop_n(f,l,next) sll_queue_pop_nz(0,f,l,next)
+// #define sll_queue_push(f,l,n) sll_queue_push_nz(0,f,l,n,next)
+// #define sll_queue_push_front(f,l,n) sll_queue_push_front_nz(0,f,l,n,next)
+// #define sll_queue_pop(f,l) sll_queue_pop_nz(0,f,l,next)
 
 // singly-linked, singly-headed list helpers
-#define sll_stack_push(f,n) sll_stack_push_n(f,n,next)
-#define sll_stack_pop(f) sll_stack_pop_n(f,next)
+// #define sll_stack_push(f,n) sll_stack_push_n(f,n,next)
+// #define sll_stack_pop(f) sll_stack_pop_n(f,next)
 
-#define freelist_push(list, p) stmnt(sll_stack_push(list, p); asan_poison(p, sizeof(*p));)
-#define freelist_pop(list) stmnt(asan_cure(list, sizeof(*list)); sll_stack_pop(list);)
+// #define freelist_push(list, p) stmnt(sll_stack_push(list, p); asan_poison(p, sizeof(*p));)
+// #define freelist_pop(list) stmnt(asan_cure(list, sizeof(*list)); sll_stack_pop(list);)
 
 //--------------------------------------------------------------------------------
 // atomic operations

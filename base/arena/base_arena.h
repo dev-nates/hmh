@@ -68,13 +68,13 @@ arena_pos(Arena *arena);
 #define push_size_no_zero(a, s) push_size_no_zero_aligned(a, s, 16)
 #define push_size(a, s) memory_zero(push_size_no_zero(a, s), s)
 
-#define push_struct_no_zero_aligned(a, T, align) (T*)arena_push((a), size_of(T), (align))
+#define push_struct_no_zero_aligned(a, T, align) cast(T*)arena_push((a), size_of(T), (align))
 #define push_struct_aligned(a, T, align) (T*)memory_zero(arena_push((a), size_of(T), (align)), size_of(T))
 #define push_struct_no_zero(a, T) push_struct_no_zero_aligned(a, T, max(16, align_of(T)))
 #define push_struct(a, T) push_struct_aligned(a, T, max(16, align_of(T)))
 
-#define push_array_no_zero_aligned(a, T, c, align) (T*)arena_push((a), size_of(T)*(c), (align))
-#define push_array_aligned(a, T, c, align) (T*)memory_zero(push_array_no_zero_aligned(a, T, c, align), size_of(T)*(c))
+#define push_array_no_zero_aligned(a, T, c, align) cast(T*)arena_push((a), size_of(T)*(c), (align))
+#define push_array_aligned(a, T, c, align) cast(T*)memory_zero(push_array_no_zero_aligned(a, T, c, align), size_of(T)*(c))
 #define push_array_no_zero(a, T, c) push_array_no_zero_aligned(a, T, c, max(16, align_of(T)))
 #define push_array(a, T, c) push_array_aligned(a, T, c, max(16, align_of(T)))
 

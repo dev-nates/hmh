@@ -29,8 +29,8 @@ wm_consume_events(void);
 //--------------------------------------------------------------------------------
 // input
 
-proc IButton_Array
-wm_consume_keyboard_scancodes(Arena *arena);
+// proc IButton_Array
+// wm_consume_keyboard_scancodes(Arena *arena);
 
 //--------------------------------------------------------------------------------
 // window

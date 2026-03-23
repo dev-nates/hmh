@@ -1,30 +1,5 @@
 
 //--------------------------------------------------------------------------------
-// input buttons
-
-proc b32
-ibutton_pressed(IButton button)
-{
-	b32 in_order = (button.down == (button.htc&1));
-	b32 result = (in_order) ? (button.htc >= 1) : (button.htc >= 2);
-	return result;
-}
-
-proc b32
-ibutton_released(IButton button)
-{
-	b32 in_order = (button.down == (button.htc&1));
-	b32 result = (in_order) ? (button.htc >= 2) : (button.htc >= 1);
-	return result;
-}
-
-proc b32
-ibutton_down(IButton button)
-{
-	return button.down;
-}
-
-//--------------------------------------------------------------------------------
 // time procs
 
 proc Dense_Time

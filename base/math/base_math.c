@@ -575,23 +575,26 @@ u32_from_rgba(vec4f32 rgba)
 proc void
 rng1u64_list_push(Arena *arena, rng1u64_list *list, rng1u64 rng)
 {
-	rng1u64_node *n = push_array(arena, rng1u64_node, 1);
-	memory_copy_struct(&n->v, &rng);
-	sll_queue_push(list->first, list->last, n);
+	rng1u64_node *node = push_array(arena, rng1u64_node, 1);
+	memory_copy_struct(&node->v, &rng);
+
+	rng1u64_node **ptr = check_nil(list->head, nil) ? &list->head : &list->tail->next;
+	*ptr = node; list->tail = node;
+	node->next = nil;
 	list->count += 1;
 }
 
 proc void
 rng1u64_list_concat(rng1u64_list *list, rng1u64_list *to_concat)
 {
-	if(to_concat->first) {
-		if(list->first) {
-			list->last->next = to_concat->first;
-			list->last       = to_concat->last;
+	if (to_concat->head) {
+		if(list->head) {
+			list->tail->next = to_concat->head;
+			list->tail       = to_concat->tail;
 		}
 		else {
-			list->first = to_concat->first;
-			list->last  = to_concat->last;
+			list->head = to_concat->head;
+			list->tail  = to_concat->tail;
 		}
 		memory_zero_struct(to_concat);
 	}
@@ -603,7 +606,7 @@ rng1u64_array_from_list(Arena *arena, rng1u64_list *list) {
 	arr.count        = list->count;
 	arr.v            = push_array_no_zero(arena, rng1u64, arr.count);
 	u64 idx = 0;
-	for(rng1u64_node *n = list->first; n != 0; n = n->next)
+	for(rng1u64_node *n = list->head; n != 0; n = n->next)
 	{
 		arr.v[idx] = n->v;
 		idx += 1;
@@ -613,9 +616,12 @@ rng1u64_array_from_list(Arena *arena, rng1u64_list *list) {
 
 proc void
 rng1s64_list_push(Arena *arena, rng1s64_list *list, rng1s64 rng) {
-	rng1s64_node *n = push_array(arena, rng1s64_node, 1);
-	memory_copy_struct(&n->v, &rng);
-	sll_queue_push(list->first, list->last, n);
+	rng1s64_node *node = push_array(arena, rng1s64_node, 1);
+	memory_copy_struct(&node->v, &rng);
+
+	rng1s64_node **ptr = check_nil(list->head, nil) ? &list->head : &list->tail->next;
+	*ptr = node; list->tail = node;
+	node->next = nil;
 	list->count += 1;
 }
 
@@ -626,7 +632,7 @@ rng1s64_array_from_list(Arena *arena, rng1s64_list *list)
 	arr.count = list->count;
 	arr.v = push_array_no_zero(arena, rng1s64, arr.count);
 	u64 idx = 0;
-	for(rng1s64_node *n = list->first; n != 0; n = n->next) {
+	for(rng1s64_node *n = list->head; n != 0; n = n->next) {
 		arr.v[idx] = n->v;
 		idx += 1;
 	}

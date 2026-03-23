@@ -59,7 +59,10 @@ base_cmdline_from_args(Arena *arena, s32 argc, cstring *args) {
 			Cmdline_Arg *arg_node = push_array(arena, Cmdline_Arg, 1);
 			arg_node->name = name;
 			arg_node->value = value;
-			sll_queue_push(cl.head, cl.tail, arg_node);
+
+			Cmdline_Arg **ptr = check_nil(cl.head, nil) ? &cl.head : &cl.tail->next;
+			*ptr = arg_node; cl.tail = arg_node;
+			arg_node->next = nil;
 			cl.count += 1;
 		}
 	}
@@ -91,7 +94,7 @@ base_main_thread_entry(s32 argc, cstring *args)
 
 int main(int argc, char **args) {
 	Thread_Context tctx;
-	tctx_init_and_equip(&tctx);
+	tctx_init_and_set(&tctx);
 	tctx_set_name(S("main"));
 	tctx_write_this_src_loc();
 

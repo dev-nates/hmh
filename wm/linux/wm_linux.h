@@ -60,7 +60,7 @@ struct Wayland_state {
 	struct xkb_context *xkb_context;
 	struct xkb_keymap  *xkb_keymap;
 
-	IButton scancodes[256];
+	// IButton scancodes[256];
 
 	// $arena *text_input_arena;
 	// $string_list text_input;

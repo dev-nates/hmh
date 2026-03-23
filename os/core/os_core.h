@@ -270,4 +270,3 @@ os_semaphore_wait(OS_Semaphore semaphore, u64 endt_us);
 
 proc b32
 os_semaphore_post(OS_Semaphore semaphore);
-

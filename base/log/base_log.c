@@ -1,58 +1,93 @@
 
-proc Log *
-log_alloc(void) {
-	Arena *arena = arena_alloc();
-	Log *log = push_array(arena, Log, 1);
-	log->arena = arena;
-	return log;
+
+proc void
+nil_logger_proc(rawptr data, Logger_Level level, string text, Logger_Options options, Source_Code_Location loc) {
+	// Do nothing
+}
+
+proc Logger
+nil_logger(void) {
+	return (Logger){.procedure = nil_logger_proc};
 }
 
 proc void
-log_release(Log *log) {
-	if (log) {
-		arena_release(log->arena);
-	}
+logger_set_user_data(Logger *logger, rawptr data) {
+	logger->data = data;
 }
 
 proc void
-log_msg(Log *log, string str) {
-	if (log) {
-		Log_Scope *scope = log->scope;
-		if (scope) {
-			str_list_push(log->arena, &scope->list, str);
-		}
-	}
+_log_msg(Source_Code_Location loc, Logger_Level level, string str) {
+	Thread_Context *ctx = tctx_get_context();
+	Logger *logger = ctx->logger;
+	logger->procedure(logger->data, level, str, logger->options, loc);
 }
 
 proc void
-log_msgf(Log *log, cstring fmt, ...) {
+_log_msgfv(Source_Code_Location loc, Logger_Level level, cstring fmt, va_list args) {
+	Temp scratch = scratch_begin(0,0);
+	va_list args_copy;
+	va_copy(args_copy, args);
+	_log_msg(loc, level, push_strfv(scratch.arena, fmt, args_copy));
+	va_end(args_copy);
+	scratch_end(scratch);
+}
+
+proc void
+_log_msgf(Source_Code_Location loc, Logger_Level level, cstring fmt, ...) {
+	Temp scratch = scratch_begin(0,0);
 	va_list args;
 	va_start(args, fmt);
-	string str = push_strfv(log->arena, fmt, args);
+	_log_msg(loc, level, push_strfv(scratch.arena, fmt, args));
 	va_end(args);
-	log_msg(log, str);
+	scratch_end(scratch);
 }
 
 proc void
-log_scope_begin(Log *log) {
-	if (log) {
-		s64 restore_pos = arena_pos(log->arena);
-		Log_Scope *scope = push_array_no_zero(log->arena, Log_Scope, 1);
-		scope->restore_pos = restore_pos;
-		sll_stack_push(log->scope, scope);
-	}
+_debugf(Source_Code_Location loc, cstring fmt, ...) {
+	Temp scratch = scratch_begin(0,0);
+	va_list args;
+	va_start(args, fmt);
+	_log_msg(loc, Log_Error, push_strfv(scratch.arena, fmt, args));
+	va_end(args);
+	scratch_end(scratch);
 }
 
-proc string_list
-log_scope_end(Arena *arena, Log *log) {
-	string_list result = zero_struct;
-	if (log) {
-		Log_Scope *scope = log->scope;
-		if (scope) {
-			result = str_list_copy(arena, &scope->list);
-			sll_stack_pop(log->scope);
-			arena_pop_to(log->arena, scope->restore_pos);
-		}
-	}
-	return result;
+proc void
+_infof(Source_Code_Location loc, cstring fmt, ...) {
+	Temp scratch = scratch_begin(0,0);
+	va_list args;
+	va_start(args, fmt);
+	_log_msg(loc, Log_Info, push_strfv(scratch.arena, fmt, args));
+	va_end(args);
+	scratch_end(scratch);
+}
+
+proc void
+_warnf(Source_Code_Location loc, cstring fmt, ...) {
+	Temp scratch = scratch_begin(0,0);
+	va_list args;
+	va_start(args, fmt);
+	_log_msg(loc, Log_Warning, push_strfv(scratch.arena, fmt, args));
+	va_end(args);
+	scratch_end(scratch);
+}
+
+proc void
+_errorf(Source_Code_Location loc, cstring fmt, ...) {
+	Temp scratch = scratch_begin(0,0);
+	va_list args;
+	va_start(args, fmt);
+	_log_msg(loc, Log_Error, push_strfv(scratch.arena, fmt, args));
+	va_end(args);
+	scratch_end(scratch);
+}
+
+proc void
+_fatalf(Source_Code_Location loc, cstring fmt, ...) {
+	Temp scratch = scratch_begin(0,0);
+	va_list args;
+	va_start(args, fmt);
+	_log_msg(loc, Log_Fatal, push_strfv(scratch.arena, fmt, args));
+	va_end(args);
+	scratch_end(scratch);
 }

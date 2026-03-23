@@ -293,8 +293,8 @@ struct rng1u64_node {
 typedef struct rng1u64_list rng1u64_list;
 struct rng1u64_list {
 	s64 count;
-	rng1u64_node *first;
-	rng1u64_node *last;
+	rng1u64_node *head;
+	rng1u64_node *tail;
 };
 
 typedef struct rng1u64_array rng1u64_array;
@@ -311,8 +311,8 @@ struct rng1u32_node {
 typedef struct rng1u32_list rng1u32_list;
 struct rng1u32_list {
 	s64 count;
-	rng1u32_node *first;
-	rng1u32_node *last;
+	rng1u32_node *head;
+	rng1u32_node *tail;
 };
 
 typedef struct rng1u32_array rng1u32_array;
@@ -329,8 +329,8 @@ struct rng1s64_node {
 typedef struct rng1s64_list rng1s64_list;
 struct rng1s64_list {
 	s64 count;
-	rng1s64_node *first;
-	rng1s64_node *last;
+	rng1s64_node *head;
+	rng1s64_node *tail;
 };
 
 typedef struct rng1s64_array rng1s64_array;
@@ -347,8 +347,8 @@ struct rng1s32_node {
 typedef struct rng1s32_list rng1s32_list;
 struct rng1s32_list {
 	s32 count;
-	rng1s32_node *first;
-	rng1s32_node *last;
+	rng1s32_node *head;
+	rng1s32_node *tail;
 };
 
 typedef struct rng1s32_array rng1s32_array;

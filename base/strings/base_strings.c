@@ -246,7 +246,7 @@ proc string
 push_strfv(Arena *arena, cstring fmt, va_list args) {
 	va_list args2;
 	va_copy(args2, args);
-	s32 needed_bytes = base_string_vsnprintf(0, 0, fmt, args) + 1;
+	s32 needed_bytes = base_string_vsnprintf(0, 0, fmt, args2) + 1;
 	string result = zero_struct;
 	result.m = push_array_no_zero(arena, u8, needed_bytes);
 	result.size = base_string_vsnprintf((cstring)result.m, needed_bytes, fmt, args2);
@@ -931,7 +931,10 @@ f64_from_str(string str) {
 proc string_node*
 str_list_push_node(string_list *list, string_node *node) {
 	assert(node->str.size >= 0);
-	sll_queue_push(list->head, list->tail, node);
+
+	string_node **ptr = check_nil(list->head, nil) ? &list->head : &list->tail->next;
+	*ptr = list->head; list->tail = list->head;
+	list->head->next = nil;
 	list->node_count += 1;
 	list->total_size += node->str.size;
 	return node;
@@ -948,7 +951,9 @@ str_list_push_node_set_string(string_list *list, string_node *node, string str) 
 proc string_node*
 str_list_push_node_front(string_list *list, string_node *node) {
 	assert(node->str.size >= 0);
-	sll_queue_push_front(list->head, list->tail, node);
+
+	node->next = list->head;
+	list->head = node;
 	list->node_count += 1;
 	list->total_size += node->str.size;
 	return node;
@@ -958,7 +963,9 @@ proc string_node*
 str_list_push_node_front_set_string(string_list *list, string_node *node, string str) {
 	assert(str.size >= 0);
 	node->str = str;
-	sll_queue_push_front(list->head, list->tail, node);
+
+	node->next = list->head;
+	list->head = node;
 	return node;
 }
 
@@ -1150,12 +1157,12 @@ str_list_join(Arena *arena, string_list *list, String_Join *optional_params) {
 	memory_copy(at, join.pre.m, join.pre.size);
 	at += join.pre.size;
 
-	for each_node(string_node, node, list->head) {
+	for each_node(node, list->head, string_node) {
 		string node_string = node->str;
 		memory_copy(at, node_string.m, node_string.size);
 		at += node_string.size;
 
-		if (!check_nil(0, node->next)) {
+		if (!check_nil(node->next, nil)) {
 			memory_copy(at, join.sep.m, join.sep.size);
 			at += join.sep.size;
 		}
@@ -1193,7 +1200,7 @@ str_array_from_list(Arena *arena, string_list *list) {
 	arr.count = list->node_count;
 	arr.v = push_array_no_zero(arena, string, list->node_count);
 	s64 idx = 0;
-	for each_node(string_node, node, list->head) {
+	for each_node(node, list->head, string_node) {
 		assert(idx < list->node_count);
 		arr.v[idx] = node->str;
 		idx += 1;
@@ -1309,7 +1316,7 @@ proc void
 str_path_list_resolve_dots_in_place(string_list *path, Path_Style style) {
 	Temp scratch = scratch_begin(0, 0);
 	string_meta_node *stack = 0;
-	string_meta_node *free_meta_node = 0;
+	string_meta_node *free_meta_nodes = 0;
 	string_node *head = path->head;
 
 	memory_zero_struct(path);
@@ -1340,14 +1347,17 @@ str_path_list_resolve_dots_in_place(string_list *path, Path_Style style) {
 		save_with_stack:
 		{
 		  str_list_push_node(path, node);
-		  
-		  string_meta_node *stack_node = free_meta_node;
-		  if (stack_node != 0) {
-		  	sll_stack_pop(free_meta_node);
+
+		  string_meta_node *stack_node = free_meta_nodes;
+		  if (!check_nil(stack_node, nil)) {
+		  	asan_cure(stack_node, size_of(*stack_node));
+		  	free_meta_nodes = free_meta_nodes->next;
 		  } else {
-		  	stack_node = push_array_no_zero(scratch.arena, string_meta_node, 1);
+		  	stack_node = push_struct_no_zero(scratch.arena, string_meta_node);
 		  }
-		  sll_stack_push(stack, stack_node);
+		  memory_zero_struct(stack_node);
+		  stack_node->next = stack; stack = stack_node;
+
 		  stack_node->node = node;
 		  continue;
 		}
@@ -1363,9 +1373,8 @@ str_path_list_resolve_dots_in_place(string_list *path, Path_Style style) {
 			path->node_count -= 1;
 			path->total_size -= stack->node->str.size;
 			
-			sll_stack_pop(stack);
-			
-			if (stack == 0) {
+			stack = stack->next;
+			if (stack == nil) {
 				path->tail = path->head;
 			} else {
 				path->tail = stack->node;
@@ -1985,12 +1994,12 @@ fuzzy_match_find(Arena *arena, string needle, string haystack) {
 	Temp scratch = scratch_begin(&arena, 1);
 	string_list needles = str_split(scratch.arena, needle, (u8*)" ", 1, 0);
 	result.needle_part_count = needles.node_count;
-	for each_node(string_node, needle_n, needles.head) {
+	for each_node(needle_n, needles.head, string_node) {
 		s64 find_pos = 0;
 		for(;find_pos < haystack.size;) {
 			find_pos = str_find_needle(find_pos, needle_n->str, haystack, String_Match_Flag_Case_Insensitive);
 			b32 is_in_gathered_ranges = 0;
-			for each_node(Fuzzy_Match_Range_Node, n, result.head) {
+			for each_node(n, result.head, Fuzzy_Match_Range_Node) {
 				if(n->range.min <= find_pos && find_pos < n->range.max) {
 					is_in_gathered_ranges = 1;
 					find_pos = n->range.max;
@@ -2003,9 +2012,12 @@ fuzzy_match_find(Arena *arena, string needle, string haystack) {
 		}
 		if(find_pos < haystack.size) {
 			rng1s64 range = r1s64(find_pos, find_pos + needle_n->str.size);
-			Fuzzy_Match_Range_Node *n = push_array(arena, Fuzzy_Match_Range_Node, 1);
-			n->range = range;
-			sll_queue_push(result.head, result.tail, n);
+			Fuzzy_Match_Range_Node *node = push_array(arena, Fuzzy_Match_Range_Node, 1);
+			node->range = range;
+
+			Fuzzy_Match_Range_Node **ptr = check_nil(result.head, nil) ? &result.head : &result.tail->next;
+			*ptr = node; result.tail = node;
+			node->next = nil;
 			result.count += 1;
 			result.total_dim += dim_1s64(range);
 		}
@@ -2017,9 +2029,12 @@ fuzzy_match_find(Arena *arena, string needle, string haystack) {
 proc Fuzzy_Match_Range_List
 fuzzy_match_range_list_copy(Arena *arena, Fuzzy_Match_Range_List *src) {
 	Fuzzy_Match_Range_List dst = zero_struct;
-	for each_node(Fuzzy_Match_Range_Node, node, src->head) {
+	for each_node(node, src->head, Fuzzy_Match_Range_Node) {
 		Fuzzy_Match_Range_Node *dstn = push_array(arena, Fuzzy_Match_Range_Node, 1);
-		sll_queue_push(dst.head, dst.tail, dstn);
+
+		Fuzzy_Match_Range_Node **ptr = check_nil(dst.head, nil) ? &dst.head : &dst.tail->next;
+		*ptr = dstn; dst.tail = dstn;
+		dstn->next = nil;
 		dstn->range = node->range;
 	}
 	dst.count = src->count;

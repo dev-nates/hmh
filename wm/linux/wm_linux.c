@@ -124,9 +124,9 @@ _wayland_keyboard_enter(
 	u32 *key;
 	wl_array_for_each(key, keys) {
 		u32 scancode = *key;
-		IButton *button = wayland_state.scancodes + scancode;
-		button->htc = 1;
-		button->down = 1;
+		// IButton *button = wayland_state.scancodes + scancode;
+		// button->htc = 1;
+		// button->down = 1;
 
 		#if 0
 		char buf[128];
@@ -150,9 +150,9 @@ _wayland_keyboard_key(rawptr data, struct wl_keyboard *wl_keyboard,
 	    u32 serial, u32 time, u32 scancode, u32 state)
 {
 	b32 pressed = (state == WL_KEYBOARD_KEY_STATE_PRESSED);
-	IButton *button = wayland_state.scancodes + scancode;
-	button->htc += 1;
-	button->down = pressed;
+	// IButton *button = wayland_state.scancodes + scancode;
+	// button->htc += 1;
+	// button->down = pressed;
 
 #if 0
 	char buf[128];
@@ -494,23 +494,23 @@ wm_consume_events(void)
 //--------------------------------------------------------------------------------
 // input
 
-proc IButton_Array
-wm_consume_keyboard_scancodes(Arena *arena)
-{
-	IButton_Array array;
-	array.v = push_array(arena, IButton, array_count(wayland_state.scancodes));
-	array.count = array_count(wayland_state.scancodes);
-	memory_copy(array.v, wayland_state.scancodes, array_count(wayland_state.scancodes)*sizeof(IButton));
-
-	//--------------------------------------------------------------------------------
-	// consume input
-	for each_element(i, wayland_state.scancodes) {
-		IButton *btn = wayland_state.scancodes + i;
-		btn->htc = 0;
-	}
-
-	return array;
-}
+// proc IButton_Array
+// wm_consume_keyboard_scancodes(Arena *arena)
+// {
+// 	IButton_Array array;
+// 	array.v = push_array(arena, IButton, array_count(wayland_state.scancodes));
+// 	array.count = array_count(wayland_state.scancodes);
+// 	memory_copy(array.v, wayland_state.scancodes, array_count(wayland_state.scancodes)*sizeof(IButton));
+//
+// 	//--------------------------------------------------------------------------------
+// 	// consume input
+// 	for each_element(i, wayland_state.scancodes) {
+// 		IButton *btn = wayland_state.scancodes + i;
+// 		btn->htc = 0;
+// 	}
+//
+// 	return array;
+// }
 
 //--------------------------------------------------------------------------------
 // window
