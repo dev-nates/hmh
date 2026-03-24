@@ -123,7 +123,7 @@ os_get_process_info(void) {
 proc string
 os_get_current_path(Arena *arena) {
 	cstring wd = getcwd(0, 0);
-	string result = push_str_copy(arena, str_cstring(wd));
+	string result = push_str_copy(arena, str_from_cstring(wd));
 	free(wd);
 	return result;
 }

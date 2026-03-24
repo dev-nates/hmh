@@ -7,4 +7,4 @@ struct Linux_Gamepad_Data {
 };
 static_assert(size_of(Linux_Gamepad_Data) <= IGAMEPAD_OPAQUE_SIZE, check_linux_gamepad_data_size);
 
-global int device_change_notify = 0;
+global int gamepad_notify = 0;

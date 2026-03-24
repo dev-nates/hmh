@@ -8,7 +8,7 @@ tctx_init_and_set(Thread_Context *tctx) {
 	}
 	tctx_thread_global = tctx;
 	tctx->logger = push_struct(tctx->arenas[0], Logger);
-	*tctx->logger = nil_logger();
+	*tctx->logger = make_console_logger(Log_Debug, 0);
 }
 
 proc void

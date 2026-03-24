@@ -25,13 +25,13 @@ struct IAxis {
 };
 
 proc b8
-ibtn_pressed(IButton btn);
+btn_pressed(IButton btn);
 
 proc b8
-ibtn_released(IButton btn);
+bnt_released(IButton btn);
 
 proc b8
-ibtn_down(IButton btn);
+btn_down(IButton btn);
 
 // -------------------------------------------------------------------------------------------------
 // Events
@@ -153,9 +153,15 @@ struct IGamepad {
 	u8      name_buffer[128];
 	u8      opaque[IGAMEPAD_OPAQUE_SIZE];
 };
+typedef struct IGamepad_List IGamepad_List;
+struct IGamepad_List {
+};
+
+proc IGamepad_List
+input_connect_gamepads(Arena *arena);
 
 proc b8
-input_gamepad_hotplugged(void);
+input_new_gamepads(void);
 
 proc void
 input_gamepad_connect(/**/IGamepad *gamepad);

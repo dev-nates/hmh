@@ -621,7 +621,7 @@ wm_window_get_unused_backbuffer(WM_Window window, /**/ rawptr *backbuffer, s64 *
 	return handle;
 }
 
-proc b32
+proc b8
 wm_window_is_open(WM_Window window) {
 	assert(!handle_match(window, zero_handle(WM_Window)));
 

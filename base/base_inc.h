@@ -16,10 +16,13 @@
 
 #include "math/base_math.h"
 #include "strings/base_strings.h"
+
+#include "terminal/ansi_codes.h"
 #include "log/base_log.h"
+#include "terminal/console_logger.h"
+
 #include "thread_ctx/base_thread_ctx.h"
 #include "random/base_random.h"
-
 #include "base_entry_point.h"
 
 #endif // BASE_INC_H

@@ -14,10 +14,12 @@
 
 #include "math/base_math.c"
 #include "strings/base_strings.c"
+
 #include "log/base_log.c"
+#include "terminal/console_logger.c"
+
 #include "thread_ctx/base_thread_ctx.c"
 #include "random/base_random.c"
-
 #include "base_entry_point.c"
 
 #endif // BASE_INC_C

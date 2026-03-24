@@ -21,7 +21,7 @@ arena_alloc_(Arena_Params *params)
 	arena->res_size = reserve_size;
 	arena->cmt =      commit_size;
 	arena->res =      reserve_size;
-	arena->pos = ARENA_HEADER_SIZE;
+	arena->pos =      ARENA_HEADER_SIZE;
 	asan_poison(base, (u64)commit_size);
 	asan_cure(base, ARENA_HEADER_SIZE);
 	return arena;

@@ -222,6 +222,8 @@ COMPILER_CLANG	/home/nates/projects/hmh/base/core/base_ctx_crack.h	/^# define CO
 COMPILER_GCC	/home/nates/projects/hmh/base/core/base_ctx_crack.h	/^# define COMPILER_GCC /;"	d
 COMPILER_MSVC	/home/nates/projects/hmh/base/core/base_ctx_crack.h	/^# define COMPILER_MSVC /;"	d
 COMPILER_MSVC_YEAR	/home/nates/projects/hmh/base/core/base_ctx_crack.h	/^#  define COMPILER_MSVC_YEAR /;"	d
+CSI_SCROLL_DOWN	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define CSI_SCROLL_DOWN(/;"	d
+CSI_SCROLL_UP	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define CSI_SCROLL_UP(/;"	d
 Cmdline	/home/nates/projects/hmh/base/base_entry_point.h	/^struct Cmdline {$/;"	s
 Cmdline	/home/nates/projects/hmh/base/base_entry_point.h	/^typedef struct Cmdline Cmdline;$/;"	t	typeref:struct:Cmdline
 Cmdline_Arg	/home/nates/projects/hmh/base/base_entry_point.h	/^struct Cmdline_Arg {$/;"	s
@@ -310,6 +312,8 @@ IGamepad_Event_Kind	/home/nates/projects/hmh/input/input.h	/^enum IGamepad_Event
 IGamepad_Event_Kind	/home/nates/projects/hmh/input/input.h	/^typedef u64 IGamepad_Event_Kind;$/;"	t	typeref:typename:u64
 IGamepad_Events	/home/nates/projects/hmh/input/input.h	/^struct IGamepad_Events {$/;"	s
 IGamepad_Events	/home/nates/projects/hmh/input/input.h	/^typedef struct IGamepad_Events IGamepad_Events;$/;"	t	typeref:struct:IGamepad_Events
+IGamepad_List	/home/nates/projects/hmh/input/input.h	/^struct IGamepad_List {$/;"	s
+IGamepad_List	/home/nates/projects/hmh/input/input.h	/^typedef struct IGamepad_List IGamepad_List;$/;"	t	typeref:struct:IGamepad_List
 IKEYBOARD_SCANCODE_COUNT	/home/nates/projects/hmh/input/input.h	/^#define IKEYBOARD_SCANCODE_COUNT /;"	d
 IKeyboard	/home/nates/projects/hmh/input/input.h	/^struct IKeyboard {$/;"	s
 IKeyboard	/home/nates/projects/hmh/input/input.h	/^typedef struct IKeyboard IKeyboard;$/;"	t	typeref:struct:IKeyboard
@@ -329,6 +333,11 @@ Immediate	/home/nates/projects/hmh/gfx/gfx_window.h	/^	Immediate,$/;"	e	enum:Win
 Indent_Kind	/home/nates/projects/hmh/base/strings/base_strings.h	/^typedef u8 Indent_Kind;$/;"	t	typeref:typename:u8
 LANG_C	/home/nates/projects/hmh/base/core/base_ctx_crack.h	/^# define LANG_C /;"	d
 LANG_CPP	/home/nates/projects/hmh/base/core/base_ctx_crack.h	/^# define LANG_CPP /;"	d
+LOG_DEBUG_COLOR	/home/nates/projects/hmh/base/log/base_log.h	/^#define LOG_DEBUG_COLOR /;"	d
+LOG_ERROR_COLOR	/home/nates/projects/hmh/base/log/base_log.h	/^#define LOG_ERROR_COLOR /;"	d
+LOG_FATAL_COLOR	/home/nates/projects/hmh/base/log/base_log.h	/^#define LOG_FATAL_COLOR /;"	d
+LOG_INFO_COLOR	/home/nates/projects/hmh/base/log/base_log.h	/^#define LOG_INFO_COLOR /;"	d
+LOG_WARNING_COLOR	/home/nates/projects/hmh/base/log/base_log.h	/^#define LOG_WARNING_COLOR /;"	d
 Linux_Entity	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^struct Linux_Entity {$/;"	s
 Linux_Entity	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^typedef struct Linux_Entity Linux_Entity;$/;"	t	typeref:struct:Linux_Entity
 Linux_Entity_Kind	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^enum Linux_Entity_Kind {$/;"	g
@@ -351,20 +360,21 @@ Log_Debug	/home/nates/projects/hmh/base/log/base_log.h	/^	Log_Debug   = 0,$/;"	e
 Log_Error	/home/nates/projects/hmh/base/log/base_log.h	/^	Log_Error   = 30,$/;"	e	enum:Logger_Level
 Log_Fatal	/home/nates/projects/hmh/base/log/base_log.h	/^	Log_Fatal   = 40,$/;"	e	enum:Logger_Level
 Log_Info	/home/nates/projects/hmh/base/log/base_log.h	/^	Log_Info    = 10,$/;"	e	enum:Logger_Level
+Log_Level_End	/home/nates/projects/hmh/base/log/base_log.h	/^	Log_Level_End = 50,$/;"	e	enum:Logger_Level
 Log_Warning	/home/nates/projects/hmh/base/log/base_log.h	/^	Log_Warning = 20,$/;"	e	enum:Logger_Level
 Logger	/home/nates/projects/hmh/base/log/base_log.h	/^struct Logger {$/;"	s
 Logger	/home/nates/projects/hmh/base/log/base_log.h	/^typedef struct Logger Logger;$/;"	t	typeref:struct:Logger
 Logger_Level	/home/nates/projects/hmh/base/log/base_log.h	/^enum Logger_Level {$/;"	g
 Logger_Level	/home/nates/projects/hmh/base/log/base_log.h	/^typedef u64 Logger_Level;$/;"	t	typeref:typename:u64
 Logger_Option	/home/nates/projects/hmh/base/log/base_log.h	/^enum Logger_Option {$/;"	g
-Logger_Option_Date	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Date,$/;"	e	enum:Logger_Option
-Logger_Option_Filepath	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Filepath,$/;"	e	enum:Logger_Option
-Logger_Option_Level	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Level,$/;"	e	enum:Logger_Option
-Logger_Option_Line	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Line,$/;"	e	enum:Logger_Option
-Logger_Option_Procedure	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Procedure,$/;"	e	enum:Logger_Option
-Logger_Option_Terminal_Color	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Terminal_Color,$/;"	e	enum:Logger_Option
-Logger_Option_Thread_Id	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Thread_Id,$/;"	e	enum:Logger_Option
-Logger_Option_Time	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Time,$/;"	e	enum:Logger_Option
+Logger_Option_Date	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Date           = bit2,$/;"	e	enum:Logger_Option
+Logger_Option_Filepath	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Filepath       = bit4,$/;"	e	enum:Logger_Option
+Logger_Option_Level	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Level          = bit1,$/;"	e	enum:Logger_Option
+Logger_Option_Line	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Line           = bit5,$/;"	e	enum:Logger_Option
+Logger_Option_Procedure	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Procedure      = bit6,$/;"	e	enum:Logger_Option
+Logger_Option_Terminal_Color	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Terminal_Color = bit7,$/;"	e	enum:Logger_Option
+Logger_Option_Thread_Id	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Thread_Id      = bit8,$/;"	e	enum:Logger_Option
+Logger_Option_Time	/home/nates/projects/hmh/base/log/base_log.h	/^	Logger_Option_Time           = bit3,$/;"	e	enum:Logger_Option
 Logger_Options	/home/nates/projects/hmh/base/log/base_log.h	/^typedef u64 Logger_Options;$/;"	t	typeref:typename:u64
 Logger_Proc	/home/nates/projects/hmh/base/log/base_log.h	/^typedef void Logger_Proc(rawptr data, Logger_Level level, string text, Logger_Options options, S/;"	t	typeref:typename:void ()(rawptr data,Logger_Level level,string text,Logger_Options options,Source_Code_Location loc)
 MDESK_H	/home/nates/projects/hmh/mdesk/mdesk.h	/^#define MDESK_H$/;"	d
@@ -391,8 +401,6 @@ NO_ASAN	/home/nates/projects/hmh/base/core/base_core.h	/^# define NO_ASAN$/;"	d
 OS_CORE_LINUX_H	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^#define OS_CORE_LINUX_H$/;"	d
 OS_CV	/home/nates/projects/hmh/os/core/os_core.h	/^struct OS_CV { u64 v[1]; };$/;"	s
 OS_CV	/home/nates/projects/hmh/os/core/os_core.h	/^typedef struct OS_CV OS_CV;$/;"	t	typeref:struct:OS_CV
-OS_Console_Logger_Data	/home/nates/projects/hmh/os/core/os_console_logger.h	/^struct OS_Console_Logger_Data {$/;"	s
-OS_Console_Logger_Data	/home/nates/projects/hmh/os/core/os_console_logger.h	/^typedef struct OS_Console_Logger_Data OS_Console_Logger_Data;$/;"	t	typeref:struct:OS_Console_Logger_Data
 OS_FILE_ITERATOR_OPAQUE_SIZE	/home/nates/projects/hmh/os/core/os_core.h	/^#define OS_FILE_ITERATOR_OPAQUE_SIZE /;"	d
 OS_File	/home/nates/projects/hmh/os/core/os_core.h	/^struct OS_File { u64 v[1]; };$/;"	s
 OS_File	/home/nates/projects/hmh/os/core/os_core.h	/^typedef struct OS_File OS_File;$/;"	t	typeref:struct:OS_File
@@ -447,7 +455,6 @@ S	/home/nates/projects/hmh/base/strings/base_strings.h	/^#define S(/;"	d
 STB_SPRINTF_DECORATE	/home/nates/projects/hmh/base/strings/base_strings.h	/^#define STB_SPRINTF_DECORATE(/;"	d
 STB_SPRINTF_IMPLEMENTATION	/home/nates/projects/hmh/base/strings/base_strings.c	/^# define STB_SPRINTF_IMPLEMENTATION$/;"	d	file:
 STB_SPRINTF_STATIC	/home/nates/projects/hmh/base/strings/base_strings.c	/^# define STB_SPRINTF_STATIC$/;"	d	file:
-SVARG	/home/nates/projects/hmh/base/strings/base_strings.h	/^#define SVARG(/;"	d
 Side	/home/nates/projects/hmh/base/core/base_core.h	/^enum Side {$/;"	g
 Side	/home/nates/projects/hmh/base/core/base_core.h	/^typedef enum Side Side;$/;"	t	typeref:enum:Side
 Side_COUNT	/home/nates/projects/hmh/base/core/base_core.h	/^	Side_COUNT,$/;"	e	enum:Side
@@ -467,6 +474,106 @@ String_Match_Flags	/home/nates/projects/hmh/base/strings/base_strings.h	/^typede
 String_Split_Flag_Keep_Empties	/home/nates/projects/hmh/base/strings/base_strings.h	/^	String_Split_Flag_Keep_Empties = bit1,$/;"	e	enum:String_Split_Flags
 String_Split_Flags	/home/nates/projects/hmh/base/strings/base_strings.h	/^enum String_Split_Flags {$/;"	g
 String_Split_Flags	/home/nates/projects/hmh/base/strings/base_strings.h	/^typedef u32 String_Split_Flags;$/;"	t	typeref:typename:u32
+TERM_ALT_FONT_1	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_1 /;"	d
+TERM_ALT_FONT_2	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_2 /;"	d
+TERM_ALT_FONT_3	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_3 /;"	d
+TERM_ALT_FONT_4	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_4 /;"	d
+TERM_ALT_FONT_5	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_5 /;"	d
+TERM_ALT_FONT_6	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_6 /;"	d
+TERM_ALT_FONT_7	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_7 /;"	d
+TERM_ALT_FONT_8	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_8 /;"	d
+TERM_ALT_FONT_9	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ALT_FONT_9 /;"	d
+TERM_AUX_PORT_OFF	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_AUX_PORT_OFF /;"	d
+TERM_AUX_PORT_ON	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_AUX_PORT_ON /;"	d
+TERM_BACKGROUND_1	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_1 /;"	d
+TERM_BACKGROUND_2	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_2 /;"	d
+TERM_BACKGROUND_3	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_3 /;"	d
+TERM_BACKGROUND_4	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_4 /;"	d
+TERM_BACKGROUND_5	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_5 /;"	d
+TERM_BACKGROUND_6	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_6 /;"	d
+TERM_BACKGROUND_7	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_7 /;"	d
+TERM_BACKGROUND_8	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_8 /;"	d
+TERM_BACKGROUND_RGB	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKGROUND_RGB(/;"	d
+TERM_BACKSPACE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BACKSPACE /;"	d
+TERM_BEL	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BEL /;"	d
+TERM_BOLD	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_BOLD /;"	d
+TERM_CARRIAGE_RETURN	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CARRIAGE_RETURN /;"	d
+TERM_CLEAR_ENTIRE_SCREEN	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CLEAR_ENTIRE_SCREEN /;"	d
+TERM_CLEAR_ENTIRE_SCREEN_AND_SCROLLBACK	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CLEAR_ENTIRE_SCREEN_AND_SCROLLBACK /;"	d
+TERM_COLOR_RESET	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_COLOR_RESET /;"	d
+TERM_CONCEAL	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CONCEAL /;"	d
+TERM_CROSS_CONCEAL	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CROSS_CONCEAL /;"	d
+TERM_CSI	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CSI /;"	d
+TERM_CURSOR_BACK	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_BACK(/;"	d
+TERM_CURSOR_DOWN	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_DOWN(/;"	d
+TERM_CURSOR_FORWARD	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_FORWARD(/;"	d
+TERM_CURSOR_HORIZONTAL_ABSOLUTE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_HORIZONTAL_ABSOLUTE(/;"	d
+TERM_CURSOR_NEXT_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_NEXT_LINE(/;"	d
+TERM_CURSOR_POSITION	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_POSITION(/;"	d
+TERM_CURSOR_PREVIOUS_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_PREVIOUS_LINE(/;"	d
+TERM_CURSOR_UP	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_CURSOR_UP(/;"	d
+TERM_DCS	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_DCS /;"	d
+TERM_DEFAULT_BACKGROUND	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_DEFAULT_BACKGROUND /;"	d
+TERM_DEFAULT_FOREGROUND	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_DEFAULT_FOREGROUND /;"	d
+TERM_DEFAULT_UNDERLINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_DEFAULT_UNDERLINE /;"	d
+TERM_DOUBLE_UNDERLINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_DOUBLE_UNDERLINE /;"	d
+TERM_ENCIRCLED	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ENCIRCLED /;"	d
+TERM_ERASE_ENTIRE_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_ENTIRE_LINE /;"	d
+TERM_ERASE_FROM_CURSOR_TO_BEGINNING_DISPLAY	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_FROM_CURSOR_TO_BEGINNING_DISPLAY /;"	d
+TERM_ERASE_FROM_CURSOR_TO_BEGINNING_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_FROM_CURSOR_TO_BEGINNING_LINE /;"	d
+TERM_ERASE_FROM_CURSOR_TO_END_DISPLAY	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_FROM_CURSOR_TO_END_DISPLAY /;"	d
+TERM_ERASE_FROM_CURSOR_TO_END_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_FROM_CURSOR_TO_END_LINE /;"	d
+TERM_ERASE_IN_DISPLAY	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_IN_DISPLAY(/;"	d
+TERM_ERASE_IN_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ERASE_IN_LINE(/;"	d
+TERM_ESC	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ESC /;"	d
+TERM_FAINT	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FAINT /;"	d
+TERM_FOREGROUND_1	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_1 /;"	d
+TERM_FOREGROUND_2	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_2 /;"	d
+TERM_FOREGROUND_3	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_3 /;"	d
+TERM_FOREGROUND_4	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_4 /;"	d
+TERM_FOREGROUND_5	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_5 /;"	d
+TERM_FOREGROUND_6	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_6 /;"	d
+TERM_FOREGROUND_7	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_7 /;"	d
+TERM_FOREGROUND_8	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_8 /;"	d
+TERM_FOREGROUND_RGB	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FOREGROUND_RGB(/;"	d
+TERM_FORM_FEED	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FORM_FEED /;"	d
+TERM_FRAMED	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_FRAMED /;"	d
+TERM_GET_CURSOR	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_GET_CURSOR /;"	d
+TERM_GOTHIC	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_GOTHIC /;"	d
+TERM_HORIZONTAL_VERTICAL_POSITION	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_HORIZONTAL_VERTICAL_POSITION(/;"	d
+TERM_IDOEOGRAM_DOUBLE_LEFT_SIDE_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_IDOEOGRAM_DOUBLE_LEFT_SIDE_LINE /;"	d
+TERM_IDOEOGRAM_DOUBLE_RIGHT_SIDE_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_IDOEOGRAM_DOUBLE_RIGHT_SIDE_LINE /;"	d
+TERM_IDOEOGRAM_LEFT_SIDE_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_IDOEOGRAM_LEFT_SIDE_LINE /;"	d
+TERM_IDOEOGRAM_RIGHT_SIDE_LINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_IDOEOGRAM_RIGHT_SIDE_LINE /;"	d
+TERM_IDOEOGRAM_STRESS_MARKING	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_IDOEOGRAM_STRESS_MARKING /;"	d
+TERM_ITALIC	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ITALIC /;"	d
+TERM_LINE_FEED	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_LINE_FEED /;"	d
+TERM_NORMAL_INTENSITY	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NORMAL_INTENSITY /;"	d
+TERM_NO_BLINKING	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_BLINKING /;"	d
+TERM_NO_CONCEAL	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_CONCEAL /;"	d
+TERM_NO_ENFRAME_OR_ENCIRCLE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_ENFRAME_OR_ENCIRCLE /;"	d
+TERM_NO_IDEOGRAM	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_IDEOGRAM /;"	d
+TERM_NO_ITALIC_OR_BLACKLETTER	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_ITALIC_OR_BLACKLETTER /;"	d
+TERM_NO_OVERLINED	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_OVERLINED /;"	d
+TERM_NO_PROPORTIONAL_SPACING	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_PROPORTIONAL_SPACING /;"	d
+TERM_NO_REVEAL	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_REVEAL /;"	d
+TERM_NO_REVERSE_FOREGROUND_BACKGROUND	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_REVERSE_FOREGROUND_BACKGROUND /;"	d
+TERM_NO_UNDERLINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_NO_UNDERLINE /;"	d
+TERM_OSC	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_OSC /;"	d
+TERM_OVERLINED	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_OVERLINED /;"	d
+TERM_PRIMARY_FONT	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_PRIMARY_FONT /;"	d
+TERM_PROPORTINAL_SPACING	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_PROPORTINAL_SPACING /;"	d
+TERM_RAPID_BLINK	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_RAPID_BLINK /;"	d
+TERM_RESTORE_CURSOR	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_RESTORE_CURSOR /;"	d
+TERM_REVERSE_FOREGROUND_BACKGROUND	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_REVERSE_FOREGROUND_BACKGROUND /;"	d
+TERM_SAVE_CURSOR	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_SAVE_CURSOR /;"	d
+TERM_SLOW_BLINK	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_SLOW_BLINK /;"	d
+TERM_SS2	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_SS2 /;"	d
+TERM_SS3	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_SS3 /;"	d
+TERM_ST	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_ST /;"	d
+TERM_TAB	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_TAB /;"	d
+TERM_UNDERLINE	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_UNDERLINE /;"	d
+TERM_UNDERLINE_RGB	/home/nates/projects/hmh/base/terminal/ansi_codes.h	/^#define TERM_UNDERLINE_RGB(/;"	d
 THREAD_CONTEXT_ARENA_RESERVE	/home/nates/projects/hmh/base/thread_ctx/base_thread_ctx.h	/^#define THREAD_CONTEXT_ARENA_RESERVE /;"	d
 Temp	/home/nates/projects/hmh/base/arena/base_arena.h	/^struct Temp {$/;"	s
 Temp	/home/nates/projects/hmh/base/arena/base_arena.h	/^typedef struct Temp Temp;$/;"	t	typeref:struct:Temp
@@ -773,6 +880,8 @@ __anonc6efda580103	/home/nates/projects/hmh/base/strings/base_strings.h	/^enum {
 __anonc6efda580203	/home/nates/projects/hmh/base/strings/base_strings.h	/^enum {$/;"	g
 __has_attribute	/home/nates/projects/hmh/wm/linux/xdg-shell.c	/^# define __has_attribute(/;"	d	file:
 _debugf	/home/nates/projects/hmh/base/log/base_log.c	/^_debugf(Source_Code_Location loc, cstring fmt, ...) {$/;"	f	typeref:typename:proc void
+_do_level	/home/nates/projects/hmh/base/terminal/console_logger.c	/^_do_level(Logger_Options options, Logger_Level level) {$/;"	f	typeref:typename:proc void
+_do_loc	/home/nates/projects/hmh/base/terminal/console_logger.c	/^_do_loc(Logger_Options options, Source_Code_Location loc) {$/;"	f	typeref:typename:proc void
 _errorf	/home/nates/projects/hmh/base/log/base_log.c	/^_errorf(Source_Code_Location loc, cstring fmt, ...) {$/;"	f	typeref:typename:proc void
 _fatalf	/home/nates/projects/hmh/base/log/base_log.c	/^_fatalf(Source_Code_Location loc, cstring fmt, ...) {$/;"	f	typeref:typename:proc void
 _handle_is_zero	/home/nates/projects/hmh/base/core/base_core.h	/^_handle_is_zero(u64 *arr, s32 count) {$/;"	f	typeref:typename:proc b32
@@ -785,7 +894,7 @@ _log_msgfv	/home/nates/projects/hmh/base/log/base_log.c	/^_log_msgfv(Source_Code
 _unused_	/home/nates/projects/hmh/mdesk/mdesk.h	/^	u64 _unused_[2];$/;"	m	struct:$md_node	typeref:typename:u64[2]
 _w0	/home/nates/projects/hmh/base/math/base_math.h	/^		f32 _w0;$/;"	m	struct:vec4f32::__anon844fbcf80d08	typeref:typename:f32
 _w0	/home/nates/projects/hmh/base/math/base_math.h	/^		s32 _w0;$/;"	m	struct:vec4s32::__anon844fbcf81108	typeref:typename:s32
-_warnf	/home/nates/projects/hmh/base/log/base_log.c	/^_warnf(Source_Code_Location loc, cstring fmt, ...) {$/;"	f	typeref:typename:proc void
+_warningf	/home/nates/projects/hmh/base/log/base_log.c	/^_warningf(Source_Code_Location loc, cstring fmt, ...) {$/;"	f	typeref:typename:proc void
 _wayland_buffer_release	/home/nates/projects/hmh/wm/linux/wm_linux.c	/^_wayland_buffer_release(rawptr data, struct wl_buffer *buffer) {$/;"	f	typeref:typename:proc void
 _wayland_keyboard_enter	/home/nates/projects/hmh/wm/linux/wm_linux.c	/^_wayland_keyboard_enter($/;"	f	typeref:typename:proc void
 _wayland_keyboard_key	/home/nates/projects/hmh/wm/linux/wm_linux.c	/^_wayland_keyboard_key(rawptr data, struct wl_keyboard *wl_keyboard,$/;"	f	typeref:typename:proc void
@@ -852,12 +961,12 @@ aligned8_v	/home/nates/projects/hmh/os/core/os_core.h	/^		u64 aligned8_v[OS_FILE
 allocation_granularity	/home/nates/projects/hmh/os/core/os_core.h	/^  s64 allocation_granularity;$/;"	m	struct:OS_System_Info	typeref:typename:s64
 arena	/home/nates/projects/hmh/base/arena/base_arena.h	/^	Arena *arena;$/;"	m	struct:Temp	typeref:typename:Arena *
 arena	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^	Arena *arena;$/;"	m	struct:Linux_State	typeref:typename:Arena *
-arena	/home/nates/projects/hmh/os/core/os_console_logger.h	/^	Arena *arena;$/;"	m	struct:OS_Console_Logger_Data	typeref:typename:Arena *
 arena_alloc	/home/nates/projects/hmh/base/arena/base_arena.h	/^#define arena_alloc(...) arena_alloc_/;"	d
 arena_alloc_	/home/nates/projects/hmh/base/arena/base_arena.c	/^arena_alloc_(Arena_Params *params)$/;"	f	typeref:typename:proc Arena *
 arena_clear	/home/nates/projects/hmh/base/arena/base_arena.c	/^arena_clear(Arena *arena)$/;"	f	typeref:typename:proc void
 arena_default_commit_size	/home/nates/projects/hmh/base/arena/base_arena.h	/^global s64 arena_default_commit_size = kilobyte(64);$/;"	v	typeref:typename:global s64
 arena_default_reserve_size	/home/nates/projects/hmh/base/arena/base_arena.h	/^global s64 arena_default_reserve_size = megabyte(64);$/;"	v	typeref:typename:global s64
+arena_from_buffer	/home/nates/projects/hmh/base/arena/base_arena.h	/^#define arena_from_buffer(/;"	d
 arena_pop	/home/nates/projects/hmh/base/arena/base_arena.c	/^arena_pop(Arena *arena, s64 size)$/;"	f	typeref:typename:proc void
 arena_pop_to	/home/nates/projects/hmh/base/arena/base_arena.c	/^arena_pop_to(Arena *arena, s64 pos)$/;"	f	typeref:typename:proc void
 arena_pos	/home/nates/projects/hmh/base/arena/base_arena.c	/^arena_pos(Arena *arena) {$/;"	f	typeref:typename:proc s64
@@ -1049,6 +1158,9 @@ branch_unlikely	/home/nates/projects/hmh/base/core/base_core.h	/^#define branch_
 bswap_u16	/home/nates/projects/hmh/base/core/base_core.c	/^bswap_u16(u16 x) {$/;"	f	typeref:typename:proc u16
 bswap_u32	/home/nates/projects/hmh/base/core/base_core.c	/^bswap_u32(u32 x) {$/;"	f	typeref:typename:proc u32
 bswap_u64	/home/nates/projects/hmh/base/core/base_core.c	/^bswap_u64(u64 x) {$/;"	f	typeref:typename:proc u64
+btn_down	/home/nates/projects/hmh/input/input.c	/^btn_down(IButton button) {$/;"	f	typeref:typename:proc b8
+btn_pressed	/home/nates/projects/hmh/input/input.c	/^btn_pressed(IButton button) {$/;"	f	typeref:typename:proc b8
+btn_released	/home/nates/projects/hmh/input/input.c	/^btn_released(IButton button) {$/;"	f	typeref:typename:proc b8
 btns	/home/nates/projects/hmh/input/input.h	/^	IButton btns[IGamepad_Button_Kind_COUNT];$/;"	m	struct:IGamepad	typeref:typename:IButton[]
 btns	/home/nates/projects/hmh/input/input.h	/^	IButton btns[IKEYBOARD_SCANCODE_COUNT];$/;"	m	struct:IKeyboard	typeref:typename:IButton[]
 btns	/home/nates/projects/hmh/input/input.h	/^	IButton btns[IMouse_Button_Kind_COUNT];$/;"	m	struct:IMouse	typeref:typename:IButton[]
@@ -1124,6 +1236,7 @@ configure	/home/nates/projects/hmh/wm/linux/xdg-shell.h	/^	void (*configure)(voi
 configure	/home/nates/projects/hmh/wm/linux/xdg-shell.h	/^	void (*configure)(void *data,$/;"	m	struct:xdg_toplevel_listener	typeref:typename:void (*)(void * data,struct xdg_toplevel * xdg_toplevel,int32_t width,int32_t height,struct wl_array * states)
 configure_bounds	/home/nates/projects/hmh/wm/linux/xdg-shell.h	/^	void (*configure_bounds)(void *data,$/;"	m	struct:xdg_toplevel_listener	typeref:typename:void (*)(void * data,struct xdg_toplevel * xdg_toplevel,int32_t width,int32_t height)
 connected	/home/nates/projects/hmh/input/input.h	/^	b8      connected;$/;"	m	struct:IGamepad	typeref:typename:b8
+console_logger_proc	/home/nates/projects/hmh/base/terminal/console_logger.c	/^console_logger_proc(rawptr data, Logger_Level level, string text, Logger_Options options, Source/;"	f	typeref:typename:proc void
 container_of	/home/nates/projects/hmh/base/core/base_core.h	/^#define container_of(/;"	d
 contains_1f32	/home/nates/projects/hmh/base/math/base_math.c	/^proc b32 contains_1f32(rng1f32 r, f32 x)                    {b32 c = (r.min <= x && x < r.max); /;"	f	typeref:typename:proc b32
 contains_1f64	/home/nates/projects/hmh/base/math/base_math.c	/^proc b32 contains_1f64(rng1f64 r, f64 x)                    {b32 c = (r.min <= x && x < r.max); /;"	f	typeref:typename:proc b32
@@ -1183,7 +1296,8 @@ date_time_from_micro_seconds	/home/nates/projects/hmh/base/core/base_core.c	/^da
 date_time_from_unix_time	/home/nates/projects/hmh/base/core/base_core.c	/^date_time_from_unix_time(u64 unix_time) {$/;"	f	typeref:typename:proc Date_Time
 day	/home/nates/projects/hmh/base/core/base_core.h	/^	u16 day; \/\/ [0,30]$/;"	m	struct:Date_Time	typeref:typename:u16
 debug_trap	/home/nates/projects/hmh/base/core/base_core.h	/^# define debug_trap(/;"	d
-debugf	/home/nates/projects/hmh/base/log/base_log.h	/^#define debugf(fmt, ...) _debugf(/;"	d
+debugf	/home/nates/projects/hmh/base/log/base_log.h	/^#define debugf(\/*fmt*\/ ...) _debugf(/;"	d
+default_console_logger_options	/home/nates/projects/hmh/base/terminal/console_logger.h	/^global Logger_Options default_console_logger_options = $/;"	v	typeref:typename:global Logger_Options
 defer_loop	/home/nates/projects/hmh/base/core/base_core.h	/^#define defer_loop(/;"	d
 defer_loop_checked	/home/nates/projects/hmh/base/core/base_core.h	/^#define defer_loop_checked(/;"	d
 degrees_from_radians_f32	/home/nates/projects/hmh/base/math/base_math.h	/^#define degrees_from_radians_f32(/;"	d
@@ -1193,7 +1307,6 @@ degrees_from_turns_f64	/home/nates/projects/hmh/base/math/base_math.h	/^#define 
 delta	/home/nates/projects/hmh/input/input.h	/^	vec2f32 delta;$/;"	m	struct:IMouse	typeref:typename:vec2f32
 dense_time_from_date_time	/home/nates/projects/hmh/base/core/base_core.c	/^dense_time_from_date_time(Date_Time date_time) {$/;"	f	typeref:typename:proc Dense_Time
 derotate_4x4f32	/home/nates/projects/hmh/base/math/base_math.c	/^proc mat4x4f32 derotate_4x4f32(mat4x4f32 m) {$/;"	f	typeref:typename:proc mat4x4f32
-device_change_notify	/home/nates/projects/hmh/input/linux/input_linux.h	/^global int device_change_notify = 0;$/;"	v	typeref:typename:global int
 device_number	/home/nates/projects/hmh/input/linux/input_linux.h	/^	int device_number;	$/;"	m	struct:Linux_Gamepad_Data	typeref:typename:int
 dim	/home/nates/projects/hmh/main.c	/^	vec2s32 dim;$/;"	m	struct:Backbuffer	typeref:typename:vec2s32	file:
 dim	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^	vec2s32 dim;$/;"	m	struct:Wayland_Window	typeref:typename:vec2s32
@@ -1249,7 +1362,7 @@ entity_mutex	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^	pthread_m
 entry_point	/home/nates/projects/hmh/main.c	/^entry_point(Cmdline cl) {$/;"	f	typeref:typename:void
 entry_point	/home/nates/projects/hmh/scratch/intro_to_c/main.c	/^entry_point(Cmdline cmdline) {$/;"	f	typeref:typename:void
 entry_point	/home/nates/projects/hmh/scratch/logger/main.c	/^entry_point(Cmdline cmdline) {$/;"	f	typeref:typename:proc void
-errorf	/home/nates/projects/hmh/base/log/base_log.h	/^#define errorf(fmt, ...) _errorf(/;"	d
+errorf	/home/nates/projects/hmh/base/log/base_log.h	/^#define errorf(\/*fmt*\/ ...) _errorf(/;"	d
 escaped_from_raw_str	/home/nates/projects/hmh/base/strings/base_strings.c	/^escaped_from_raw_str(Arena *arena, string str) {$/;"	f	typeref:typename:proc string
 events	/home/nates/projects/hmh/input/input.h	/^	IGamepad_Event *events;$/;"	m	struct:IGamepad_Events	typeref:typename:IGamepad_Event *
 expand_array	/home/nates/projects/hmh/base/core/base_core.h	/^#define expand_array(a) expand_array_/;"	d
@@ -1267,9 +1380,8 @@ f64_from_str	/home/nates/projects/hmh/base/strings/base_strings.c	/^f64_from_str
 fallthrough	/home/nates/projects/hmh/base/core/base_core.h	/^# define fallthrough __attribute__((fallthrough)/;"	d
 fallthrough	/home/nates/projects/hmh/base/core/base_core.h	/^# define fallthrough$/;"	d
 false	/home/nates/projects/hmh/base/core/base_core.h	/^#define false /;"	d
-fatalf	/home/nates/projects/hmh/base/log/base_log.h	/^#define fatalf(fmt, ...) _fatalf(/;"	d
+fatalf	/home/nates/projects/hmh/base/log/base_log.h	/^#define fatalf(\/*fmt*\/ ...) _fatalf(/;"	d
 fd	/home/nates/projects/hmh/input/linux/input_linux.h	/^	int fd;$/;"	m	struct:Linux_Gamepad_Data	typeref:typename:int
-file	/home/nates/projects/hmh/os/core/os_console_logger.h	/^	OS_File file;$/;"	m	struct:OS_Console_Logger_Data	typeref:typename:OS_File
 filename	/home/nates/projects/hmh/base/core/base_core.h	/^	cstring filename;$/;"	m	struct:Source_Code_Location	typeref:typename:cstring
 first	/home/nates/projects/hmh/mdesk/mdesk.h	/^	$md_msg *first, *last;$/;"	m	struct:$md_msg_list	typeref:typename:$md_msg *
 first	/home/nates/projects/hmh/mdesk/mdesk.h	/^	$md_node *first, *last;$/;"	m	struct:$md_node	typeref:typename:$md_node *
@@ -1292,6 +1404,7 @@ from_be_u64	/home/nates/projects/hmh/base/core/base_core.c	/^# define from_be_u6
 from_be_u64	/home/nates/projects/hmh/base/core/base_core.h	/^# define from_be_u64(/;"	d
 fuzzy_match_find	/home/nates/projects/hmh/base/strings/base_strings.c	/^fuzzy_match_find(Arena *arena, string needle, string haystack) {$/;"	f	typeref:typename:proc Fuzzy_Match_Range_List
 fuzzy_match_range_list_copy	/home/nates/projects/hmh/base/strings/base_strings.c	/^fuzzy_match_range_list_copy(Arena *arena, Fuzzy_Match_Range_List *src) {$/;"	f	typeref:typename:proc Fuzzy_Match_Range_List
+gamepad_notify	/home/nates/projects/hmh/input/linux/input_linux.h	/^global int gamepad_notify = 0;$/;"	v	typeref:typename:global int
 gathered_node_flags	/home/nates/projects/hmh/mdesk/mdesk.c	/^		$md_node_flags gathered_node_flags;$/;"	m	struct:md_parse_from_tokenize_text::$md_parse_work_node	typeref:typename:$md_node_flags	file:
 gigabyte	/home/nates/projects/hmh/base/core/base_core.h	/^#define gigabyte(/;"	d
 global	/home/nates/projects/hmh/base/core/base_core.h	/^#define global /;"	d
@@ -1318,17 +1431,13 @@ hour	/home/nates/projects/hmh/base/core/base_core.h	/^	u16 hour; \/\/ [0,24]$/;"
 hsv_from_rgb	/home/nates/projects/hmh/base/math/base_math.c	/^hsv_from_rgb(vec3f32 rgb)$/;"	f	typeref:typename:proc vec3f32
 hsva_from_rgba	/home/nates/projects/hmh/base/math/base_math.c	/^hsva_from_rgba(vec4f32 rgba)$/;"	f	typeref:typename:proc vec4f32
 htc	/home/nates/projects/hmh/input/input.h	/^	u32 htc;$/;"	m	struct:IButton	typeref:typename:u32
-ibtn_down	/home/nates/projects/hmh/input/input.c	/^ibtn_down(IButton button)$/;"	f	typeref:typename:proc b8
-ibtn_pressed	/home/nates/projects/hmh/input/input.c	/^ibtn_pressed(IButton button)$/;"	f	typeref:typename:proc b8
-ibtn_released	/home/nates/projects/hmh/input/input.c	/^ibtn_released(IButton button)$/;"	f	typeref:typename:proc b8
 in_use	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^	b32 in_use;$/;"	m	struct:Wayland_Buffer	typeref:typename:b32
 inc	/home/nates/projects/hmh/base/strings/base_strings.h	/^	s32 inc;$/;"	m	struct:Unicode_Decode	typeref:typename:s32
 indented_from_string	/home/nates/projects/hmh/base/strings/base_strings.c	/^indented_from_string(Arena *arena, string str, $indent_params params) {$/;"	f	typeref:typename:proc string
 inf32	/home/nates/projects/hmh/base/core/base_core.c	/^inf32(void) {$/;"	f	typeref:typename:proc f32
-infof	/home/nates/projects/hmh/base/log/base_log.h	/^#define infof(fmt, ...) _infof(/;"	d
+infof	/home/nates/projects/hmh/base/log/base_log.h	/^#define infof(\/*fmt*\/ ...) _infof(/;"	d
 input_clear_keyboard	/home/nates/projects/hmh/input/input.h	/^input_clear_keyboard(\/**\/IKeyboard *keyboard) {$/;"	f	typeref:typename:proc void
 input_clear_mouse	/home/nates/projects/hmh/input/input.h	/^input_clear_mouse(\/**\/IMouse *mouse) {$/;"	f	typeref:typename:proc void
-input_gamepad_hotplugged	/home/nates/projects/hmh/input/linux/input_linux.c	/^input_gamepad_hotplugged(void) {$/;"	f	typeref:typename:proc b8
 input_layer_open	/home/nates/projects/hmh/input/linux/input_linux.c	/^input_layer_open(void) {$/;"	f	typeref:typename:proc b8
 ins_atomic_ptr_eval	/home/nates/projects/hmh/base/core/base_core.h	/^# define ins_atomic_ptr_eval(/;"	d
 ins_atomic_ptr_eval_assign	/home/nates/projects/hmh/base/core/base_core.h	/^# define ins_atomic_ptr_eval_assign(/;"	d
@@ -1406,7 +1515,7 @@ loc_rng_intersect	/home/nates/projects/hmh/base/core/base_core.c	/^loc_rng_inter
 loc_rng_union	/home/nates/projects/hmh/base/core/base_core.c	/^loc_rng_union(Loc_Range a, Loc_Range b) {$/;"	f	typeref:typename:proc Loc_Range
 local_persist	/home/nates/projects/hmh/base/core/base_core.h	/^#define local_persist /;"	d
 log_msg	/home/nates/projects/hmh/base/log/base_log.h	/^#define log_msg(level, str) _log_msg(/;"	d
-log_msgf	/home/nates/projects/hmh/base/log/base_log.h	/^#define log_msgf(level, fmt, ...) _log_msgf(/;"	d
+log_msgf	/home/nates/projects/hmh/base/log/base_log.h	/^#define log_msgf(level, ...) _log_msgf(/;"	d
 logger	/home/nates/projects/hmh/base/thread_ctx/base_thread_ctx.h	/^	Logger *logger;$/;"	m	struct:Thread_Context	typeref:typename:Logger *
 logger_set_user_data	/home/nates/projects/hmh/base/log/base_log.c	/^logger_set_user_data(Logger *logger, rawptr data) {$/;"	f	typeref:typename:proc void
 logical_processor_count	/home/nates/projects/hmh/os/core/os_core.h	/^  s32 logical_processor_count;$/;"	m	struct:OS_System_Info	typeref:typename:s32
@@ -1426,6 +1535,7 @@ make_array	/home/nates/projects/hmh/base/array/base_array.c	/^make_array(u8 *m, 
 make_array16	/home/nates/projects/hmh/base/array/base_array.c	/^make_array16(u16 *m, s64 size) {$/;"	f	typeref:typename:proc array16
 make_array32	/home/nates/projects/hmh/base/array/base_array.c	/^make_array32(u32 *m, s64 size) {$/;"	f	typeref:typename:proc array32
 make_array64	/home/nates/projects/hmh/base/array/base_array.c	/^make_array64(u64 *m, s64 size) {$/;"	f	typeref:typename:proc array64
+make_console_logger	/home/nates/projects/hmh/base/terminal/console_logger.c	/^make_console_logger(Logger_Level lowest, Logger_Options options) {$/;"	f	typeref:typename:proc Logger
 make_loc	/home/nates/projects/hmh/base/core/base_core.c	/^make_loc(s64 line, s64 col) {$/;"	f	typeref:typename:proc Loc
 make_loc_rng	/home/nates/projects/hmh/base/core/base_core.c	/^make_loc_rng(Loc min, Loc max) {$/;"	f	typeref:typename:proc Loc_Range
 make_str	/home/nates/projects/hmh/base/strings/base_strings.c	/^make_str(u8 *m, s64 size) { return (string){m, size}; }$/;"	f	typeref:typename:proc string
@@ -1649,8 +1759,6 @@ os_condition_variable_release	/home/nates/projects/hmh/os/core/linux/os_core_lin
 os_condition_variable_signal	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_condition_variable_signal(OS_CV cv) {$/;"	f	typeref:typename:proc void
 os_condition_variable_wait	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_condition_variable_wait(OS_CV cv, OS_Mutex mutex, u64 endt_us) {$/;"	f	typeref:typename:proc b32
 os_data_from_path	/home/nates/projects/hmh/os/core/os_core.c	/^os_data_from_path(Arena *arena, string path) {$/;"	f	typeref:typename:proc array
-os_default_console_logger_options	/home/nates/projects/hmh/os/core/os_console_logger.h	/^global Logger_Options os_default_console_logger_options = $/;"	v	typeref:typename:global Logger_Options
-os_destroy_console_logger	/home/nates/projects/hmh/os/core/os_console_logger.c	/^os_destroy_console_logger(Logger *logger) {$/;"	f	typeref:typename:proc void
 os_directory_exists	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_directory_exists(string path) {$/;"	f	typeref:typename:proc b32
 os_file_close	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_file_close(OS_File file) {$/;"	f	typeref:typename:proc void
 os_file_get_properties	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_file_get_properties(OS_File file) {$/;"	f	typeref:typename:proc File_Properties
@@ -1670,7 +1778,6 @@ os_lnx_entity_release	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^o
 os_lnx_file_properties_from_stat	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_lnx_file_properties_from_stat(struct stat *s)$/;"	f	typeref:typename:proc File_Properties
 os_lnx_timespec_from_date_time	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_lnx_timespec_from_date_time(Date_Time dt)$/;"	f	typeref:typename:proc struct timespec
 os_lnx_tm_from_date_time	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_lnx_tm_from_date_time(Date_Time dt)$/;"	f	typeref:typename:proc struct tm
-os_make_console_logger	/home/nates/projects/hmh/os/core/os_console_logger.c	/^os_make_console_logger(OS_File file, Logger_Level lowest, Logger_Options options) {$/;"	f	typeref:typename:proc Logger
 os_make_directory	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_make_directory(string path) {$/;"	f	typeref:typename:proc b32
 os_mutex_alloc	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_mutex_alloc(void) {$/;"	f	typeref:typename:proc OS_Mutex
 os_mutex_drop	/home/nates/projects/hmh/os/core/linux/os_core_linux.c	/^os_mutex_drop(OS_Mutex mutex) {$/;"	f	typeref:typename:proc void
@@ -1969,7 +2076,6 @@ str_array_reserve	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_arr
 str_chop	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_chop(string str, s64 amt) {$/;"	f	typeref:typename:proc string
 str_chop_last_dot	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_chop_last_dot(string str) {$/;"	f	typeref:typename:proc string
 str_chop_last_slash	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_chop_last_slash(string str) {$/;"	f	typeref:typename:proc string
-str_cstring	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_cstring(cstring c) {$/;"	f	typeref:typename:proc string
 str_cstring_scan_backwards_from_pos	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_cstring_scan_backwards_from_pos(rawptr start, rawptr pos) {$/;"	f	typeref:typename:proc string
 str_cstring_scan_to_cap	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_cstring_scan_to_cap(rawptr start, rawptr cap) {$/;"	f	typeref:typename:proc string
 str_ends_with	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_ends_with(string str, string end, String_Match_Flags flags) {$/;"	f	typeref:typename:proc b32
@@ -1980,6 +2086,7 @@ str_find_needle_reverse	/home/nates/projects/hmh/base/strings/base_strings.c	/^s
 str_from_bits_u32	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_bits_u32(Arena *arena, u32 x) {$/;"	f	typeref:typename:proc string
 str_from_bits_u64	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_bits_u64(Arena *arena, u64 x) {$/;"	f	typeref:typename:proc string
 str_from_count	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_count(Arena *arena, s64 count) {$/;"	f	typeref:typename:proc string
+str_from_cstring	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_cstring(cstring c) {$/;"	f	typeref:typename:proc string
 str_from_memory_size	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_memory_size(Arena *arena, s64 size) {$/;"	f	typeref:typename:proc string
 str_from_s64	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_s64(Arena *arena, s64 val, u32 radix, s64 min_digits, u8 separator) {$/;"	f	typeref:typename:proc string
 str_from_str16	/home/nates/projects/hmh/base/strings/base_strings.c	/^str_from_str16(Arena *arena, string16 in) {$/;"	f	typeref:typename:proc string
@@ -2049,6 +2156,7 @@ sub_4s32	/home/nates/projects/hmh/base/math/base_math.c	/^proc vec4s32 sub_4s32(
 surface	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^	struct wl_surface *surface;$/;"	m	struct:Wayland_Window	typeref:struct:wl_surface *
 surface_x	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^	wl_fixed_t surface_x, surface_y;$/;"	m	struct:Wayland_Pointer_Event	typeref:typename:wl_fixed_t
 surface_y	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^	wl_fixed_t surface_x, surface_y;$/;"	m	struct:Wayland_Pointer_Event	typeref:typename:wl_fixed_t
+svarg	/home/nates/projects/hmh/base/strings/base_strings.h	/^#define svarg(/;"	d
 swap	/home/nates/projects/hmh/base/core/base_core.h	/^#define swap(/;"	d
 system_info	/home/nates/projects/hmh/os/core/linux/os_core_linux.h	/^	OS_System_Info system_info;$/;"	m	struct:Linux_State	typeref:typename:OS_System_Info
 tail	/home/nates/projects/hmh/base/array/base_array.h	/^	array_node *head, *tail;$/;"	m	struct:array_list	typeref:typename:array_node *
@@ -2218,7 +2326,7 @@ vec_4f32	/home/nates/projects/hmh/base/math/base_math.c	/^proc vec4f32 vec_4f32(
 vec_4s32	/home/nates/projects/hmh/base/math/base_math.c	/^proc vec4s32 vec_4s32(s32 x, s32 y, s32 z, s32 w) { return (vec4s32){x, y, z, w}; }$/;"	f	typeref:typename:proc vec4s32
 w	/home/nates/projects/hmh/base/math/base_math.h	/^		f32 w;$/;"	m	struct:vec4f32::__anon844fbcf80b08	typeref:typename:f32
 w	/home/nates/projects/hmh/base/math/base_math.h	/^		s32 w;$/;"	m	struct:vec4s32::__anon844fbcf80f08	typeref:typename:s32
-warnf	/home/nates/projects/hmh/base/log/base_log.h	/^#define warnf(fmt, ...) _warnf(/;"	d
+warningf	/home/nates/projects/hmh/base/log/base_log.h	/^#define warningf(\/*fmt*\/ ...) _warningf(/;"	d
 wayland_buffer_listener	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^global const struct wl_buffer_listener wayland_buffer_listener = {$/;"	v	typeref:typename:const struct wl_buffer_listener
 wayland_keyboard_listener	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^global const struct wl_keyboard_listener wayland_keyboard_listener = {$/;"	v	typeref:typename:const struct wl_keyboard_listener
 wayland_pointer_listener	/home/nates/projects/hmh/wm/linux/wm_linux.h	/^global const struct wl_pointer_listener wayland_pointer_listener = {$/;"	v	typeref:typename:const struct wl_pointer_listener

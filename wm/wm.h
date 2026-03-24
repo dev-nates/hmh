@@ -47,7 +47,7 @@ wm_window_get_backbuffer_dim(WM_Window window);
 proc WM_Buffer
 wm_window_get_unused_backbuffer(WM_Window window, /**/ rawptr *backbuffer, s64 *stride);
 
-proc b32
+proc b8
 wm_window_is_open(WM_Window window);
 
 #endif // WM_H

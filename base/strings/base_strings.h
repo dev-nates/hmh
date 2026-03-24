@@ -185,7 +185,7 @@ cstring32_length(cstring32 c);
 
 #define S(s) make_str((u8*)(s), sizeof(s)-1)
 #define GS(s) {(u8*)(s), sizeof(s)-1}
-#define SVARG(s) (int)((s).size), ((s).m)
+#define svarg(s) (int)((s).size), ((s).m)
 
 #define str_array(s, count) make_str((u8*)(s), sizeof(*(s))*(count))
 #define str_array_fixed(s) make_str((u8*)(s), sizeof(s))
@@ -202,7 +202,7 @@ proc string
 str_zero(void);
 
 proc string
-str_cstring(cstring c);
+str_from_cstring(cstring c);
 
 proc string
 str_cstring_scan_to_cap(rawptr start, rawptr cap);

@@ -47,7 +47,7 @@ _debugf(Source_Code_Location loc, cstring fmt, ...) {
 	Temp scratch = scratch_begin(0,0);
 	va_list args;
 	va_start(args, fmt);
-	_log_msg(loc, Log_Error, push_strfv(scratch.arena, fmt, args));
+	_log_msg(loc, Log_Debug, push_strfv(scratch.arena, fmt, args));
 	va_end(args);
 	scratch_end(scratch);
 }
@@ -63,7 +63,7 @@ _infof(Source_Code_Location loc, cstring fmt, ...) {
 }
 
 proc void
-_warnf(Source_Code_Location loc, cstring fmt, ...) {
+_warningf(Source_Code_Location loc, cstring fmt, ...) {
 	Temp scratch = scratch_begin(0,0);
 	va_list args;
 	va_start(args, fmt);

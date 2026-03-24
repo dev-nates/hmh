@@ -117,7 +117,7 @@ str_zero(void) {
 }
 
 proc string
-str_cstring(cstring c) {
+str_from_cstring(cstring c) {
 	return make_str(c, cstring_length(c));
 }
 

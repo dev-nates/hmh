@@ -42,6 +42,7 @@ struct Arena_Params {
 	rawptr optional_backing_buffer;
 };
 #define arena_alloc(...) arena_alloc_(&(Arena_Params){.reserve_size = arena_default_reserve_size, .commit_size = arena_default_commit_size, __VA_ARGS__})
+#define arena_from_buffer(buffer, buffer_size) arena_alloc_(&(Arena_Params){.reserve_size = buffer_size, .commit_size = buffer_size, .optional_backing_buffer = buffer})
 proc Arena*
 arena_alloc_(Arena_Params *params);
 
