@@ -27,10 +27,10 @@ random_u64($random_series *series) {
 	return series->d;
 }
 
-proc b32
+proc b8
 random_choice($random_series *series) {
 	u64 val = random_u64(series);
-	b32 result = count_bits_set64(val)&1;
+	b8 result = count_bits_set64(val)&1;
 	return result;
 }
 

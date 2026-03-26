@@ -9,10 +9,78 @@
 #include "os/os_inc.c"
 #include "wm/wm_inc.c"
 
-//#define MICROSECONDS_PER_FRAME 16666
-#define MICROSECONDS_PER_FRAME 16666
-global f32 dt = ((f32)MICROSECONDS_PER_FRAME)/1000000.f;
+// #define MICROSECONDS_PER_FRAME 16666
+// global f32 dt = ((f32)MICROSECONDS_PER_FRAME)/1000000.f;
 
+proc void
+entry_point(Cmdline cl) {
+	if (!input_open()) { return; }
+	Arena *gamepad_arena = arena_alloc();
+
+	IGamepad_List gamepads = zero_struct;
+	gamepads.count = -1;
+
+	Timer hotplug_timer = timer_make(millions(1));
+
+	volatile b8 is_running = true;
+	for (;is_running;) {
+		Temp scr = scratch_begin(0,0);
+
+
+		if (input_check_for_hotplugged_gamepads()) {
+			timer_begin(&hotplug_timer);
+		}
+		if (gamepads.count == -1 || timer_elapsed(hotplug_timer)) {
+			timer_done(&hotplug_timer);
+
+			input_disconnect_gamepads(gamepads);
+			arena_clear(gamepad_arena);
+
+			gamepads = input_connect_gamepads(gamepad_arena);
+			infof("Gamepad count: " TC(255, 0, 0) "%ld" TC_END, gamepads.count);
+			for (each_node(gamepad, gamepads.head, IGamepad)) {
+				infof("Gamepad: " TC(255, 255, 0) "%.*s" TC_END, svarg(gamepad->name));
+			}
+		}
+
+		s64 idx = 0;
+		IGamepad *gamepad = gamepads.head;
+		for (s64 idx = 0; idx < gamepads.count; idx += 1, gamepad = gamepad->next) {
+			IGamepad_Events events = input_gamepad_read_events(gamepad, scr.arena);
+			if (events.count <= 0) { continue; }
+
+			infof("Gamepad #" TC(255, 128, 0) "%ld" TC_END, idx);
+			for (s64 i = 0; i < events.count; i += 1) {
+				IGamepad_Event *event = events.v + i;
+				switch (event->kind) {
+				case IGamepad_Event_Button: {
+					IButton_Event *e = cast(IButton_Event*)event;
+					infof(
+						"Event: [" TC(255,255,0) "%s" TC_END "]: State: %s -- Time %lu",
+						"Button",
+						(e->state) ? "pressed" : "released",
+						e->e.time
+					);
+				} break;
+				case IGamepad_Event_Axis: {
+					IAxis_Event *e = cast(IAxis_Event*)event;
+					infof(
+						"Event: [" TC(255,0,0) "%s" TC_END "]: State: %f -- Time %lu",
+						"Axis",
+						cast(f64)(e->value),
+						e->e.time
+					);
+				} break;
+				}
+			}
+		}
+
+		scratch_end(scr);
+	}
+	return;
+}
+
+/*
 typedef struct Backbuffer Backbuffer;
 struct Backbuffer {
 	rawptr m;
@@ -128,7 +196,7 @@ entry_point(Cmdline cl) {
 		// rendering
 		rawptr backbuffer_memory;
 		s64 stride;
-		WM_Buffer buffer_handle = wm_window_get_unused_backbuffer(window, /**/ &backbuffer_memory, &stride);
+		WM_Buffer buffer_handle = wm_window_get_unused_backbuffer(window, &backbuffer_memory, &stride);
 		vec2s32 dim = wm_window_get_backbuffer_dim(window);
 		if (!handle_match(buffer_handle, zero_handle(WM_Buffer))) {
 			Backbuffer backbuffer = {
@@ -154,6 +222,5 @@ entry_point(Cmdline cl) {
 
 		scratch_end(scr);
 	}
-
-	return;
 }
+*/

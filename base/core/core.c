@@ -1,6 +1,5 @@
-
 //--------------------------------------------------------------------------------
-// time procs
+// Date
 
 proc Dense_Time
 dense_time_from_date_time(Date_Time date_time) {
@@ -116,6 +115,7 @@ date_time_from_unix_time(u64 unix_time) {
   return date;
 }
 
+
 //--------------------------------------------------------------------------------
 // safe casts
 
@@ -160,9 +160,9 @@ u128_make(u64 v0, u64 v1) {
 	return result;
 }
 
-proc b32
+proc b8
 u128_match(u128 a, u128 b) {
-	b32 result = (a.v[0]==b.v[0]) && (a.v[1]==b.v[1]);
+	b8 result = (a.v[0]==b.v[0]) && (a.v[1]==b.v[1]);
 	return result;
 }
 
@@ -308,11 +308,7 @@ proc u64 rotl64(u64 val, u64 amt);
 proc u32 rotr32(u32 val, u32 amt);
 proc u64 rotr64(u64 val, u64 amt);
 
-//--------------------------------------------------------------------------------
-// cycles
-proc u64 cpu_cycles();
-
-#elif COMPILER_CLANG || COMPILER_GCC
+#elif COMPILER_CLANG
 
 proc u32
 count_bits_set32(u32 val) {
@@ -366,11 +362,58 @@ rotr64(u64 val, u64 amt) {
 	return __builtin_rotateright64(val, amt);
 }
 
-//--------------------------------------------------------------------------------
-// cycles
+#elif COMPILER_GCC
+
+proc u32
+count_bits_set32(u32 val) {
+  return (u32)__builtin_popcount(val);
+}
+
 proc u64
-cpu_cycles() {
-	return __rdtsc();
+count_bits_set64(u64 val) {
+  return (u64)__builtin_popcountll(val);
+}
+
+proc u32
+ctz32(u32 val) {
+  return (u32)__builtin_ctz(val);
+}
+
+proc u32
+clz32(u32 val) {
+  return (u32)__builtin_clz(val);
+}
+
+proc u64
+ctz64(u64 val) {
+  return (u64)__builtin_ctzll(val);
+}
+
+proc u64
+clz64(u64 val) {
+  return (u64)__builtin_clzll(val);
+}
+
+//--------------------------------------------------------------------------------
+// rot bits
+proc u32
+rotl32(u32 val, u32 amt) {
+	return __builtin_stdc_rotate_left(val, amt);
+}
+
+proc u64
+rotl64(u64 val, u64 amt) {
+	return __builtin_stdc_rotate_left(val, amt);
+}
+
+proc u32
+rotr32(u32 val, u32 amt) {
+	return __builtin_stdc_rotate_right(val, amt);
+}
+
+proc u64
+rotr64(u64 val, u64 amt) {
+	return __builtin_stdc_rotate_right(val, amt);
 }
 #else
 # error "Bit intrinsic functions not defined for this compiler."
@@ -392,10 +435,10 @@ sign_from_side_f32(Side side) {
 //--------------------------------------------------------------------------------
 // memory functions
 
-proc b32
+proc b8
 memory_is_zero(rawptr ptr, s64 size) {
 	assert(size >= 0);
-	b32 result = 1;
+	b8 result = 1;
 
 	s64 leftover_cnt = (size & 0x7);
 	s64 u64_cnt = (size >> 3);
@@ -430,14 +473,14 @@ make_loc(s64 line, s64 col) {
 	return (Loc) { .line = line, .col = col };
 }
 
-proc b32
+proc b8
 loc_match(Loc a, Loc b) {
 	return (a.line == b.line) && (a.col == b.col);
 }
 
-proc b32
+proc b8
 loc_less_than(Loc a, Loc b) {
-	b32 result = (a.line < b.line) ? 1 : (a.col < b.col) ? 1 : 0;
+	b8 result = (a.line < b.line) ? 1 : (a.col < b.col) ? 1 : 0;
 	return result;
 }
 
@@ -485,9 +528,9 @@ loc_rng_union(Loc_Range a, Loc_Range b) {
 	return result;
 }
 
-proc b32
+proc b8
 loc_rng_contains(Loc_Range r, Loc pt) {
-	b32 result;
+	b8 result;
 	result = (loc_less_than(r.min, pt) || loc_match(r.min, pt)) &&
 		loc_less_than(pt, r.max);
 	return result;

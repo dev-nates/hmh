@@ -1,22 +1,41 @@
 
-
 //--------------------------------------------------------------------------------
 // Handles
 
 typedef struct OS_File OS_File;
 struct OS_File { u64 v[1]; };
+proc OS_File os_file_zero(void) { return cast(OS_File){}; }
+proc b8 os_file_match(OS_File a, OS_File b) { return cast(b8)(a.v[0] == b.v[0]); }
+
 typedef struct OS_Shared_Memory OS_Shared_Memory;
 struct OS_Shared_Memory { u64 v[1]; };
+proc OS_Shared_Memory os_shared_memory_zero(void) { return cast(OS_Shared_Memory){}; }
+proc b8 os_shared_memory_match(OS_Shared_Memory a, OS_Shared_Memory b) { return cast(b8)(a.v[0] == b.v[0]); }
+
 typedef struct OS_Thread OS_Thread;
 struct OS_Thread { u64 v[1]; };
+proc OS_Thread os_thread_zero(void) { return cast(OS_Thread){}; }
+proc b8 os_thread_match(OS_Thread a, OS_Thread b) { return cast(b8)(a.v[0] == b.v[0]); }
+
 typedef struct OS_Mutex OS_Mutex;
 struct OS_Mutex { u64 v[1]; };
+proc OS_Mutex os_mutex_zero(void) { return cast(OS_Mutex){}; }
+proc b8 os_mutex_match(OS_Mutex a, OS_Mutex b) { return cast(b8)(a.v[0] == b.v[0]); }
+
 typedef struct OS_RW_Mutex OS_RW_Mutex;
 struct OS_RW_Mutex { u64 v[1]; };
+proc OS_RW_Mutex os_rw_mutex_zero(void) { return cast(OS_RW_Mutex){}; }
+proc b8 os_rw_mutex_match(OS_RW_Mutex a, OS_RW_Mutex b) { return cast(b8)(a.v[0] == b.v[0]); }
+
 typedef struct OS_CV OS_CV;
 struct OS_CV { u64 v[1]; };
+proc OS_CV os_cv_zero(void) { return cast(OS_CV){}; }
+proc b8 os_cv_match(OS_CV a, OS_CV b) { return cast(b8)(a.v[0] == b.v[0]); }
+
 typedef struct OS_Semaphore OS_Semaphore;
 struct OS_Semaphore { u64 v[1]; };
+proc OS_Semaphore os_semaphore_zero(void) { return cast(OS_Semaphore){}; }
+proc b8 os_semaphore_match(OS_Semaphore a, OS_Semaphore b) { return cast(b8)(a.v[0] == b.v[0]); }
 
 //--------------------------------------------------------------------------------
 // system info
@@ -122,51 +141,39 @@ proc File_Properties
 os_file_get_properties(OS_File file);
 
 
-proc b32
+proc b8
 os_path_remove(string path);
 
-proc b32
+proc b8
 os_path_exists(string path);
 
-proc b32
+proc b8
 os_path_copy(string dst, string src);
 
 proc array
 os_data_from_path(Arena *arena, string path);
 
-proc b32
+proc b8
 os_write_data_to_path(string path, array data);
 
 
-proc b32
+proc b8
 os_make_directory(string path);
 
-proc b32
+proc b8
 os_directory_exists(string path);
 
 //--------------------------------------------------------------------------------
 // file iterator
 
-proc b32
+proc b8
 os_file_iter_begin(string path, OS_File_Iter_Flags flags, OS_File_Iter *it);
 
 proc void
 os_file_iter_end(OS_File_Iter *it);
 
-proc b32
-os_file_iter_next(Arena *arena, OS_File_Iter *it, string *path, File_Properties *props);
-
-//--------------------------------------------------------------------------------
-// time procs
-
-proc u64
-os_time_us(void);
-
-proc u64
-os_time_ms(void);
-
-proc void
-os_sleep_ms(u64 ms);
+proc b8
+os_file_iter_next(Arena *arena, OS_File_Iter *it, _ret_ string *path, File_Properties *props);
 
 //--------------------------------------------------------------------------------
 // shared memory
@@ -193,7 +200,7 @@ os_shared_memory_view_close(OS_Shared_Memory shared_memory, rawptr ptr, rng1s64 
 proc OS_Thread
 os_thread_launch(OS_Thread_Proc *procedure, rawptr params, string name);
 
-proc b32
+proc b8
 os_thread_join(OS_Thread handle);
 
 proc void
@@ -244,7 +251,7 @@ os_condition_variable_alloc(void);
 proc void
 os_condition_variable_release(OS_CV cv);
 
-proc b32
+proc b8
 os_condition_variable_wait(OS_CV cv, OS_Mutex mutex, u64 endt_us);
 
 proc void
@@ -262,11 +269,11 @@ os_semaphore_alloc(s32 initial_count, s32 max_count, string name);
 proc void
 os_semaphore_release(OS_Semaphore semaphore);
 
-proc b32
+proc b8
 os_semaphore_try(OS_Semaphore semaphore);
 
-proc b32
+proc b8
 os_semaphore_wait(OS_Semaphore semaphore, u64 endt_us);
 
-proc b32
+proc b8
 os_semaphore_post(OS_Semaphore semaphore);

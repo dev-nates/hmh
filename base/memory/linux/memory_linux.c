@@ -4,7 +4,7 @@ memory_page_size(void) {
 }
 proc s64
 memory_large_page_size(void) {
-	return megabyte(2);
+	return megabytes(2);
 }
 
 proc rawptr
@@ -19,10 +19,10 @@ memory_reserve(s64 size, $mem_flags flags) {
 	}
 	return result;
 }
-proc b32
+proc b8
 memory_commit(rawptr ptr, s64 size) {
 	assert(size >= 0);
-	b32 result = (mprotect(ptr, (size_t)size, PROT_READ|PROT_WRITE) == 0);
+	b8 result = (mprotect(ptr, (size_t)size, PROT_READ|PROT_WRITE) == 0);
 	return result;
 }
 

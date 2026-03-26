@@ -2,27 +2,33 @@
 #ifndef BASE_INC_H
 #define BASE_INC_H
 
-#include "core/base_ctx_crack.h"
-#include "core/base_core.h"
+#include "core/ctx_crack.h"
 
-#include "memory/base_memory.h"
 #if OS_LINUX
-	#include "memory/linux/base_memory_linux.h"
+	#define _DEFAULT_SOURCE
+#endif
+#include "core/core.h"
+#include "time/time.h"
+
+#include "memory/memory.h"
+#if OS_LINUX
+	#include "time/linux/time_linux.h"
+	#include "memory/linux/memory_linux.h"
 #else
 	# error "missing memory sublayer header"
 #endif
-#include "arena/base_arena.h"
-#include "array/base_array.h"
+#include "arena/arena.h"
+#include "array/array.h"
 
-#include "math/base_math.h"
-#include "strings/base_strings.h"
+#include "math/math.h"
+#include "strings/strings.h"
 
 #include "terminal/ansi_codes.h"
-#include "log/base_log.h"
+#include "log/log.h"
 #include "terminal/console_logger.h"
 
-#include "thread_ctx/base_thread_ctx.h"
-#include "random/base_random.h"
-#include "base_entry_point.h"
+#include "thread_ctx/thread_ctx.h"
+#include "random/random.h"
+#include "entry_point.h"
 
 #endif // BASE_INC_H

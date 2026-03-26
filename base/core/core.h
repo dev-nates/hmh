@@ -25,6 +25,9 @@
 #define false 0
 #define nil 0
 
+// Used to separate out arguments in a procedure
+#define _ret_
+
 #define proc static
 #define global static
 #define local_persist static
@@ -120,6 +123,8 @@
 
 #if COMPILER_CLANG
 # define this_function_name __func__
+#elif COMPILER_GCC
+# define this_function_name __func__
 #else
 # error this_function_name undefined for this compiler
 #endif
@@ -166,6 +171,14 @@
 # define noreturn
 #endif
 
+// -------------------------------------------------------------------------------------------------
+// Format
+#if COMPILER_CLANG
+#define CLANG_FORMAT_WARN(start, end) __attribute__((__format__(__printf__, start, end)))
+#else
+#define CLANG_FORMAT_WARN(start, end)
+#endif
+
 //--------------------------------------------------------------------------------
 // warnings
 
@@ -173,6 +186,9 @@
 # define disable_warnings_begin _Pragma("clang diagnostic push") \
 	_Pragma("clang diagnostic ignored \"-Weverything\"")
 #define disable_warnings_end _Pragma("clang diagnostic pop")
+#elif COMPILER_GCC
+# define disable_warnings_begin
+#define disable_warnings_end
 #else
 # error "warnings macro not defined for this compiler"
 #endif
@@ -296,137 +312,137 @@ global s32 min_s32 = (s32)0x80000000;
 global s16 min_s16 = (s16)0x8000;
 global s8  min_s8  =  (s8)0x80;
 
-global const u32 bitmask1  = 0x00000001;
-global const u32 bitmask2  = 0x00000003;
-global const u32 bitmask3  = 0x00000007;
-global const u32 bitmask4  = 0x0000000f;
-global const u32 bitmask5  = 0x0000001f;
-global const u32 bitmask6  = 0x0000003f;
-global const u32 bitmask7  = 0x0000007f;
-global const u32 bitmask8  = 0x000000ff;
-global const u32 bitmask9  = 0x000001ff;
-global const u32 bitmask10 = 0x000003ff;
-global const u32 bitmask11 = 0x000007ff;
-global const u32 bitmask12 = 0x00000fff;
-global const u32 bitmask13 = 0x00001fff;
-global const u32 bitmask14 = 0x00003fff;
-global const u32 bitmask15 = 0x00007fff;
-global const u32 bitmask16 = 0x0000ffff;
-global const u32 bitmask17 = 0x0001ffff;
-global const u32 bitmask18 = 0x0003ffff;
-global const u32 bitmask19 = 0x0007ffff;
-global const u32 bitmask20 = 0x000fffff;
-global const u32 bitmask21 = 0x001fffff;
-global const u32 bitmask22 = 0x003fffff;
-global const u32 bitmask23 = 0x007fffff;
-global const u32 bitmask24 = 0x00ffffff;
-global const u32 bitmask25 = 0x01ffffff;
-global const u32 bitmask26 = 0x03ffffff;
-global const u32 bitmask27 = 0x07ffffff;
-global const u32 bitmask28 = 0x0fffffff;
-global const u32 bitmask29 = 0x1fffffff;
-global const u32 bitmask30 = 0x3fffffff;
-global const u32 bitmask31 = 0x7fffffff;
-global const u32 bitmask32 = 0xffffffff;
+#define bitmask1(type) cast(type)(0x00000001)
+#define bitmask2(type) cast(type)(0x00000003)
+#define bitmask3(type) cast(type)(0x00000007)
+#define bitmask4(type) cast(type)(0x0000000f)
+#define bitmask5(type) cast(type)(0x0000001f)
+#define bitmask6(type) cast(type)(0x0000003f)
+#define bitmask7(type) cast(type)(0x0000007f)
+#define bitmask8(type) cast(type)(0x000000ff)
+#define bitmask9(type) cast(type)(0x000001ff)
+#define bitmask10(type) cast(type)(0x000003ff)
+#define bitmask11(type) cast(type)(0x000007ff)
+#define bitmask12(type) cast(type)(0x00000fff)
+#define bitmask13(type) cast(type)(0x00001fff)
+#define bitmask14(type) cast(type)(0x00003fff)
+#define bitmask15(type) cast(type)(0x00007fff)
+#define bitmask16(type) cast(type)(0x0000ffff)
+#define bitmask17(type) cast(type)(0x0001ffff)
+#define bitmask18(type) cast(type)(0x0003ffff)
+#define bitmask19(type) cast(type)(0x0007ffff)
+#define bitmask20(type) cast(type)(0x000fffff)
+#define bitmask21(type) cast(type)(0x001fffff)
+#define bitmask22(type) cast(type)(0x003fffff)
+#define bitmask23(type) cast(type)(0x007fffff)
+#define bitmask24(type) cast(type)(0x00ffffff)
+#define bitmask25(type) cast(type)(0x01ffffff)
+#define bitmask26(type) cast(type)(0x03ffffff)
+#define bitmask27(type) cast(type)(0x07ffffff)
+#define bitmask28(type) cast(type)(0x0fffffff)
+#define bitmask29(type) cast(type)(0x1fffffff)
+#define bitmask30(type) cast(type)(0x3fffffff)
+#define bitmask31(type) cast(type)(0x7fffffff)
+#define bitmask32(type) cast(type)(0xffffffff)
 
-global const u64 bitmask33 = 0x00000001ffffffffull;
-global const u64 bitmask34 = 0x00000003ffffffffull;
-global const u64 bitmask35 = 0x00000007ffffffffull;
-global const u64 bitmask36 = 0x0000000fffffffffull;
-global const u64 bitmask37 = 0x0000001fffffffffull;
-global const u64 bitmask38 = 0x0000003fffffffffull;
-global const u64 bitmask39 = 0x0000007fffffffffull;
-global const u64 bitmask40 = 0x000000ffffffffffull;
-global const u64 bitmask41 = 0x000001ffffffffffull;
-global const u64 bitmask42 = 0x000003ffffffffffull;
-global const u64 bitmask43 = 0x000007ffffffffffull;
-global const u64 bitmask44 = 0x00000fffffffffffull;
-global const u64 bitmask45 = 0x00001fffffffffffull;
-global const u64 bitmask46 = 0x00003fffffffffffull;
-global const u64 bitmask47 = 0x00007fffffffffffull;
-global const u64 bitmask48 = 0x0000ffffffffffffull;
-global const u64 bitmask49 = 0x0001ffffffffffffull;
-global const u64 bitmask50 = 0x0003ffffffffffffull;
-global const u64 bitmask51 = 0x0007ffffffffffffull;
-global const u64 bitmask52 = 0x000fffffffffffffull;
-global const u64 bitmask53 = 0x001fffffffffffffull;
-global const u64 bitmask54 = 0x003fffffffffffffull;
-global const u64 bitmask55 = 0x007fffffffffffffull;
-global const u64 bitmask56 = 0x00ffffffffffffffull;
-global const u64 bitmask57 = 0x01ffffffffffffffull;
-global const u64 bitmask58 = 0x03ffffffffffffffull;
-global const u64 bitmask59 = 0x07ffffffffffffffull;
-global const u64 bitmask60 = 0x0fffffffffffffffull;
-global const u64 bitmask61 = 0x1fffffffffffffffull;
-global const u64 bitmask62 = 0x3fffffffffffffffull;
-global const u64 bitmask63 = 0x7fffffffffffffffull;
-global const u64 bitmask64 = 0xffffffffffffffffull;
+#define bitmask33(type) cast(type)(0x00000001ffffffffull)
+#define bitmask34(type) cast(type)(0x00000003ffffffffull)
+#define bitmask35(type) cast(type)(0x00000007ffffffffull)
+#define bitmask36(type) cast(type)(0x0000000fffffffffull)
+#define bitmask37(type) cast(type)(0x0000001fffffffffull)
+#define bitmask38(type) cast(type)(0x0000003fffffffffull)
+#define bitmask39(type) cast(type)(0x0000007fffffffffull)
+#define bitmask40(type) cast(type)(0x000000ffffffffffull)
+#define bitmask41(type) cast(type)(0x000001ffffffffffull)
+#define bitmask42(type) cast(type)(0x000003ffffffffffull)
+#define bitmask43(type) cast(type)(0x000007ffffffffffull)
+#define bitmask44(type) cast(type)(0x00000fffffffffffull)
+#define bitmask45(type) cast(type)(0x00001fffffffffffull)
+#define bitmask46(type) cast(type)(0x00003fffffffffffull)
+#define bitmask47(type) cast(type)(0x00007fffffffffffull)
+#define bitmask48(type) cast(type)(0x0000ffffffffffffull)
+#define bitmask49(type) cast(type)(0x0001ffffffffffffull)
+#define bitmask50(type) cast(type)(0x0003ffffffffffffull)
+#define bitmask51(type) cast(type)(0x0007ffffffffffffull)
+#define bitmask52(type) cast(type)(0x000fffffffffffffull)
+#define bitmask53(type) cast(type)(0x001fffffffffffffull)
+#define bitmask54(type) cast(type)(0x003fffffffffffffull)
+#define bitmask55(type) cast(type)(0x007fffffffffffffull)
+#define bitmask56(type) cast(type)(0x00ffffffffffffffull)
+#define bitmask57(type) cast(type)(0x01ffffffffffffffull)
+#define bitmask58(type) cast(type)(0x03ffffffffffffffull)
+#define bitmask59(type) cast(type)(0x07ffffffffffffffull)
+#define bitmask60(type) cast(type)(0x0fffffffffffffffull)
+#define bitmask61(type) cast(type)(0x1fffffffffffffffull)
+#define bitmask62(type) cast(type)(0x3fffffffffffffffull)
+#define bitmask63(type) cast(type)(0x7fffffffffffffffull)
+#define bitmask64(type) cast(type)(0xffffffffffffffffull)
 
-global const u32 bit1  = (1<<0);
-global const u32 bit2  = (1<<1);
-global const u32 bit3  = (1<<2);
-global const u32 bit4  = (1<<3);
-global const u32 bit5  = (1<<4);
-global const u32 bit6  = (1<<5);
-global const u32 bit7  = (1<<6);
-global const u32 bit8  = (1<<7);
-global const u32 bit9  = (1<<8);
-global const u32 bit10 = (1<<9);
-global const u32 bit11 = (1<<10);
-global const u32 bit12 = (1<<11);
-global const u32 bit13 = (1<<12);
-global const u32 bit14 = (1<<13);
-global const u32 bit15 = (1<<14);
-global const u32 bit16 = (1<<15);
-global const u32 bit17 = (1<<16);
-global const u32 bit18 = (1<<17);
-global const u32 bit19 = (1<<18);
-global const u32 bit20 = (1<<19);
-global const u32 bit21 = (1<<20);
-global const u32 bit22 = (1<<21);
-global const u32 bit23 = (1<<22);
-global const u32 bit24 = (1<<23);
-global const u32 bit25 = (1<<24);
-global const u32 bit26 = (1<<25);
-global const u32 bit27 = (1<<26);
-global const u32 bit28 = (1<<27);
-global const u32 bit29 = (1<<28);
-global const u32 bit30 = (1<<29);
-global const u32 bit31 = (1<<30);
-global const u32 bit32 = ((u32)1<<(u32)31);
+#define bit1  (1<<0)
+#define bit2  (1<<1)
+#define bit3  (1<<2)
+#define bit4  (1<<3)
+#define bit5  (1<<4)
+#define bit6  (1<<5)
+#define bit7  (1<<6)
+#define bit8  (1<<7)
+#define bit9  (1<<8)
+#define bit10 (1<<9)
+#define bit11 (1<<10)
+#define bit12 (1<<11)
+#define bit13 (1<<12)
+#define bit14 (1<<13)
+#define bit15 (1<<14)
+#define bit16 (1<<15)
+#define bit17 (1<<16)
+#define bit18 (1<<17)
+#define bit19 (1<<18)
+#define bit20 (1<<19)
+#define bit21 (1<<20)
+#define bit22 (1<<21)
+#define bit23 (1<<22)
+#define bit24 (1<<23)
+#define bit25 (1<<24)
+#define bit26 (1<<25)
+#define bit27 (1<<26)
+#define bit28 (1<<27)
+#define bit29 (1<<28)
+#define bit30 (1<<29)
+#define bit31 (1<<30)
+#define bit32 ((u32)1<<(u32)31)
 
-global const u64 bit33 = (1ull<<32);
-global const u64 bit34 = (1ull<<33);
-global const u64 bit35 = (1ull<<34);
-global const u64 bit36 = (1ull<<35);
-global const u64 bit37 = (1ull<<36);
-global const u64 bit38 = (1ull<<37);
-global const u64 bit39 = (1ull<<38);
-global const u64 bit40 = (1ull<<39);
-global const u64 bit41 = (1ull<<40);
-global const u64 bit42 = (1ull<<41);
-global const u64 bit43 = (1ull<<42);
-global const u64 bit44 = (1ull<<43);
-global const u64 bit45 = (1ull<<44);
-global const u64 bit46 = (1ull<<45);
-global const u64 bit47 = (1ull<<46);
-global const u64 bit48 = (1ull<<47);
-global const u64 bit49 = (1ull<<48);
-global const u64 bit50 = (1ull<<49);
-global const u64 bit51 = (1ull<<50);
-global const u64 bit52 = (1ull<<51);
-global const u64 bit53 = (1ull<<52);
-global const u64 bit54 = (1ull<<53);
-global const u64 bit55 = (1ull<<54);
-global const u64 bit56 = (1ull<<55);
-global const u64 bit57 = (1ull<<56);
-global const u64 bit58 = (1ull<<57);
-global const u64 bit59 = (1ull<<58);
-global const u64 bit60 = (1ull<<59);
-global const u64 bit61 = (1ull<<60);
-global const u64 bit62 = (1ull<<61);
-global const u64 bit63 = (1ull<<62);
-global const u64 bit64 = (1ull<<63);
+#define bit33 (1ull<<32)
+#define bit34 (1ull<<33)
+#define bit35 (1ull<<34)
+#define bit36 (1ull<<35)
+#define bit37 (1ull<<36)
+#define bit38 (1ull<<37)
+#define bit39 (1ull<<38)
+#define bit40 (1ull<<39)
+#define bit41 (1ull<<40)
+#define bit42 (1ull<<41)
+#define bit43 (1ull<<42)
+#define bit44 (1ull<<43)
+#define bit45 (1ull<<44)
+#define bit46 (1ull<<45)
+#define bit47 (1ull<<46)
+#define bit48 (1ull<<47)
+#define bit49 (1ull<<48)
+#define bit50 (1ull<<49)
+#define bit51 (1ull<<50)
+#define bit52 (1ull<<51)
+#define bit53 (1ull<<52)
+#define bit54 (1ull<<53)
+#define bit55 (1ull<<54)
+#define bit56 (1ull<<55)
+#define bit57 (1ull<<56)
+#define bit58 (1ull<<57)
+#define bit59 (1ull<<58)
+#define bit60 (1ull<<59)
+#define bit61 (1ull<<60)
+#define bit62 (1ull<<61)
+#define bit63 (1ull<<62)
+#define bit64 (1ull<<63)
 
 // -------------------------------------------------------------------------------------------------
 // Code location
@@ -509,7 +525,7 @@ struct Loc_Range {
 };
 
 //--------------------------------------------------------------------------------
-// time
+// Date
 
 typedef enum Week_Day Week_Day;
 enum Week_Day {
@@ -539,6 +555,7 @@ enum Month {
 	Month_Dec,
 };
 
+
 typedef struct Date_Time Date_Time;
 struct Date_Time {
 	u16 usec; // [0,999]
@@ -551,19 +568,13 @@ struct Date_Time {
 		Week_Day week_day;
 		u32 wday;
 	};
-
 	union {
 		Month month;
 		u32 mon;
 	};
-
 	u32 year; // 1 = 1ec, 0 = 1 bc
 };
-
 typedef u64 Dense_Time;
-
-//--------------------------------------------------------------------------------
-// time procs
 
 proc Dense_Time dense_time_from_date_time(Date_Time date_time);
 proc Date_Time date_time_from_dense_time(Dense_Time time);
@@ -598,7 +609,7 @@ proc s32 safe_cast_s32(s64 x);
 
 proc u128 u128_zero(void);
 proc u128 u128_make(u64 v0, u64 v1);
-proc b32 u128_match(u128 a, u128 b);
+proc b8 u128_match(u128 a, u128 b);
 
 //--------------------------------------------------------------------------------
 // bit patterns
@@ -641,11 +652,6 @@ proc u32 rotr32(u32 val, u32 amt);
 proc u64 rotr64(u64 val, u64 amt);
 
 //--------------------------------------------------------------------------------
-// cycles
-
-proc u64 cpu_cycles();
-
-//--------------------------------------------------------------------------------
 // enum -> sign
 
 proc s32 sign_from_side_s32(Side side);
@@ -654,37 +660,38 @@ proc f32 sign_from_side_f32(Side side);
 //--------------------------------------------------------------------------------
 // memory functions
 
-proc b32 memory_is_zero(rawptr ptr, s64 size);
+proc b8 memory_is_zero(rawptr ptr, s64 size);
 
 // -------------------------------------------------------------------------------------------------
 // Handles
-#define zero_handle(T) (T){}
-#define handle_is_zero(handle) _handle_is_zero(handle.v, array_count(handle.v))
-#define handle_match(a, b) _handle_match(a.v, array_count(a.v), b.v, array_count(b.v))
-proc b32
-_handle_is_zero(u64 *arr, s32 count) {
-	assert(count > 0);
-	b32 result = true;
-	for (s32 i = 0; i < count; i += 1) {
-		if (arr[i] != 0) {
-			result = false;
-			break;
-		}
-	}
-	return result;
-}
-proc b32
-_handle_match(u64 *a, s32 a_count, u64 *b, s32 b_count) {
-	assert(a_count == b_count && a_count > 0 && b_count > 0);
-	b32 result = true;
-	for (s32 i = 0; i < a_count; i += 1) {
-		if (a[i] != b[i]) {
-			result = false;
-			break;
-		}
-	}
-	return result;
-}
+
+// #define zero_handle(T) (T){}
+// #define handle_is_zero(handle) _handle_is_zero(handle.v, array_count(handle.v))
+// #define handle_match(a, b) _handle_match(a.v, array_count(a.v), b.v, array_count(b.v))
+// proc b8
+// _handle_is_zero(u64 *arr, s32 count) {
+// 	assert(count > 0);
+// 	b8 result = true;
+// 	for (s32 i = 0; i < count; i += 1) {
+// 		if (arr[i] != 0) {
+// 			result = false;
+// 			break;
+// 		}
+// 	}
+// 	return result;
+// }
+// proc b8
+// _handle_match(u64 *a, s32 a_count, u64 *b, s32 b_count) {
+// 	assert(a_count == b_count && a_count > 0 && b_count > 0);
+// 	b8 result = true;
+// 	for (s32 i = 0; i < a_count; i += 1) {
+// 		if (a[i] != b[i]) {
+// 			result = false;
+// 			break;
+// 		}
+// 	}
+// 	return result;
+// }
 
 //--------------------------------------------------------------------------------
 // sorting
@@ -695,14 +702,14 @@ _handle_match(u64 *a, s32 a_count, u64 *b, s32 b_count) {
 // text 2d coordinate range functions
 
 proc Loc       make_loc(s64 line, s64 column);
-proc b32       loc_match(Loc a, Loc b);
-proc b32       loc_less_than(Loc a, Loc b);
+proc b8        loc_match(Loc a, Loc b);
+proc b8        loc_less_than(Loc a, Loc b);
 proc Loc       loc_min(Loc a, Loc b);
 proc Loc       loc_max(Loc a, Loc b);
 proc Loc_Range make_loc_rng(Loc min, Loc max);
 proc Loc_Range loc_rng_intersect(Loc_Range a, Loc_Range b);
 proc Loc_Range loc_rng_union(Loc_Range a, Loc_Range b);
-proc b32       loc_rng_contains(Loc_Range r, Loc pt);
+proc b8        loc_rng_contains(Loc_Range r, Loc pt);
 
 //--------------------------------------------------------------------------------
 // non-virtual ring buffer read/write
@@ -713,14 +720,14 @@ proc s64 ring_read(rawptr ring_base, s64 ring_size, s64 ring_pos, rawptr dst_dat
 //--------------------------------------------------------------------------------
 // units
 
-#define kilobyte(n) (((s64)(n)) << 10)
-#define megabyte(n) (((s64)(n)) << 20)
-#define gigabyte(n) (((s64)(n)) << 30)
-#define terabyte(n) (((s64)(n)) << 40)
+#define kilobytes(n) (((s64)(n)) << 10)
+#define megabytes(n) (((s64)(n)) << 20)
+#define gigabytes(n) (((s64)(n)) << 30)
+#define terabytes(n) (((s64)(n)) << 40)
 
-#define thousand(n)  ((n)*1000ll)
-#define million(n)   ((n)*1000000ll)
-#define billion(n)   ((n)*1000000000ll)
+#define thousands(n)  ((n)*1000ll)
+#define millions(n)   ((n)*1000000ll)
+#define billions(n)   ((n)*1000000000ll)
 
 //--------------------------------------------------------------------------------
 // clamps, min, max
@@ -757,13 +764,13 @@ proc s64 ring_read(rawptr ring_base, s64 ring_size, s64 ring_pos, rawptr dst_dat
 #define defer_loop(begin, end)         for(int _i_ = ((begin), 0); !_i_; _i_ += 1, (end))
 #define defer_loop_checked(begin, end) for(int _i_ = 2 * !(begin); (_i_ == 2 ? ((end), 0) : !_i_); _i_ += 1, (end))
 
-#define each_index(it, count) (s64 it = 0; it < (count); it += 1)
-#define each_index_rng(it, rng) (s64 it = (rng).min; it < (rng).max; it += 1)
-#define each_element(it, array) (s64 it = 0; it < array_count(array); it += 1)
-#define each_enum_val(it, type) (type it = (type)0; it < type##_count; it = (type)(it+1))
-#define each_non_zero_enum_val(it, type) (type it = (type)1; it < type##_count; it = (type)(it+1))
+#define each_index(it, count) s64 it = 0; it < (count); it += 1
+#define each_index_rng(it, rng) s64 it = (rng).min; it < (rng).max; it += 1
+#define each_element(it, array) s64 it = 0; it < array_count(array); it += 1
+#define each_enum_val(it, type) type it = (type)0; it < type##_count; it = (type)(it+1)
+#define each_non_zero_enum_val(it, type) type it = (type)1; it < type##_count; it = (type)(it+1)
 
-#define each_node_nz(it, head, type, nilv, next) (type *it = head; !check_nil(it, nilv); it = it->next)
+#define each_node_nz(it, head, type, nilv, next) type *it = head; !check_nil(it, nilv); it = it->next
 #define each_node_nil(it, head, type, nilv) each_node_nz(it, head, type, nilv, next)
 #define each_node(it, head, type) each_node_nz(it, head, type, nil, next)
 #define each_node_reverse_nil(it, head, type, nilv) each_node_nz(it, head, type, nilv, prev)

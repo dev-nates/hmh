@@ -32,7 +32,7 @@ _wayland_registry_establish_interface(
 	}
 
 	if (registered_interface) {
-		printf("registered interface: %.*s [v: %u n: %u]\n", SVARG(interface_string), version, name);
+		printf("registered interface: %.*s [v: %u n: %u]\n", svarg(interface_string), version, name);
 	}
 }
 
@@ -410,7 +410,7 @@ _xdg_toplevel_configure(
 	window->dim = new_dim;
 	printf("xdg toplevel configure: [%i %i]\n", new_dim.x, new_dim.y);
 
-	for each_index(i, window->buffer_count) {
+	for (each_index(i, window->buffer_count)) {
 		Wayland_Buffer *buffer = window->buffers + i;
 		if (!buffer->in_use && buffer->buffer) {
 			wl_buffer_destroy(buffer->buffer);
@@ -546,11 +546,11 @@ wm_window_open(Arena *arena, string title)
 	// create random shared memory file name
 	string random_name;
 	{
-		u64 time = os_time_us();
+		u64 time = time_us();
 		$random_series series = mk_random_series(time);
 		rng1s64 range = r1s64(0, 25);
 		u8 buf[16];
-		for each_element(i, buf) {
+		for (each_element(i, buf)) {
 			buf[i] = 'A' + (u8)random_r1s64(&series, range);
 		}
 		string pre = S("/wl-lnx-shm-");
@@ -563,7 +563,7 @@ wm_window_open(Arena *arena, string title)
 	int fd = (int)window->shared_memory_file.v[0];
 	window->pool = wl_shm_create_pool(wayland_state.shm, fd, window->pool_size);
 
-	for each_index(i, window->buffer_count) {
+	for (each_index(i, window->buffer_count)) {
 		window->buffers[i].offset = (s32)i*max_buffer_size;
 		window->buffers[i].in_use = 0;
 		window->buffers[i].m = (rawptr)((u8*)window->shared_memory + window->buffers[i].offset);
@@ -576,7 +576,7 @@ wm_window_open(Arena *arena, string title)
 
 proc void
 wm_window_close(WM_Window window) {
-	assert(!handle_match(window, zero_handle(WM_Window)));
+	assert(!wm_window_match(window, wm_window_zero()));
 
 	Wayland_Window *w = cast(Wayland_Window*)(window.v[0]);
 	os_shared_memory_view_close(w->shared_memory_file, w->shared_memory, r1s64(0, w->pool_size));
@@ -590,21 +590,21 @@ wm_window_close(WM_Window window) {
 
 proc vec2s32
 wm_window_get_backbuffer_dim(WM_Window window) {
-	assert(!handle_match(window, zero_handle(WM_Window)));
+	assert(!wm_window_match(window, wm_window_zero()));
 
 	Wayland_Window *w = cast(Wayland_Window*)(window.v[0]);
 	return w->dim;
 }
 
 proc WM_Buffer
-wm_window_get_unused_backbuffer(WM_Window window, /**/ rawptr *backbuffer, s64 *stride) {
-	assert(!handle_match(window, zero_handle(WM_Window)));
+wm_window_get_unused_backbuffer(WM_Window window, _ret_ rawptr *backbuffer, s64 *stride) {
+	assert(!wm_window_match(window, wm_window_zero()));
 
 	assert(backbuffer && stride);
 	Wayland_Window *w = cast(Wayland_Window*)(window.v[0]);
 
 	Wayland_Buffer *lnx_buffer = 0;
-	for each_index(i, w->buffer_count) {
+	for (each_index(i, w->buffer_count)) {
 		Wayland_Buffer *at = w->buffers + i;
 		if (!at->in_use && at->buffer != 0) {
 			lnx_buffer = at;
@@ -623,7 +623,7 @@ wm_window_get_unused_backbuffer(WM_Window window, /**/ rawptr *backbuffer, s64 *
 
 proc b8
 wm_window_is_open(WM_Window window) {
-	assert(!handle_match(window, zero_handle(WM_Window)));
+	assert(!wm_window_match(window, wm_window_zero()));
 
 	Wayland_Window *w = cast(Wayland_Window*)(window.v[0]);
 	return !w->closed;
@@ -632,8 +632,8 @@ wm_window_is_open(WM_Window window) {
 proc void
 wm_window_commit_buffer(WM_Window window, WM_Buffer buffer_handle)
 {
-	assert(!handle_match(window, zero_handle(WM_Window)));
-	assert(!handle_match(buffer_handle, zero_handle(WM_Buffer)));
+	assert(!wm_window_match(window, wm_window_zero()));
+	assert(!wm_buffer_match(buffer_handle, wm_buffer_zero()));
 
 	Wayland_Window *w = cast(Wayland_Window*)(window.v[0]);
 	Wayland_Buffer *b = cast(Wayland_Buffer*)(buffer_handle.v[0]);

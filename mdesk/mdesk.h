@@ -224,7 +224,7 @@ md_msg_list_concat_in_place($md_msg_list *dst, $md_msg_list *to_push);
 proc $md_token
 md_mk_token(rng1s64 range, $md_token_flags flags);
 
-proc b32
+proc b8
 md_token_match($md_token a, $md_token b);
 
 proc $string_list
@@ -249,7 +249,7 @@ md_node_flags_from_token_flags($md_token_flags flags);
 
 //--------------------------------------------------------------------------------
 // nil
-proc b32
+proc b8
 md_node_is_nil($md_node *node);
 
 //--------------------------------------------------------------------------------
@@ -328,10 +328,10 @@ proc $md_node*
 md_tag_arg_from_string($md_node *node, $string tag_string, $string_match_flags tag_str_flags, $string arg_string, $string_match_flags arg_str_flags);
 
 
-proc b32
+proc b8
 md_node_has_child($md_node *node, $string string, $string_match_flags flags);
 
-proc b32
+proc b8
 md_node_has_tag($md_node *node, $string string, $string_match_flags flags);
 
 proc s64
@@ -347,10 +347,10 @@ md_string_from_children($arena *arena, $md_node *root);
 //--------------------------------------------------------------------------------
 // tree comparison
 
-proc b32
+proc b8
 md_node_match($md_node *a, $md_node *b, $string_match_flags flags);
 
-proc b32
+proc b8
 md_tree_match($md_node *a, $md_node *b, $string_match_flags flags);
 
 //--------------------------------------------------------------------------------

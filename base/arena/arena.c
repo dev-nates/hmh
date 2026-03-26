@@ -76,8 +76,7 @@ arena_pop_to(Arena *arena, s64 pos)
 }
 
 proc void
-arena_clear(Arena *arena)
-{
+arena_clear(Arena *arena) {
 	arena_pop_to(arena, 0);
 }
 

@@ -30,66 +30,16 @@ os_lnx_entity_release(Linux_Entity *entity) {
 	}
 }
 
-//--------------------------------------------------------------------------------_
-// linux helpers
-
-proc Date_Time
-os_lnx_date_time_from_tm(struct tm in, u32 msec)
-{
-	Date_Time dt = {0};
-	dt.sec  = (u16)in.tm_sec;
-	dt.min  = (u16)in.tm_min;
-	dt.hour = (u16)in.tm_hour;
-	dt.day  = (u16)(in.tm_mday-1);
-	dt.mon  = (u32)in.tm_mon;
-	dt.year = (u32)(in.tm_year+1900);
-	dt.msec = (u16)msec;
-	return dt;
-}
-
-proc struct tm
-os_lnx_tm_from_date_time(Date_Time dt)
-{
-	struct tm result = {0};
-	result.tm_sec = (int)dt.sec;
-	result.tm_min = (int)dt.min;
-	result.tm_hour= (int)dt.hour;
-	result.tm_mday= (int)dt.day+1;
-	result.tm_mon = (int)dt.mon;
-	result.tm_year= (int)dt.year-1900;
-	return result;
-}
-
-proc struct timespec
-os_lnx_timespec_from_date_time(Date_Time dt)
-{
-	struct tm tm_val = os_lnx_tm_from_date_time(dt);
-	time_t seconds = timegm(&tm_val);
-	struct timespec result = {0};
-	result.tv_sec = seconds;
-	return result;
-}
-
-proc Dense_Time
-os_lnx_dense_time_from_timespec(struct timespec in)
-{
-	Dense_Time result = 0;
-	{
-		struct tm tm_time = {0};
-		gmtime_r(&in.tv_sec, &tm_time);
-		Date_Time date_time = os_lnx_date_time_from_tm(tm_time, (u32)(in.tv_nsec/million(1)));
-		result = dense_time_from_date_time(date_time);
-	}
-return result;
-}
+// -------------------------------------------------------------------------------------------------
+// Helpers
 
 proc File_Properties
-os_lnx_file_properties_from_stat(struct stat *s)
+_file_properties_from_stat(struct stat *s)
 {
 	File_Properties props = {0};
 	props.size     = s->st_size;
-	props.created  = os_lnx_dense_time_from_timespec(s->st_ctim);
-	props.modified = os_lnx_dense_time_from_timespec(s->st_mtim);
+	props.created  = _dense_time_from_timespec(s->st_ctim);
+	props.modified = _dense_time_from_timespec(s->st_mtim);
 	int type = s->st_mode & S_IFMT;
 	if(type == S_IFDIR)
 	{
@@ -149,7 +99,7 @@ os_file_open(string path, OS_File_Access_Flags flags) {
 
 	int fd = open(cstr, lnx_flags, 0755);
 	scratch_end(scratch);
-	OS_File handle = zero_handle(OS_File);
+	OS_File handle = os_file_zero();
 	if (fd >= 0) {
 		handle.v[0] = (u64)fd;
 	}
@@ -159,7 +109,7 @@ os_file_open(string path, OS_File_Access_Flags flags) {
 
 proc void
 os_file_close(OS_File file) {
-	assert(!handle_match(file, zero_handle(OS_File)));
+	assert(!os_file_match(file, os_file_zero()));
 
 	int fd = (int)file.v[0];
 	assert(fd >= 0);
@@ -168,7 +118,7 @@ os_file_close(OS_File file) {
 
 proc s64
 os_file_read(OS_File file, rng1s64 rng, rawptr out) {
-	assert(!handle_match(file, zero_handle(OS_File)));
+	assert(!os_file_match(file, os_file_zero()));
 	assert(0 <= rng.min && rng.min <= rng.max);
 
 	s64 off = rng.min;
@@ -189,7 +139,7 @@ os_file_read(OS_File file, rng1s64 rng, rawptr out) {
 
 proc s64
 os_file_write(OS_File file, rng1s64 rng, rawptr out) {
-	assert(!handle_match(file, zero_handle(OS_File)));
+	assert(!os_file_match(file, os_file_zero()));
 	assert(0 <= rng.min && rng.min <= rng.max);
 
 	int fd = (int)file.v[0];
@@ -219,42 +169,42 @@ os_file_write(OS_File file, rng1s64 rng, rawptr out) {
 
 proc File_Properties
 os_file_get_properties(OS_File file) {
-	assert(!handle_match(file, zero_handle(OS_File)));
+	assert(!os_file_match(file, os_file_zero()));
 	int fd = (int)file.v[0];
 	assert(fd >= 0);
 
 	struct stat stat;
 	fstat(fd, &stat);
 
-	File_Properties result = os_lnx_file_properties_from_stat(&stat);
+	File_Properties result = _file_properties_from_stat(&stat);
 	return result;
 }
 
-proc b32
+proc b8
 os_path_remove(string path) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
-	b32 success = (remove(cstr) != -1);
+	b8 success = (remove(cstr) != -1);
 	scratch_end(scratch);
 	return success;
 }
 
-proc b32
+proc b8
 os_path_exists(string path) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
 	int success = access(cstr, F_OK);
-	b32 result = (success != -1);
+	b8 result = (success != -1);
 	scratch_end(scratch);
 	return result;
 }
 
-proc b32
+proc b8
 os_path_copy(string dst, string src) {
-	b32 result = 0;
+	b8 result = 0;
 	OS_File dst_handle = os_file_open(dst, (OS_File_Access_Flags)(OS_File_Access_Flag_Read_Write | OS_File_Access_Flag_Create));
 	OS_File src_handle = os_file_open(src, (OS_File_Access_Flags)(OS_File_Access_Flag_Read_Only));
-	if (!handle_match(dst_handle, zero_handle(OS_File)) && !handle_match(src_handle, zero_handle(OS_File))) {
+	if (!os_file_match(dst_handle, os_file_zero()) && !os_file_match(src_handle, os_file_zero())) {
 		int dstfd = (int)dst_handle.v[0];
 		int srcfd = (int)src_handle.v[0];
 		assert(dstfd != srcfd);
@@ -284,9 +234,9 @@ os_path_copy(string dst, string src) {
 	return result;
 }
 
-proc b32
+proc b8
 os_make_directory(string path) {
-	b32 result = 0;
+	b8 result = 0;
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
 	int success = mkdir(cstr, 0755);
@@ -295,11 +245,11 @@ os_make_directory(string path) {
 	return result;
 }
 
-proc b32
+proc b8
 os_directory_exists(string path) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
-	b32 exists = 0;
+	b8 exists = 0;
 	DIR *h = opendir(cstr);
 	if (h) {
 		closedir(h);
@@ -312,8 +262,8 @@ os_directory_exists(string path) {
 //--------------------------------------------------------------------------------
 // file iterator
 
-proc b32
-os_file_iter_begin(string path, OS_File_Iter_Flags flags, OS_File_Iter *it) {
+proc b8
+os_file_iter_begin(string path, OS_File_Iter_Flags flags, _ret_ OS_File_Iter *it) {
 	Temp scratch = scratch_begin(0, 0);
 	Linux_File_Iter *lnx_it = (Linux_File_Iter*)it;
 
@@ -323,7 +273,7 @@ os_file_iter_begin(string path, OS_File_Iter_Flags flags, OS_File_Iter *it) {
 	lnx_it->flags = flags;
 	scratch_end(scratch);
 
-	b32 found_directory = (lnx_it->dir != 0);
+	b8 found_directory = (lnx_it->dir != 0);
 	return found_directory;
 }
 
@@ -333,23 +283,27 @@ os_file_iter_end(OS_File_Iter *it) {
 	closedir(lnx_it->dir);
 }
 
-proc b32
+proc b8
 os_file_iter_next(Arena *arena, OS_File_Iter *it, string *path, File_Properties *props) {
+	b8 result = 1;
+
 	Temp scratch = scratch_begin(&arena, 1);
 	Linux_File_Iter *lnx_it = (Linux_File_Iter*)it;
 	if (lnx_it->dir == 0) {
 		*path = str_zero();
 		*props = (File_Properties)zero_struct;
-		return 0;
+		result = 0;
+		goto end;
 	}
 
 	for (;;) {
-		b32 good_entry = 0;
+		b8 good_entry = 0;
 		struct dirent *entry = readdir(lnx_it->dir);
 		if (entry == 0 || entry->d_name[0] == 0) {
 			*path = str_zero();
 			*props = (File_Properties)zero_struct;
-			return 0;
+			result = 0;
+			goto end;
 		}
 
 		// skip . && .. entries
@@ -367,46 +321,37 @@ os_file_iter_next(Arena *arena, OS_File_Iter *it, string *path, File_Properties 
 		struct stat st;
 		stat(full.m, &st);
 
-		int type = st.st_mode & S_IFMT;
-		if (type == S_IFREG && !has_flags(lnx_it->flags, OS_File_Iter_Flag_Skip_Files)) {
+
+		u32 mode = st.st_mode;
+		if (S_IFDIR <= mode) {
+			good_entry = (OS_File_Iter_Flag_Include_Directories & lnx_it->flags);
+		} else if (OS_File_Iter_Flag_Skip_Files & lnx_it->flags) {
+			// Do nothing
+		} else if (S_IFREG <= mode) {
 			good_entry = 1;
-			if (!has_flags(lnx_it->flags, OS_File_Iter_Flag_Include_Hidden_Files) && entry->d_name[0] == '.') {
-				good_entry = 0;
-			}
-		} else if (type == S_IFDIR && has_flags(lnx_it->flags, OS_File_Iter_Flag_Include_Directories)) {
-			good_entry = 1;
+			if (!(OS_File_Iter_Flag_Include_Hidden_Files & lnx_it->flags)) { good_entry = false; }
+		} else if (S_IFCHR <= mode) {
+			good_entry = true;
+		} else if (S_IFBLK <= mode) {
+			good_entry = true;
+		} else if (S_IFIFO <= mode) {
+			good_entry = true;
+		} else if (S_IFLNK <= mode) {
+			good_entry = true;
+		} else if (S_IFSOCK <= mode) {
+			good_entry = true;
 		}
 
 		if (good_entry) {
 			*path = push_str_copy(arena, full);
-			*props = os_lnx_file_properties_from_stat(&st);
+			*props = _file_properties_from_stat(&st);
 			break;
 		}
 	}
+
+end:
 	scratch_end(scratch);
-	return 1;
-}
-
-//--------------------------------------------------------------------------------
-// time procs
-
-proc u64
-os_time_us(void) {
-	struct timespec t;
-	clock_gettime(CLOCK_MONOTONIC, &t);
-	u64 result = (u64)t.tv_sec*million(1) + ((u64)t.tv_nsec/thousand(1));
 	return result;
-}
-
-proc u64
-os_time_ms(void) {
-	u64 result = os_time_us()/thousand(1);
-	return result;
-}
-
-proc void
-os_sleep_ms(u64 ms) {
-	usleep((__useconds_t)(ms*thousand(1)));
 }
 
 //--------------------------------------------------------------------------------
@@ -460,14 +405,14 @@ os_shared_memory_open(string str, OS_File_Access_Flags flags) {
 
 proc void
 os_shared_memory_close(OS_Shared_Memory shared_memory) {
-	assert(!handle_match(shared_memory, zero_handle(OS_Shared_Memory)));
+	assert(!os_shared_memory_match(shared_memory, os_shared_memory_zero()));
 	int fd = (int)shared_memory.v[0];
 	close(fd);
 }
 
 proc rawptr
 os_shared_memory_view_open(OS_Shared_Memory shared_memory, rng1s64 range) {
-	assert(!handle_match(shared_memory, zero_handle(OS_Shared_Memory)));
+	assert(!os_shared_memory_match(shared_memory, os_shared_memory_zero()));
 	int fd = (int)shared_memory.v[0];
 	rawptr ptr = mmap(0, (size_t)dim_1s64(range), PROT_READ | PROT_WRITE, MAP_SHARED, fd, range.min);
 	if (ptr == MAP_FAILED) {
@@ -478,7 +423,7 @@ os_shared_memory_view_open(OS_Shared_Memory shared_memory, rng1s64 range) {
 
 proc void
 os_shared_memory_view_close(OS_Shared_Memory shared_memory, rawptr ptr, rng1s64 range) {
-	assert(!handle_match(shared_memory, zero_handle(OS_Shared_Memory)));
+	assert(!os_shared_memory_match(shared_memory, os_shared_memory_zero()));
 	munmap(ptr, (size_t)dim_1s64(range));
 }
 
@@ -514,21 +459,21 @@ os_thread_launch(OS_Thread_Proc *procedure, rawptr params, string name) {
 	return handle;
 }
 
-proc b32
+proc b8
 os_thread_join(OS_Thread handle) {
-	assert(!handle_match(handle, zero_handle(OS_Thread)));
+	assert(!os_thread_match(handle, os_thread_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(handle.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_Thread);
 	int join_result = pthread_join(entity->thread.handle, 0);
-	b32 result = (join_result == 0);
+	b8 result = (join_result == 0);
 	os_lnx_entity_release(entity);
 	return result;
 }
 
 proc void
 os_thread_detach(OS_Thread handle) {
-	assert(!handle_match(handle, zero_handle(OS_Thread)));
+	assert(!os_thread_match(handle, os_thread_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(handle.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_Thread);
@@ -556,7 +501,7 @@ os_mutex_alloc(void) {
 
 proc void
 os_mutex_release(OS_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_Mutex)));
+	assert(!os_mutex_match(mutex, os_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_Mutex);
@@ -566,7 +511,7 @@ os_mutex_release(OS_Mutex mutex) {
 
 proc void
 os_mutex_take(OS_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_Mutex)));
+	assert(!os_mutex_match(mutex, os_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_Mutex);
@@ -575,7 +520,7 @@ os_mutex_take(OS_Mutex mutex) {
 
 proc void
 os_mutex_drop(OS_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_Mutex)));
+	assert(!os_mutex_match(mutex, os_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_Mutex);
@@ -598,7 +543,7 @@ os_rw_mutex_alloc(void) {
 }
 proc void
 os_rw_mutex_release(OS_RW_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_RW_Mutex)));
+	assert(!os_rw_mutex_match(mutex, os_rw_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_RW_Mutex);
@@ -608,7 +553,7 @@ os_rw_mutex_release(OS_RW_Mutex mutex) {
 
 proc void
 os_mutex_take_r(OS_RW_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_RW_Mutex)));
+	assert(!os_rw_mutex_match(mutex, os_rw_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_RW_Mutex);
@@ -617,7 +562,7 @@ os_mutex_take_r(OS_RW_Mutex mutex) {
 
 proc void
 os_mutex_drop_r(OS_RW_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_RW_Mutex)));
+	assert(!os_rw_mutex_match(mutex, os_rw_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_RW_Mutex);
@@ -626,7 +571,7 @@ os_mutex_drop_r(OS_RW_Mutex mutex) {
 
 proc void
 os_mutex_take_w(OS_RW_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_RW_Mutex)));
+	assert(!os_rw_mutex_match(mutex, os_rw_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_RW_Mutex);
@@ -635,7 +580,7 @@ os_mutex_take_w(OS_RW_Mutex mutex) {
 
 proc void
 os_mutex_drop_w(OS_RW_Mutex mutex) {
-	assert(!handle_match(mutex, zero_handle(OS_RW_Mutex)));
+	assert(!os_rw_mutex_match(mutex, os_rw_mutex_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(mutex.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_RW_Mutex);
@@ -658,7 +603,7 @@ proc OS_CV os_condition_variable_alloc(void) {
 
 proc void
 os_condition_variable_release(OS_CV cv) {
-	assert(!handle_match(cv, zero_handle(OS_CV)));
+	assert(!os_cv_match(cv, os_cv_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(cv.v[0]);
 	assert(entity->kind == Linux_Entity_Kind_CV);
@@ -666,25 +611,25 @@ os_condition_variable_release(OS_CV cv) {
 	os_lnx_entity_release(entity);
 }
 
-proc b32
+proc b8
 os_condition_variable_wait(OS_CV cv, OS_Mutex mutex, u64 endt_us) {
-	assert(!handle_match(cv, zero_handle(OS_CV)));
-	assert(!handle_match(mutex, zero_handle(OS_Mutex)));
+	assert(!os_cv_match(cv, os_cv_zero()));
+	assert(!os_mutex_match(mutex, os_mutex_zero()));
 
 	Linux_Entity *cv_entity = (Linux_Entity*)(cv.v[0]);
 	Linux_Entity *mutex_entity = (Linux_Entity*)(mutex.v[0]);
 	struct timespec timespec;
-	timespec.tv_sec = endt_us/million(1);
-	timespec.tv_nsec = thousand(1) * (s64)(endt_us - (endt_us/million(1))*million(1));
-	assert(timespec.tv_nsec >= 0 && timespec.tv_nsec < billion(1));
+	timespec.tv_sec = endt_us/millions(1);
+	timespec.tv_nsec = thousands(1) * (s64)(endt_us - (endt_us/millions(1))*millions(1));
+	assert(timespec.tv_nsec >= 0 && timespec.tv_nsec < billions(1));
 	int wait_result = pthread_cond_timedwait(&cv_entity->cv.handle, &mutex_entity->mutex.handle, &timespec);
-	b32 result = (wait_result != ETIMEDOUT);
+	b8 result = (wait_result != ETIMEDOUT);
 	return result;
 }
 
 proc void
 os_condition_variable_signal(OS_CV cv) {
-	assert(!handle_match(cv, zero_handle(OS_CV)));
+	assert(!os_cv_match(cv, os_cv_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(cv.v[0]);
 	pthread_cond_signal(&entity->cv.handle);
@@ -692,7 +637,7 @@ os_condition_variable_signal(OS_CV cv) {
 
 proc void
 os_condition_variable_broadcast(OS_CV cv) {
-	assert(!handle_match(cv, zero_handle(OS_CV)));
+	assert(!os_cv_match(cv, os_cv_zero()));
 
 	Linux_Entity *entity = (Linux_Entity*)(cv.v[0]);
 	pthread_cond_signal(&entity->cv.handle);
@@ -722,45 +667,45 @@ os_semaphore_alloc(s32 initial_count, s32 max_count, string name) {
 }
 proc void
 os_semaphore_release(OS_Semaphore semaphore) {
-	assert(!handle_match(semaphore, zero_handle(OS_Semaphore)));
+	assert(!os_semaphore_match(semaphore, os_semaphore_zero()));
 
 	sem_t *s = (sem_t*)(semaphore.v[0]);
 	int err = munmap((rawptr)s, size_of(sem_t));
 	assert_always(err == 0);
 }
 
-proc b32
+proc b8
 os_semaphore_try(OS_Semaphore semaphore) {
-	assert(!handle_match(semaphore, zero_handle(OS_Semaphore)));
+	assert(!os_semaphore_match(semaphore, os_semaphore_zero()));
 	sem_t *s = (sem_t*)(semaphore.v[0]);
 
 	int err = sem_trywait(s);
-	b32 result = (err != EAGAIN);
+	b8 result = (err != EAGAIN);
 	return result;
 }
 
-proc b32
+proc b8
 os_semaphore_wait(OS_Semaphore semaphore, u64 endt_us) {
-	assert(!handle_match(semaphore, zero_handle(OS_Semaphore)));
+	assert(!os_semaphore_match(semaphore, os_semaphore_zero()));
 	sem_t *s = (sem_t*)(semaphore.v[0]);
 
 	struct timespec timespec;
-	timespec.tv_sec = endt_us/million(1);
-	timespec.tv_nsec = thousand(1) * (s64)(endt_us - (endt_us/million(1))*million(1));
-	assert(timespec.tv_nsec >= 0 && timespec.tv_nsec < billion(1));
+	timespec.tv_sec = endt_us/millions(1);
+	timespec.tv_nsec = thousands(1) * (s64)(endt_us - (endt_us/millions(1))*millions(1));
+	assert(timespec.tv_nsec >= 0 && timespec.tv_nsec < billions(1));
 	int err  = sem_timedwait(s, &timespec);
 	assert(err != EINVAL);
-	b32 result = (err != ETIMEDOUT);
+	b8 result = (err != ETIMEDOUT);
 	return result;
 }
 
-proc b32
+proc b8
 os_semaphore_post(OS_Semaphore semaphore) {
-	assert(!handle_match(semaphore, zero_handle(OS_Semaphore)));
+	assert(!os_semaphore_match(semaphore, os_semaphore_zero()));
 	sem_t *s = (sem_t*)(semaphore.v[0]);
 	int err = sem_post(s);
 	assert(err != EINVAL);
-	b32 result = (err != EOVERFLOW);
+	b8 result = (err != EOVERFLOW);
 	return result;
 }
 
@@ -793,7 +738,7 @@ int main(int argc, char **args) {
 			Temp scratch = scratch_begin(0, 0);
 			u8 *buffer = 0;
 			s64 host_name_size = 0;
-			b32 got_host_name = 0;
+			b8 got_host_name = 0;
 			for (s64 r = 0, cap = 16; r < 8; r += 1, cap *= 2) {
 				temp_end(scratch);
 				buffer = push_array_no_zero(scratch.arena, u8, cap);
@@ -825,14 +770,14 @@ int main(int argc, char **args) {
 		// get binary path
 		{
 			Temp scratch = scratch_begin(0, 0);
-			b32 got_bin_path = 0;
+			b8 got_bin_path = 0;
 
 			u8 *buffer = 0;
 			s64 size = 0;
 			for (s64 r = 0, cap = 16; r < 8; r += 1, cap *= 2) {
 				temp_end(scratch);
 				buffer = push_array_no_zero(scratch.arena, u8, cap);
-				ssize_t buf_size = readlink("/proc/self/exe", buffer, (size_t)cap);
+				ssize_t buf_size = readlink("/proc/self/exe", buffer, cast(size_t)cap);
 				if (buf_size < cap) {
 					got_bin_path = 1;
 					size = (s64)buf_size;

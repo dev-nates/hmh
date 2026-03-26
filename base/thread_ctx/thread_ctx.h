@@ -1,6 +1,6 @@
 
 
-#define THREAD_CONTEXT_ARENA_RESERVE megabyte(8)
+#define THREAD_CONTEXT_ARENA_RESERVE megabytes(8)
 typedef struct Thread_Context Thread_Context;
 struct Thread_Context {
 	Arena *arenas[2];
@@ -24,7 +24,7 @@ proc string tctx_get_name(void);
 
 proc void tctx_write_src_loc(Source_Code_Location loc);
 
-proc void tctx_read_src_loc(/**/Source_Code_Location *loc);
+proc void tctx_read_src_loc(_ret_ Source_Code_Location *loc);
 #define tctx_write_this_src_loc() tctx_write_src_loc(code_location)
 
 #define scratch_begin(conflicts, count) temp_begin(tctx_get_scratch((conflicts), (count)))

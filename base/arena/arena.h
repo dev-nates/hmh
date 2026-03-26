@@ -33,8 +33,8 @@ struct Temp {
 //--------------------------------------------------------------------------------
 // arena procs
 
-global s64 arena_default_reserve_size = megabyte(64);
-global s64 arena_default_commit_size = kilobyte(64);
+global s64 arena_default_reserve_size = megabytes(64);
+global s64 arena_default_commit_size = kilobytes(64);
 typedef struct Arena_Params Arena_Params;
 struct Arena_Params {
 	s64 reserve_size;
@@ -43,6 +43,7 @@ struct Arena_Params {
 };
 #define arena_alloc(...) arena_alloc_(&(Arena_Params){.reserve_size = arena_default_reserve_size, .commit_size = arena_default_commit_size, __VA_ARGS__})
 #define arena_from_buffer(buffer, buffer_size) arena_alloc_(&(Arena_Params){.reserve_size = buffer_size, .commit_size = buffer_size, .optional_backing_buffer = buffer})
+#define arena_from_fixed(arr) arena_from_buffer(arr, size_of(arr))
 proc Arena*
 arena_alloc_(Arena_Params *params);
 

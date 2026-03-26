@@ -138,22 +138,22 @@ struct Fuzzy_Match_Range_List {
 //--------------------------------------------------------------------------------
 // char procs
 
-proc b32
+proc b8
 char_is_space(u8 c);
 
-proc b32
+proc b8
 char_is_upper(u8 c);
 
-proc b32
+proc b8
 char_is_lower(u8 c);
 
-proc b32
+proc b8
 char_is_alpha(u8 c);
 
-proc b32
+proc b8
 char_is_slash(u8 c);
 
-proc b32
+proc b8
 char_is_digit(u8 c, u32 base);
 
 proc u8
@@ -184,7 +184,7 @@ cstring32_length(cstring32 c);
 // str macros && constructors
 
 #define S(s) make_str((u8*)(s), sizeof(s)-1)
-#define GS(s) {(u8*)(s), sizeof(s)-1}
+#define SC(s) {(u8*)(s), sizeof(s)-1}
 #define svarg(s) (int)((s).size), ((s).m)
 
 #define str_array(s, count) make_str((u8*)(s), sizeof(*(s))*(count))
@@ -261,6 +261,8 @@ push_str_copy(Arena *arena, string str);
 proc string
 push_strfv(Arena *arena, cstring fmt, va_list args);
 
+
+CLANG_FORMAT_WARN(2, 3)
 proc string
 push_strf(Arena *arena, cstring fmt, ...);
 
@@ -284,7 +286,7 @@ weak_ass_slash_from_str(Arena *arena, string str);
 
 #define str_match_lit(a_lit, b, flags)   str_match(str_lit(a_lit), (b), (flags))
 #define str_match_cstr(a_cstr, b, flags) str_match(str_cstring(a_cstr), (b), (flags))
-proc b32
+proc b8
 str_match(string a, string b, String_Match_Flags flags);
 
 proc s64
@@ -293,7 +295,7 @@ str_find_needle(s64 start_pos, string needle, string haystack, String_Match_Flag
 proc s64
 str_find_needle_reverse(s64 start_pos, string needle, string haystack, String_Match_Flags flags);
 
-proc b32
+proc b8
 str_ends_with(string str, string end, String_Match_Flags flags);
 #define str_ends_with_lit(str, end_lit, flags) str_ends_with((str), str_lit(end_lit), (flags))
 
@@ -323,7 +325,7 @@ str_skip_chop_whitespace(string str);
 proc s64
 sign_from_str(string str, string *string_tail);
 
-proc b32
+proc b8
 str_is_integer(string str, u32 radix);
 
 proc u64
@@ -338,10 +340,10 @@ u32_from_str(string str, u32 radix);
 proc s32
 s32_from_str(string str, u32 radix);
 
-proc b32
+proc b8
 try_u64_from_str_c_rules(string str, u64 *x);
 
-proc b32
+proc b8
 try_s64_from_str_c_rules(string str, s64 *x);
 
 //--------------------------------------------------------------------------------

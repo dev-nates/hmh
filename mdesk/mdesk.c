@@ -62,7 +62,7 @@ md_mk_token(rng1s64 range, $md_token_flags flags) {
 	return token;
 }
 
-proc b32
+proc b8
 md_token_match($md_token a, $md_token b) {
 	return (a.range.min == b.range.min &&
 		a.range.max == b.range.max &&
@@ -156,7 +156,7 @@ md_node_flags_from_token_flags($md_token_flags flags) {
 //--------------------------------------------------------------------------------
 // nil
 
-proc b32
+proc b8
 md_node_is_nil($md_node *node) {
 	return check_nil(node, md_nil_node) || node->kind == $md_node_kind_nil;
 }
@@ -380,14 +380,14 @@ md_tag_arg_from_string($md_node *node,
 	return md_child_from_string(tag, arg_string, arg_str_flags);
 }
 
-proc b32
+proc b8
 md_node_has_child($md_node *node,
 	$string string, $string_match_flags flags)
 {
 	return !md_node_is_nil(md_child_from_string(node, string, flags));
 }
 
-proc b32
+proc b8
 md_node_has_tag($md_node *node, $string string, $string_match_flags flags) {
 	return !md_node_is_nil(md_tag_from_string(node, string, flags));
 }
@@ -429,7 +429,7 @@ md_string_from_children($arena *arena, $md_node *root) {
 //--------------------------------------------------------------------------------
 // tree comparison
 
-proc b32
+proc b8
 md_node_match($md_node *a, $md_node *b, $string_match_flags flags) {
 	b32 result = 0;
 	if (a->kind == b->kind && str_match(a->string, b->string, flags)) {
@@ -463,7 +463,7 @@ md_node_match($md_node *a, $md_node *b, $string_match_flags flags) {
 	return result;
 }
 
-proc b32
+proc b8
 md_tree_match($md_node *a, $md_node *b, $string_match_flags flags) {
 	b32 result = md_node_match(a, b, flags);
 	if (result) {

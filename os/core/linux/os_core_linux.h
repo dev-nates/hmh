@@ -4,25 +4,18 @@
 
 #include <fcntl.h>
 #include <errno.h>
-#define __USE_POSIX199309
-#define __USE_POSIX
-#include <time.h>
+
 #include <dirent.h>
 
-#define __USE_XOPEN2K8
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/sysinfo.h>
 #include <sys/sendfile.h>
-#include "sys/inotify.h"
 
 #include <limits.h>
 #include <stdlib.h>
 
-#define __USE_UNIX98
 #include <pthread.h>
-
-#define __USE_XOPEN2K
 #include <semaphore.h>
 
 typedef struct Linux_File_Iter Linux_File_Iter;
@@ -84,19 +77,15 @@ struct Linux_State {
 // access shared data.
 global Linux_State linux_state = zero_struct;
 
-//--------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // entities
 
 proc Linux_Entity* os_lnx_entity_alloc(Linux_Entity_Kind kind);
-proc void             os_lnx_entity_release(Linux_Entity *entity);
+proc void          os_lnx_entity_release(Linux_Entity *entity);
 
-//--------------------------------------------------------------------------------_
-// linux helpers
+// -------------------------------------------------------------------------------------------------
+// Helpers
 
-proc Date_Time       os_lnx_date_time_from_tm(struct tm in, u32 msec);
-proc struct tm       os_lnx_tm_from_date_time(Date_Time dt);
-proc struct timespec os_lnx_timespec_from_date_time(Date_Time dt);
-proc Dense_Time      os_lnx_dense_time_from_timespec(struct timespec in);
-proc File_Properties os_lnx_file_properties_from_stat(struct stat *s);
-
+proc File_Properties
+_file_properties_from_stat(struct stat *s);
 #endif // OS_CORE_LINUX_H

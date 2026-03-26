@@ -360,7 +360,7 @@ proc rng1u32 rng_1u32(u32 min, u32 max)                     {rng1u32 r = {min, m
 proc rng1u32 shift_1u32(rng1u32 r, u32 x)                   {r.min += x; r.max += x; return r;}
 proc rng1u32 pad_1u32(rng1u32 r, u32 x)                     {r.min -= x; r.max += x; return r;}
 proc u32 center_1u32(rng1u32 r)                             {u32 c = (r.min+r.max)/2; return c;}
-proc b32 contains_1u32(rng1u32 r, u32 x)                    {b32 c = (r.min <= x && x < r.max); return c;}
+proc b8 contains_1u32(rng1u32 r, u32 x)                     {b8 c = (r.min <= x && x < r.max); return c;}
 proc u32 dim_1u32(rng1u32 r)                                {u32 c = ((r.max > r.min) ? (r.max - r.min) : 0); return c;}
 proc rng1u32 union_1u32(rng1u32 a, rng1u32 b)               {rng1u32 c = {min(a.min, b.min), max(a.max, b.max)}; return c;}
 proc rng1u32 intersect_1u32(rng1u32 a, rng1u32 b)           {rng1u32 c = {max(a.min, b.min), min(a.max, b.max)}; return c;}
@@ -370,7 +370,7 @@ proc rng1s32 rng_1s32(s32 min, s32 max)                     {rng1s32 r = {min, m
 proc rng1s32 shift_1s32(rng1s32 r, s32 x)                   {r.min += x; r.max += x; return r;}
 proc rng1s32 pad_1s32(rng1s32 r, s32 x)                     {r.min -= x; r.max += x; return r;}
 proc s32 center_1s32(rng1s32 r)                             {s32 c = (r.min+r.max)/2; return c;}
-proc b32 contains_1s32(rng1s32 r, s32 x)                    {b32 c = (r.min <= x && x < r.max); return c;}
+proc b8 contains_1s32(rng1s32 r, s32 x)                     {b8 c = (r.min <= x && x < r.max); return c;}
 proc s32 dim_1s32(rng1s32 r)                                {s32 c = ((r.max > r.min) ? (r.max - r.min) : 0); return c;}
 proc rng1s32 union_1s32(rng1s32 a, rng1s32 b)               {rng1s32 c = {min(a.min, b.min), max(a.max, b.max)}; return c;}
 proc rng1s32 intersect_1s32(rng1s32 a, rng1s32 b)           {rng1s32 c = {max(a.min, b.min), min(a.max, b.max)}; return c;}
@@ -380,7 +380,7 @@ proc rng1u64 rng_1u64(u64 min, u64 max)                     {rng1u64 r = {min, m
 proc rng1u64 shift_1u64(rng1u64 r, u64 x)                   {r.min += x; r.max += x; return r;}
 proc rng1u64 pad_1u64(rng1u64 r, u64 x)                     {r.min -= x; r.max += x; return r;}
 proc u64 center_1u64(rng1u64 r)                             {u64 c = (r.min+r.max)/2; return c;}
-proc b32 contains_1u64(rng1u64 r, u64 x)                    {b32 c = (r.min <= x && x < r.max); return c;}
+proc b8 contains_1u64(rng1u64 r, u64 x)                     {b8 c = (r.min <= x && x < r.max); return c;}
 proc u64 dim_1u64(rng1u64 r)                                {u64 c = ((r.max > r.min) ? (r.max - r.min) : 0); return c;}
 proc rng1u64 union_1u64(rng1u64 a, rng1u64 b)               {rng1u64 c = {min(a.min, b.min), max(a.max, b.max)}; return c;}
 proc rng1u64 intersect_1u64(rng1u64 a, rng1u64 b)           {rng1u64 c = {max(a.min, b.min), min(a.max, b.max)}; return c;}
@@ -390,7 +390,7 @@ proc rng1s64 rng_1s64(s64 min, s64 max)                     {rng1s64 r = {min, m
 proc rng1s64 shift_1s64(rng1s64 r, s64 x)                   {r.min += x; r.max += x; return r;}
 proc rng1s64 pad_1s64(rng1s64 r, s64 x)                     {r.min -= x; r.max += x; return r;}
 proc s64 center_1s64(rng1s64 r)                             {s64 c = (r.min+r.max)/2; return c;}
-proc b32 contains_1s64(rng1s64 r, s64 x)                    {b32 c = (r.min <= x && x < r.max); return c;}
+proc b8 contains_1s64(rng1s64 r, s64 x)                     {b8 c = (r.min <= x && x < r.max); return c;}
 proc s64 dim_1s64(rng1s64 r)                                {s64 c = ((r.max > r.min) ? (r.max - r.min) : 0); return c;}
 proc rng1s64 union_1s64(rng1s64 a, rng1s64 b)               {rng1s64 c = {min(a.min, b.min), max(a.max, b.max)}; return c;}
 proc rng1s64 intersect_1s64(rng1s64 a, rng1s64 b)           {rng1s64 c = {max(a.min, b.min), min(a.max, b.max)}; return c;}
@@ -400,7 +400,7 @@ proc rng1f32 rng_1f32(f32 min, f32 max)                     {rng1f32 r = {min, m
 proc rng1f32 shift_1f32(rng1f32 r, f32 x)                   {r.min += x; r.max += x; return r;}
 proc rng1f32 pad_1f32(rng1f32 r, f32 x)                     {r.min -= x; r.max += x; return r;}
 proc f32 center_1f32(rng1f32 r)                             {f32 c = (r.min+r.max)/2.f; return c;}
-proc b32 contains_1f32(rng1f32 r, f32 x)                    {b32 c = (r.min <= x && x < r.max); return c;}
+proc b8 contains_1f32(rng1f32 r, f32 x)                     {b8 c = (r.min <= x && x < r.max); return c;}
 proc f32 dim_1f32(rng1f32 r)                                {f32 c = ((r.max > r.min) ? (r.max - r.min) : 0.f); return c;}
 proc rng1f32 union_1f32(rng1f32 a, rng1f32 b)               {rng1f32 c = {min(a.min, b.min), max(a.max, b.max)}; return c;}
 proc rng1f32 intersect_1f32(rng1f32 a, rng1f32 b)           {rng1f32 c = {max(a.min, b.min), min(a.max, b.max)}; return c;}
@@ -410,7 +410,7 @@ proc rng1f64 rng_1f64(f64 min, f64 max)                     {rng1f64 r = {min, m
 proc rng1f64 shift_1f64(rng1f64 r, f64 x)                   {r.min += x; r.max += x; return r;}
 proc rng1f64 pad_1f64(rng1f64 r, f64 x)                     {r.min -= x; r.max += x; return r;}
 proc f64 center_1f64(rng1f64 r)                             {f64 c = (r.min+r.max)/2.0; return c;}
-proc b32 contains_1f64(rng1f64 r, f64 x)                    {b32 c = (r.min <= x && x < r.max); return c;}
+proc b8 contains_1f64(rng1f64 r, f64 x)                     {b8 c = (r.min <= x && x < r.max); return c;}
 proc f64 dim_1f64(rng1f64 r)                                {f64 c = ((r.max > r.min) ? (r.max - r.min) : 0.0); return c;}
 proc rng1f64 union_1f64(rng1f64 a, rng1f64 b)               {rng1f64 c = {min(a.min, b.min), max(a.max, b.max)}; return c;}
 proc rng1f64 intersect_1f64(rng1f64 a, rng1f64 b)           {rng1f64 c = {max(a.min, b.min), min(a.max, b.max)}; return c;}
@@ -423,7 +423,7 @@ proc rng2s16 rng_2s16(vec2s16 min, vec2s16 max)             {rng2s16 r = {min, m
 proc rng2s16 shift_2s16(rng2s16 r, vec2s16 x)               {r.min = add_2s16(r.min, x); r.max = add_2s16(r.max, x); return r;}
 proc rng2s16 pad_2s16(rng2s16 r, s16 x)                     {vec2s16 xv = {x, x}; r.min = sub_2s16(r.min, xv); r.max = add_2s16(r.max, xv); return r;}
 proc vec2s16 center_2s16(rng2s16 r)                         {vec2s16 c = {(s16)((r.min.x+r.max.x)/2), (s16)((r.min.y+r.max.y)/2)}; return c;}
-proc b32 contains_2s16(rng2s16 r, vec2s16 x)                {b32 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
+proc b8 contains_2s16(rng2s16 r, vec2s16 x)                 {b8 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
 proc vec2s16 dim_2s16(rng2s16 r)                            {vec2s16 dim = {(s16)(((r.max.x > r.min.x) ? (r.max.x - r.min.x) : 0)), (s16)(((r.max.y > r.min.y) ? (r.max.y - r.min.y) : 0))}; return dim;}
 proc rng2s16 union_2s16(rng2s16 a, rng2s16 b)               {rng2s16 c; c.p0.x = min(a.min.x, b.min.x); c.p0.y = min(a.min.y, b.min.y); c.p1.x = max(a.max.x, b.max.x); c.p1.y = max(a.max.y, b.max.y); return c;}
 proc rng2s16 intersect_2s16(rng2s16 a, rng2s16 b)           {rng2s16 c; c.p0.x = max(a.min.x, b.min.x); c.p0.y = max(a.min.y, b.min.y); c.p1.x = min(a.max.x, b.max.x); c.p1.y = min(a.max.y, b.max.y); return c;}
@@ -433,7 +433,7 @@ proc rng2s32 rng_2s32(vec2s32 min, vec2s32 max)             {rng2s32 r = {min, m
 proc rng2s32 shift_2s32(rng2s32 r, vec2s32 x)               {r.min = add_2s32(r.min, x); r.max = add_2s32(r.max, x); return r;}
 proc rng2s32 pad_2s32(rng2s32 r, s32 x)                     {vec2s32 xv = {x, x}; r.min = sub_2s32(r.min, xv); r.max = add_2s32(r.max, xv); return r;}
 proc vec2s32 center_2s32(rng2s32 r)                         {vec2s32 c = {(r.min.x+r.max.x)/2, (r.min.y+r.max.y)/2}; return c;}
-proc b32 contains_2s32(rng2s32 r, vec2s32 x)                {b32 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
+proc b8 contains_2s32(rng2s32 r, vec2s32 x)                 {b8 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
 proc vec2s32 dim_2s32(rng2s32 r)                            {vec2s32 dim = {((r.max.x > r.min.x) ? (r.max.x - r.min.x) : 0), ((r.max.y > r.min.y) ? (r.max.y - r.min.y) : 0)}; return dim;}
 proc rng2s32 union_2s32(rng2s32 a, rng2s32 b)               {rng2s32 c; c.p0.x = min(a.min.x, b.min.x); c.p0.y = min(a.min.y, b.min.y); c.p1.x = max(a.max.x, b.max.x); c.p1.y = max(a.max.y, b.max.y); return c;}
 proc rng2s32 intersect_2s32(rng2s32 a, rng2s32 b)           {rng2s32 c; c.p0.x = max(a.min.x, b.min.x); c.p0.y = max(a.min.y, b.min.y); c.p1.x = min(a.max.x, b.max.x); c.p1.y = min(a.max.y, b.max.y); return c;}
@@ -443,7 +443,7 @@ proc rng2s64 rng_2s64(vec2s64 min, vec2s64 max)             {rng2s64 r = {min, m
 proc rng2s64 shift_2s64(rng2s64 r, vec2s64 x)               {r.min = add_2s64(r.min, x); r.max = add_2s64(r.max, x); return r;}
 proc rng2s64 pad_2s64(rng2s64 r, s64 x)                     {vec2s64 xv = {x, x}; r.min = sub_2s64(r.min, xv); r.max = add_2s64(r.max, xv); return r;}
 proc vec2s64 center_2s64(rng2s64 r)                         {vec2s64 c = {(r.min.x+r.max.x)/2, (r.min.y+r.max.y)/2}; return c;}
-proc b32 contains_2s64(rng2s64 r, vec2s64 x)                {b32 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
+proc b8 contains_2s64(rng2s64 r, vec2s64 x)                 {b8 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
 proc vec2s64 dim_2s64(rng2s64 r)                            {vec2s64 dim = {((r.max.x > r.min.x) ? (r.max.x - r.min.x) : 0), ((r.max.y > r.min.y) ? (r.max.y - r.min.y) : 0)}; return dim;}
 proc rng2s64 union_2s64(rng2s64 a, rng2s64 b)               {rng2s64 c; c.p0.x = min(a.min.x, b.min.x); c.p0.y = min(a.min.y, b.min.y); c.p1.x = max(a.max.x, b.max.x); c.p1.y = max(a.max.y, b.max.y); return c;}
 proc rng2s64 intersect_2s64(rng2s64 a, rng2s64 b)           {rng2s64 c; c.p0.x = max(a.min.x, b.min.x); c.p0.y = max(a.min.y, b.min.y); c.p1.x = min(a.max.x, b.max.x); c.p1.y = min(a.max.y, b.max.y); return c;}
@@ -453,7 +453,7 @@ proc rng2f32 rng_2f32(vec2f32 min, vec2f32 max)             {rng2f32 r = {min, m
 proc rng2f32 shift_2f32(rng2f32 r, vec2f32 x)               {r.min = add_2f32(r.min, x); r.max = add_2f32(r.max, x); return r;}
 proc rng2f32 pad_2f32(rng2f32 r, f32 x)                     {vec2f32 xv = {x, x}; r.min = sub_2f32(r.min, xv); r.max = add_2f32(r.max, xv); return r;}
 proc vec2f32 center_2f32(rng2f32 r)                         {vec2f32 c = {(r.min.x+r.max.x)/2.f, (r.min.y+r.max.y)/2.f}; return c;}
-proc b32 contains_2f32(rng2f32 r, vec2f32 x)                {b32 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
+proc b8 contains_2f32(rng2f32 r, vec2f32 x)                 {b8 c = (r.min.x <= x.x && x.x < r.max.x && r.min.y <= x.y && x.y < r.max.y); return c;}
 proc vec2f32 dim_2f32(rng2f32 r)                            {vec2f32 dim = {((r.max.x > r.min.x) ? (r.max.x - r.min.x) : 0.f), ((r.max.y > r.min.y) ? (r.max.y - r.min.y) : 0)}; return dim;}
 proc rng2f32 union_2f32(rng2f32 a, rng2f32 b)               {rng2f32 c; c.p0.x = min(a.min.x, b.min.x); c.p0.y = min(a.min.y, b.min.y); c.p1.x = max(a.max.x, b.max.x); c.p1.y = max(a.max.y, b.max.y); return c;}
 proc rng2f32 intersect_2f32(rng2f32 a, rng2f32 b)           {rng2f32 c; c.p0.x = max(a.min.x, b.min.x); c.p0.y = max(a.min.y, b.min.y); c.p1.x = min(a.max.x, b.max.x); c.p1.y = min(a.max.y, b.max.y); return c;}

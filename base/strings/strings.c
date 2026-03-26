@@ -22,23 +22,23 @@ read_only global u8 ascii_symbol_from_integer[16] = {
 	'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
 };
 
-proc b32 char_is_space(u8 c) {
+proc b8 char_is_space(u8 c) {
 	return (c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == '\v' || c == '\f');
 }
-proc b32 char_is_upper(u8 c) {
+proc b8 char_is_upper(u8 c) {
 	return ('A' <= c && c <= 'Z');
 }
-proc b32 char_is_lower(u8 c) {
+proc b8 char_is_lower(u8 c) {
 	return ('a' <= c && c <= 'z');
 }
-proc b32 char_is_alpha(u8 c) {
+proc b8 char_is_alpha(u8 c) {
 	return (char_is_lower(c) || char_is_upper(c));
 }
-proc b32 char_is_slash(u8 c) {
+proc b8 char_is_slash(u8 c) {
 	return (c == '/' || c == '\\');
 }
-proc b32 char_is_digit(u8 c, u32 base) {
-	b32 result = 0;
+proc b8 char_is_digit(u8 c, u32 base) {
+	b8 result = 0;
 	if (0 < base && base <= 16) {
 		u8 val = integer_from_ascii_symbol[c];
 		if (val < base) {
@@ -246,7 +246,7 @@ proc string
 push_strfv(Arena *arena, cstring fmt, va_list args) {
 	va_list args2;
 	va_copy(args2, args);
-	s32 needed_bytes = base_string_vsnprintf(0, 0, fmt, args2) + 1;
+	s32 needed_bytes = base_string_vsnprintf(0, 0, fmt, args) + 1;
 	string result = zero_struct;
 	result.m = push_array_no_zero(arena, u8, needed_bytes);
 	result.size = base_string_vsnprintf((cstring)result.m, needed_bytes, fmt, args2);
@@ -314,10 +314,10 @@ weak_ass_slash_from_str(Arena *arena, string str) {
 //--------------------------------------------------------------------------------
 // str matching
 
-proc b32
+proc b8
 str_match(string a, string b, String_Match_Flags flags) {
 	assert(a.size >= 0 && b.size >= 0);
-	b32 result = 0;
+	b8 result = 0;
 	if(a.size == b.size && flags == 0) {
 	  result = memory_match(a.m, b.m, b.size);
 	} else if(a.size == b.size || (flags & String_Match_Flag_Right_Side_Sloppy)) {
@@ -429,11 +429,11 @@ str_find_needle_reverse(s64 start_pos, string needle, string haystack, String_Ma
 	return result;
 }
 
-proc b32
+proc b8
 str_ends_with(string str, string end, String_Match_Flags flags) {
 	assert(str.size >= 0 && end.size >= 0);
 	string postfix = str_postfix(str, end.size);
-	b32 is_match = str_match(end, postfix, flags);
+	b8 is_match = str_match(end, postfix, flags);
 	return is_match;
 }
 
@@ -523,10 +523,10 @@ sign_from_str(string str, string *string_tail) {
 	return sign;
 }
 
-proc b32
+proc b8
 str_is_integer(string str, u32 radix) {
 	assert(str.size > 0);
-	b32 result = 0;
+	b8 result = 0;
 	if (str.size > 0) {
 		if (1 < radix && radix <= 16) {
 			result = 1;
@@ -584,12 +584,12 @@ s32_from_str(string str, u32 radix) {
 	return result;
 }
 
-proc b32
+proc b8
 try_u64_from_str_c_rules(string str, u64 *x) {
 	assert(str.size >= 0);
-	b32 is_integer = 0;
-	b32 is_decimal = str_is_integer(str, 10);
-	b32 starts_with_zero = (str.size && str.m[0] == '0');
+	b8 is_integer = 0;
+	b8 is_decimal = str_is_integer(str, 10);
+	b8 starts_with_zero = (str.size && str.m[0] == '0');
 
 	if (!starts_with_zero && is_decimal) {
 		is_integer = 1;
@@ -607,10 +607,10 @@ try_u64_from_str_c_rules(string str, u64 *x) {
 	return is_integer;
 }
 
-proc b32 try_s64_from_str_c_rules(string str, s64 *x) {
+proc b8 try_s64_from_str_c_rules(string str, s64 *x) {
 	assert(str.size >= 0);
 	s64 sign = sign_from_str(str, &str);
-	b32 is_integer = try_u64_from_str_c_rules(str, x);
+	b8 is_integer = try_u64_from_str_c_rules(str, x);
 	*x *= sign;
 	return is_integer;
 }
@@ -620,16 +620,16 @@ str_from_memory_size(Arena *arena, s64 size) {
 	if (size < 0) return str_zero();
 
 	string result;
-	if (size < kilobyte(1)) {
-		result = push_strf(arena, "%llu bytes", size);
-	} else if (size < megabyte(1)) {
-		result = push_strf(arena, "%llu.%.02llu KiB", size / kilobyte(1), ((size*100) / kilobyte(1)) % 100);
-	} else if (size < gigabyte(1)) {
-		result = push_strf(arena, "%llu.%.02llu MiB", size / megabyte(1), ((size*100) / megabyte(1)) % 100);
-	} else if (size < terabyte(1)) {
-		result = push_strf(arena, "%llu.%.02llu GiB", size / gigabyte(1), ((size*100) / gigabyte(1)) % 100);
+	if (size < kilobytes(1)) {
+		result = push_strf(arena, "%ld bytes", size);
+	} else if (size < megabytes(1)) {
+		result = push_strf(arena, "%ld.%.02ld KiB", size / kilobytes(1), ((size*100) / kilobytes(1)) % 100);
+	} else if (size < gigabytes(1)) {
+		result = push_strf(arena, "%ld.%.02ld MiB", size / megabytes(1), ((size*100) / megabytes(1)) % 100);
+	} else if (size < terabytes(1)) {
+		result = push_strf(arena, "%ld.%.02ld GiB", size / gigabytes(1), ((size*100) / gigabytes(1)) % 100);
 	} else {
-		result = push_strf(arena, "%llu.%.02llu TiB", size / terabyte(1), ((size*100) / terabyte(1)) % 100);
+		result = push_strf(arena, "%ld.%.02ld TiB", size / terabytes(1), ((size*100) / terabytes(1)) % 100);
 	}
 	return result;
 }
@@ -639,28 +639,28 @@ str_from_count(Arena *arena, s64 count) {
 	if (count < 0) return str_zero();
 
 	string result;
-	if (count < thousand(1)) {
-		result = push_strf(arena, "%llu", count);
-	} else if (count < million(1)) {
-		s64 perc = ((count*100)/thousand(1))%100;
+	if (count < thousands(1)) {
+		result = push_strf(arena, "%ld", count);
+	} else if (count < millions(1)) {
+		s64 perc = ((count*100)/thousands(1))%100;
 		if (perc > 0) {
-			result = push_strf(arena, "%llu.%02lluK", count/thousand(1), perc);
+			result = push_strf(arena, "%lld.%02ldK", count/thousands(1), perc);
 		} else {
-			result = push_strf(arena, "%lluK", count/thousand(1));
+			result = push_strf(arena, "%lldK", count/thousands(1));
 		}
-	} else if (count < billion(1)) {
-		s64 perc = ((count*100)/million(1))%100;
+	} else if (count < billions(1)) {
+		s64 perc = ((count*100)/millions(1))%100;
 		if (perc > 0) {
-			result = push_strf(arena, "%llu.%02lluM", count/million(1), perc);
+			result = push_strf(arena, "%lld.%02ldM", count/millions(1), perc);
 		} else {
-			result = push_strf(arena, "%lluM", count/million(1), perc);
+			result = push_strf(arena, "%lldM", count/millions(1));
 		}
 	} else {
-		s64 perc = ((count*100)/billion(1))%100;
+		s64 perc = ((count*100)/billions(1))%100;
 		if (perc > 0) {
-			result = push_strf(arena, "%llu.%02lluB", count/billion(1), perc);
+			result = push_strf(arena, "%lld.%02ldB", count/billions(1), perc);
 		} else {
-			result = push_strf(arena, "%lluB", count/billion(1), perc);
+			result = push_strf(arena, "%lldB", count/billions(1));
 		}
 	}
 	return result;
@@ -933,8 +933,8 @@ str_list_push_node(string_list *list, string_node *node) {
 	assert(node->str.size >= 0);
 
 	string_node **ptr = check_nil(list->head, nil) ? &list->head : &list->tail->next;
-	*ptr = list->head; list->tail = list->head;
-	list->head->next = nil;
+	*ptr = node; list->tail = node;
+	node->next = nil;
 	list->node_count += 1;
 	list->total_size += node->str.size;
 	return node;
@@ -1157,7 +1157,7 @@ str_list_join(Arena *arena, string_list *list, String_Join *optional_params) {
 	memory_copy(at, join.pre.m, join.pre.size);
 	at += join.pre.size;
 
-	for each_node(node, list->head, string_node) {
+	for (each_node(node, list->head, string_node)) {
 		string node_string = node->str;
 		memory_copy(at, node_string.m, node_string.size);
 		at += node_string.size;
@@ -1182,7 +1182,7 @@ proc string_list
 str_list_from_flags(Arena *arena, u32 flags, string *flag_string_table, s32 flag_string_count) {
 	string_list list = zero_struct;
 	assert(flag_string_count >= 0);
-	for each_index(i, flag_string_count) {
+	for (each_index(i, flag_string_count)) {
 		u32 flag = (1<<i);
 		if ((flag&flags) != 0) {
 			str_list_push_copy(arena, &list, flag_string_table[i]);
@@ -1200,7 +1200,7 @@ str_array_from_list(Arena *arena, string_list *list) {
 	arr.count = list->node_count;
 	arr.v = push_array_no_zero(arena, string, list->node_count);
 	s64 idx = 0;
-	for each_node(node, list->head, string_node) {
+	for (each_node(node, list->head, string_node)) {
 		assert(idx < list->node_count);
 		arr.v[idx] = node->str;
 		idx += 1;
@@ -1511,8 +1511,8 @@ utf8_decode(u8 *str, s64 max) {
 			if (2 < max) {
 				u8 cont_byte = str[1];
 				if (utf8_class[cont_byte >> 3] == 0) {
-					result.codepoint = (byte & bitmask5) << 6;
-					result.codepoint |=  (cont_byte & bitmask6);
+					result.codepoint = (byte & bitmask5(u32)) << 6;
+					result.codepoint |=  (cont_byte & bitmask6(u32));
 					result.inc = 2;
 				}
 			}
@@ -1524,9 +1524,9 @@ utf8_decode(u8 *str, s64 max) {
 				if (utf8_class[cont_byte[0] >> 3] == 0 &&
 					utf8_class[cont_byte[1] >> 3] == 0)
 				{
-					result.codepoint = (byte & bitmask4) << 12;
-					result.codepoint |= ((cont_byte[0] & bitmask6) << 6);
-					result.codepoint |=  (cont_byte[1] & bitmask6);
+					result.codepoint = (byte & bitmask4(u32)) << 12;
+					result.codepoint |= ((cont_byte[0] & bitmask6(u32)) << 6);
+					result.codepoint |=  (cont_byte[1] & bitmask6(u32));
 					result.inc = 3;
 				}
 			}
@@ -1538,10 +1538,10 @@ utf8_decode(u8 *str, s64 max) {
 					utf8_class[cont_byte[1] >> 3] == 0 &&
 					utf8_class[cont_byte[2] >> 3] == 0)
 				{
-					result.codepoint = (byte & bitmask3) << 18;
-					result.codepoint |= ((cont_byte[0] & bitmask6) << 12);
-					result.codepoint |= ((cont_byte[1] & bitmask6) <<  6);
-					result.codepoint |=  (cont_byte[2] & bitmask6);
+					result.codepoint = (byte & bitmask3(u32)) << 18;
+					result.codepoint |= ((cont_byte[0] & bitmask6(u32)) << 12);
+					result.codepoint |= ((cont_byte[1] & bitmask6(u32)) <<  6);
+					result.codepoint |=  (cont_byte[2] & bitmask6(u32));
 					result.inc = 4;
 				}
 			}
@@ -1570,21 +1570,21 @@ utf8_encode(u8 *str, u32 codepoint) {
 		inc = 1;
 	}
 	else if (codepoint <= 0x7ff){
-		str[0] = (bitmask2 << 6) | ((codepoint >> 6) & bitmask5);
-		str[1] = bit8 | (codepoint & bitmask6);
+		str[0] = (bitmask2(u32) << 6) | ((codepoint >> 6) & bitmask5(u32));
+		str[1] = bit8 | (codepoint & bitmask6(u32));
 		inc = 2;
 	}
 	else if (codepoint <= 0xffff){
-		str[0] = (bitmask3 << 5) | ((codepoint >> 12) & bitmask4);
-		str[1] = bit8 | ((codepoint >> 6) & bitmask6);
-		str[2] = bit8 | ( codepoint       & bitmask6);
+		str[0] = (bitmask3(u32) << 5) | ((codepoint >> 12) & bitmask4(u32));
+		str[1] = bit8 | ((codepoint >> 6) & bitmask6(u32));
+		str[2] = bit8 | ( codepoint       & bitmask6(u32));
 		inc = 3;
 	}
 	else if (codepoint <= 0x10ffff){
-		str[0] = (bitmask4 << 4) | ((codepoint >> 18) & bitmask3);
-		str[1] = bit8 | ((codepoint >> 12) & bitmask6);
-		str[2] = bit8 | ((codepoint >>  6) & bitmask6);
-		str[3] = bit8 | ( codepoint        & bitmask6);
+		str[0] = (bitmask4(u32) << 4) | ((codepoint >> 18) & bitmask3(u32));
+		str[1] = bit8 | ((codepoint >> 12) & bitmask6(u32));
+		str[2] = bit8 | ((codepoint >>  6) & bitmask6(u32));
+		str[3] = bit8 | ( codepoint        & bitmask6(u32));
 		inc = 4;
 	}
 	else{
@@ -1606,7 +1606,7 @@ utf16_encode(u16 *str, u32 codepoint) {
 	else{
 		u32 v = codepoint - 0x10000;
 		str[0] = safe_cast_u16(0xd800 + (v >> 10));
-		str[1] = safe_cast_u16(0xdc00 + (v & bitmask10));
+		str[1] = safe_cast_u16(0xdc00 + (v & bitmask10(u32)));
 		inc = 2;
 	}
 	return inc;
@@ -1753,10 +1753,10 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 				for (;;) {
 					if (total_indent <= 0) break;
 					s64 this_indent = min(total_indent, array_count(spaces));
-					str_list_push(scratch.arena, &list, push_strf(scratch.arena, "%.*s", this_indent, table[params.kind]));
+					str_list_push(scratch.arena, &list, push_strf(scratch.arena, "%.*s", cast(int)(this_indent), table[params.kind]));
 					total_indent -= this_indent;
 				}
-				string indented = push_strf(scratch.arena, "%S\n", line);
+				string indented = push_strf(scratch.arena, "%.*s\n", svarg(line));
 				str_list_push(scratch.arena, &list, indented);
 			}
 			if (line.size == 0) {
@@ -1777,10 +1777,10 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 		for (;;) {
 			if (total_indent <= 0) break;
 			s64 this_indent = min(total_indent, array_count(spaces));
-			str_list_push(scratch.arena, &list, push_strf(scratch.arena, "%.*s", this_indent, table[params.kind]));
+			str_list_push(scratch.arena, &list, push_strf(scratch.arena, "%.*s", cast(int)this_indent, table[params.kind]));
 			total_indent -= this_indent;
 		}
-		string indented = push_strf(scratch.arena, "%S\n", line);
+		string indented = push_strf(scratch.arena, "%.*s\n", svarg(line));
 		str_list_push(scratch.arena, &list, indented);
 	}
 
@@ -1994,12 +1994,12 @@ fuzzy_match_find(Arena *arena, string needle, string haystack) {
 	Temp scratch = scratch_begin(&arena, 1);
 	string_list needles = str_split(scratch.arena, needle, (u8*)" ", 1, 0);
 	result.needle_part_count = needles.node_count;
-	for each_node(needle_n, needles.head, string_node) {
+	for (each_node(needle_n, needles.head, string_node)) {
 		s64 find_pos = 0;
 		for(;find_pos < haystack.size;) {
 			find_pos = str_find_needle(find_pos, needle_n->str, haystack, String_Match_Flag_Case_Insensitive);
 			b32 is_in_gathered_ranges = 0;
-			for each_node(n, result.head, Fuzzy_Match_Range_Node) {
+			for (each_node(n, result.head, Fuzzy_Match_Range_Node)) {
 				if(n->range.min <= find_pos && find_pos < n->range.max) {
 					is_in_gathered_ranges = 1;
 					find_pos = n->range.max;
@@ -2029,7 +2029,7 @@ fuzzy_match_find(Arena *arena, string needle, string haystack) {
 proc Fuzzy_Match_Range_List
 fuzzy_match_range_list_copy(Arena *arena, Fuzzy_Match_Range_List *src) {
 	Fuzzy_Match_Range_List dst = zero_struct;
-	for each_node(node, src->head, Fuzzy_Match_Range_Node) {
+	for (each_node(node, src->head, Fuzzy_Match_Range_Node)) {
 		Fuzzy_Match_Range_Node *dstn = push_array(arena, Fuzzy_Match_Range_Node, 1);
 
 		Fuzzy_Match_Range_Node **ptr = check_nil(dst.head, nil) ? &dst.head : &dst.tail->next;

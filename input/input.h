@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------------------------------
 // Open
 
-proc b8 input_layer_open(void);
+proc b8 input_open(void);
 
 // -------------------------------------------------------------------------------------------------
 // Input Structures
@@ -20,7 +20,7 @@ struct IButton {
 };
 typedef struct IAxis IAxis;
 struct IAxis {
-	f32 min, max;
+	rng1f32 range;
 	f32 value;
 };
 
@@ -81,7 +81,7 @@ struct IMouse {
 };
 
 proc void
-input_clear_mouse(/**/IMouse *mouse) {
+input_clear_mouse(_ret_ IMouse *mouse) {
 	mouse->wheel = 0;
 	mouse->delta = v2f32(0.f,0.f);
 	for (s32 i = 0; i < array_count(mouse->btns); i += 1) {
@@ -100,7 +100,7 @@ struct IKeyboard {
 };
 
 proc void
-input_clear_keyboard(/**/IKeyboard *keyboard) {
+input_clear_keyboard(_ret_ IKeyboard *keyboard) {
 	for (s32 i = 0; i < array_count(keyboard->btns); i += 1) {
 		IButton *btn = keyboard->btns + i;
 		btn->htc = 0;
@@ -114,30 +114,77 @@ typedef u64 IGamepad_Event_Kind;
 enum IGamepad_Event_Kind {
 	IGamepad_Event_Axis,
 	IGamepad_Event_Button,
+	IGamepad_Event_COUNT,
 };
 
 typedef struct IGamepad_Event IGamepad_Event;
 struct IGamepad_Event {
-	IGamepad_Event_Kind kind;
 	union {
 		IAxis axis;
 		IButton button;
 	};
+	IGamepad_Event_Kind kind;
 };
 
 typedef struct IGamepad_Events IGamepad_Events;
 struct IGamepad_Events {
-	IGamepad_Event *events;
+	IGamepad_Event *v;
 	s64 count;
 };
 
-typedef u64 IGamepad_Button_Kind;
+typedef s64 IGamepad_Button_Kind;
 enum IGamepad_Button_Kind {
+	IGamepad_Button_A,
+	IGamepad_Button_B,
+	IGamepad_Button_C,
+
+	IGamepad_Button_X,
+	IGamepad_Button_Y,
+	IGamepad_Button_Z,
+
+
+	IGamepad_Button_LTrigger,
+	IGamepad_Button_RTrigger,
+
+	IGamepad_Button_LBumper,
+	IGamepad_Button_RBumper,
+
+	IGamepad_Button_LThumb,
+	IGamepad_Button_RThumb,
+
+	IGamepad_Button_Select,
+	IGamepad_Button_Start,
+	IGamepad_Button_Mode,
 	IGamepad_Button_Kind_COUNT,
 };
 
-typedef u64 IGamepad_Axis_Kind;
+typedef s64 IGamepad_Axis_Kind;
 enum IGamepad_Axis_Kind {
+	IGamepad_Axis_X,
+	IGamepad_Axis_Y,
+	IGamepad_Axis_Z,
+	IGamepad_Axis_RX,
+	IGamepad_Axis_RY,
+	IGamepad_Axis_RZ,
+
+	IGamepad_Axis_Throttle,
+	IGamepad_Axis_Rudder,
+	IGamepad_Axis_Wheel,
+	IGamepad_Axis_Gas,
+	IGamepad_Axis_Brake,
+
+	IGamepad_Axis_Hat0x, IGamepad_Axis_Hat0y,
+	IGamepad_Axis_Hat1x, IGamepad_Axis_Hat1y,
+	IGamepad_Axis_Hat2x, IGamepad_Axis_Hat2y,
+	IGamepad_Axis_Hat3x, IGamepad_Axis_Hat3y,
+
+	IGamepad_Axis_Pressure,
+	IGamepad_Axis_Distance,
+
+	IGamepad_Axis_Tilt_X,
+	IGamepad_Axis_Tilt_Y,
+	IGamepad_Axis_Tool_Width,
+
 	IGamepad_Axis_Kind_COUNT,
 };
 
@@ -145,30 +192,33 @@ enum IGamepad_Axis_Kind {
 #define IGAMEPAD_OPAQUE_SIZE 16
 typedef struct IGamepad IGamepad;
 struct IGamepad {
+	IGamepad *next;
 	b8      connected;
 	b8      has_rumble;
 	IButton btns[IGamepad_Button_Kind_COUNT];
 	IAxis   axes[IGamepad_Axis_Kind_COUNT];
-	cstring name;
+	string  name;
 	u8      name_buffer[128];
 	u8      opaque[IGAMEPAD_OPAQUE_SIZE];
 };
 typedef struct IGamepad_List IGamepad_List;
 struct IGamepad_List {
+	IGamepad *head, *tail;
+	s64 count;
 };
 
 proc IGamepad_List
 input_connect_gamepads(Arena *arena);
 
+proc void
+input_disconnect_gamepads(IGamepad_List list);
+
 proc b8
-input_new_gamepads(void);
-
-proc void
-input_gamepad_connect(/**/IGamepad *gamepad);
-
-proc void
-input_gamepad_set_rumble(f32 weak_rumble, f32 strong_rumble, /**/IGamepad *gamepad);
+input_check_for_hotplugged_gamepads(void);
 
 proc IGamepad_Events
 input_gamepad_read_events(IGamepad *gamepad, Arena *arena);
 
+// proc void
+// input_gamepad_set_rumble(f32 weak_rumble, f32 strong_rumble, _ret_ IGamepad *gamepad);
+//

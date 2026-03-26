@@ -64,7 +64,11 @@
 // SGR[Select Graphic Rendition] Sets colors and style of characters
 
 // Colors
-#define TERM_COLOR_RESET TERM_CSI "0" "m"
+#define TERM_STYLE_RESET TERM_CSI "0" "m"
+
+#define TC_END TERM_STYLE_RESET
+#define TC(r, g, b) TERM_FOREGROUND_RGB(r, g, b)
+
 #define TERM_FOREGROUND_RGB(r, g, b) TERM_CSI "38;2;"stringify(r)";"stringify(g)";"stringify(b) "m"
 #define TERM_BACKGROUND_RGB(r, g, b) TERM_CSI "48;2;"stringify(r)";"stringify(g)";"stringify(b) "m"
 #define TERM_DEFAULT_FOREGROUND TERM_CSI "39" "m"

@@ -10,7 +10,7 @@ disable_unused_funcs="-Wno-unused-function"
 disable_unused_vars="-Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
 disable_no_shadowing="-Wno-shadow"
 disable_conditional_uninitialized="-Wno-conditional-uninitialized"
-ignored_warnings="-Wno-initializer-overrides -Wno-extra-semi-stmt -Wno-implicit-void-ptr-cast -Wno-cast-qual -Wno-incompatible-pointer-types-discards-qualifiers -Wno-missing-braces -Wno-missing-field-initializers -Wno-pointer-sign -Wno-undef -Wno-pedantic -Wno-reserved-macro-identifier -Wno-declaration-after-statement -Wno-bad-function-cast -Wno-float-equal -Wno-switch-default -Wno-unsafe-buffer-usage -Wno-class-varargs -Wno-cast-align -Wno-disabled-macro-expansion -Wno-padded -Wno-reserved-identifier -Wno-assign-enum -Wno-covered-switch-default"
+ignored_warnings="-Wno-format-non-iso -Wno-initializer-overrides -Wno-extra-semi-stmt -Wno-implicit-void-ptr-cast -Wno-cast-qual -Wno-incompatible-pointer-types-discards-qualifiers -Wno-missing-braces -Wno-missing-field-initializers -Wno-pointer-sign -Wno-undef -Wno-pedantic -Wno-reserved-macro-identifier -Wno-declaration-after-statement -Wno-bad-function-cast -Wno-float-equal -Wno-switch-default -Wno-unsafe-buffer-usage -Wno-class-varargs -Wno-cast-align -Wno-disabled-macro-expansion -Wno-padded -Wno-reserved-identifier -Wno-assign-enum -Wno-covered-switch-default"
 
 # --------------------------------------------------------------------------------------------------
 # Defines
@@ -27,7 +27,7 @@ options="$options -I$root_path"
 
 libs="-lm -lwayland-client -lxkbcommon"
 method="build"
-mode="scratch"
+mode="debug"
 scratch_package="logger"
 
 # --------------------------------------------------------------------------------------------------
@@ -70,4 +70,9 @@ if [ "$mode" == "scratch" ]; then
 		$bin_path/p
 		exit 1
 	fi
+
+	# these lines were just a test to get the codebase working with gcc
+	#
+	# ignored="-Wno-discarded-qualifiers"
+	# gcc -g -O0 -std=c11 -DBASE_ENTRY_POINT=1 $libs $ignored -I$root_path $root_path/scratch/$scratch_package/main.c
 fi

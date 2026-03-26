@@ -41,7 +41,7 @@ _do_level(Logger_Options options, Logger_Level level) {
 		level_str = "FATAL";
 		terminal_color = LOG_FATAL_COLOR;
 	}
-	fprintf(stdout, "%s[%s]%s --- ", terminal_color, level_str, TERM_COLOR_RESET);
+	fprintf(stdout, "%s[%s]%s --- ", terminal_color, level_str, TERM_STYLE_RESET);
 
 	scratch_end(scratch);
 }

@@ -13,7 +13,7 @@ mk_random_series(u64 seed);
 proc u64
 random_u64($random_series *series);
 
-proc b32
+proc b8
 random_choice($random_series *series);
 
 //--------------------------------------------------------------------------------
