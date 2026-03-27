@@ -70,10 +70,10 @@ os_get_process_info(void) {
 	return linux_state.process_info;
 }
 
-proc string
+proc string8
 os_get_current_path(Arena *arena) {
 	cstring wd = getcwd(0, 0);
-	string result = push_str_copy(arena, str_from_cstring(wd));
+	string8 result = push_str_copy(arena, str_from_cstring(wd));
 	free(wd);
 	return result;
 }
@@ -82,7 +82,7 @@ os_get_current_path(Arena *arena) {
 // file procs
 
 proc OS_File
-os_file_open(string path, OS_File_Access_Flags flags) {
+os_file_open(string8 path, OS_File_Access_Flags flags) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
 
@@ -155,6 +155,7 @@ os_file_write(OS_File file, rng1s64 rng, rawptr out) {
 		lseek(fd, rng.min + written, SEEK_SET);
 		#endif
 
+		errno = 0;
 		ssize_t amt = write(fd, out + written, (u64)left);
 		if (amt >= 0) {
 			written += amt;
@@ -181,7 +182,7 @@ os_file_get_properties(OS_File file) {
 }
 
 proc b8
-os_path_remove(string path) {
+os_path_remove(string8 path) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
 	b8 success = (remove(cstr) != -1);
@@ -190,7 +191,7 @@ os_path_remove(string path) {
 }
 
 proc b8
-os_path_exists(string path) {
+os_path_exists(string8 path) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
 	int success = access(cstr, F_OK);
@@ -200,7 +201,7 @@ os_path_exists(string path) {
 }
 
 proc b8
-os_path_copy(string dst, string src) {
+os_path_copy(string8 dst, string8 src) {
 	b8 result = 0;
 	OS_File dst_handle = os_file_open(dst, (OS_File_Access_Flags)(OS_File_Access_Flag_Read_Write | OS_File_Access_Flag_Create));
 	OS_File src_handle = os_file_open(src, (OS_File_Access_Flags)(OS_File_Access_Flag_Read_Only));
@@ -235,7 +236,7 @@ os_path_copy(string dst, string src) {
 }
 
 proc b8
-os_make_directory(string path) {
+os_make_directory(string8 path) {
 	b8 result = 0;
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
@@ -246,7 +247,7 @@ os_make_directory(string path) {
 }
 
 proc b8
-os_directory_exists(string path) {
+os_directory_exists(string8 path) {
 	Temp scratch = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scratch.arena, path).m;
 	b8 exists = 0;
@@ -263,7 +264,7 @@ os_directory_exists(string path) {
 // file iterator
 
 proc b8
-os_file_iter_begin(string path, OS_File_Iter_Flags flags, _ret_ OS_File_Iter *it) {
+os_file_iter_begin(string8 path, OS_File_Iter_Flags flags, _ret_ OS_File_Iter *it) {
 	Temp scratch = scratch_begin(0, 0);
 	Linux_File_Iter *lnx_it = (Linux_File_Iter*)it;
 
@@ -284,7 +285,7 @@ os_file_iter_end(OS_File_Iter *it) {
 }
 
 proc b8
-os_file_iter_next(Arena *arena, OS_File_Iter *it, string *path, File_Properties *props) {
+os_file_iter_next(Arena *arena, OS_File_Iter *it, string8 *path, File_Properties *props) {
 	b8 result = 1;
 
 	Temp scratch = scratch_begin(&arena, 1);
@@ -313,11 +314,11 @@ os_file_iter_next(Arena *arena, OS_File_Iter *it, string *path, File_Properties 
 		}
 
 		rawptr cap = (entry->d_name + size_of(entry->d_name));
-		string at_name = str_cstring_scan_to_cap(entry->d_name, cap);
+		string8 at_name = str_cstring_scan_to_cap(entry->d_name, cap);
 		string_list list = zero_struct;
 		str_list_push(scratch.arena, &list, lnx_it->path);
 		str_list_push(scratch.arena, &list, at_name);
-		string full = str_list_join(scratch.arena, &list, &(String_Join){.sep = S("/")});
+		string8 full = str_list_join(scratch.arena, &list, &(String_Join){.sep = S("/")});
 		struct stat st;
 		stat(full.m, &st);
 
@@ -358,7 +359,7 @@ end:
 // shared memory
 
 proc OS_Shared_Memory
-os_shared_memory_alloc(string str, s64 size, OS_File_Access_Flags flags)
+os_shared_memory_alloc(string8 str, s64 size, OS_File_Access_Flags flags)
 {
 	OS_Shared_Memory handle = zero_struct;
 	Temp scr = scratch_begin(0, 0);
@@ -382,7 +383,7 @@ os_shared_memory_alloc(string str, s64 size, OS_File_Access_Flags flags)
 }
 
 proc OS_Shared_Memory
-os_shared_memory_open(string str, OS_File_Access_Flags flags) {
+os_shared_memory_open(string8 str, OS_File_Access_Flags flags) {
 	OS_Shared_Memory handle = zero_struct;
 	Temp scr = scratch_begin(0, 0);
 	cstring cstr = push_str_copy(scr.arena, str).m;
@@ -445,7 +446,7 @@ _linux_thread_entry_point(rawptr entity) {
 }
 
 proc OS_Thread
-os_thread_launch(OS_Thread_Proc *procedure, rawptr params, string name) {
+os_thread_launch(OS_Thread_Proc *procedure, rawptr params, string8 name) {
 	Linux_Entity *entity = os_lnx_entity_alloc(Linux_Entity_Kind_Thread);
 	entity->thread.procedure = procedure;
 	entity->thread.params = params;
@@ -647,7 +648,7 @@ os_condition_variable_broadcast(OS_CV cv) {
 // semaphores
 
 proc OS_Semaphore
-os_semaphore_alloc(s32 initial_count, s32 max_count, string name) {
+os_semaphore_alloc(s32 initial_count, s32 max_count, string8 name) {
 	assert(initial_count >= 0);
 	assert(max_count >= 0);
 

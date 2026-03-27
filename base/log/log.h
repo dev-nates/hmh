@@ -28,7 +28,7 @@ enum Logger_Option {
 	Logger_Option_Thread_Id      = bit8,
 };
 
-typedef void Logger_Proc(rawptr data, Logger_Level level, string text, Logger_Options options, Source_Code_Location loc);
+typedef void Logger_Proc(rawptr data, Logger_Level level, string8 text, Logger_Options options, Source_Code_Location loc);
 
 typedef struct Logger Logger;
 struct Logger {
@@ -46,7 +46,7 @@ logger_set_user_data(Logger *logger, rawptr data);
 
 #define log_msg(level, str) _log_msg(code_location, level, str)
 proc void
-_log_msg(Source_Code_Location loc, Logger_Level level, string str);
+_log_msg(Source_Code_Location loc, Logger_Level level, string8 str);
 
 #define msgfv(level, str, fmt, args) _log_msgfv(code_location, level, fmt, args)
 proc void

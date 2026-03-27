@@ -1,13 +1,13 @@
 
-#include "base/base_inc.h"
+#include "base/inc.h"
 #include "input/input_inc.h"
 #include "os/os_inc.h"
-#include "wm/wm_inc.h"
+// #include "wm/wm_inc.h"
 
-#include "base/base_inc.c"
+#include "base/inc.c"
 #include "input/input_inc.c"
 #include "os/os_inc.c"
-#include "wm/wm_inc.c"
+// #include "wm/wm_inc.c"
 
 // #define MICROSECONDS_PER_FRAME 16666
 // global f32 dt = ((f32)MICROSECONDS_PER_FRAME)/1000000.f;
@@ -17,19 +17,16 @@ entry_point(Cmdline cl) {
 	if (!input_open()) { return; }
 	Arena *gamepad_arena = arena_alloc();
 
+	Timer hotplug_timer = timer_make(thousands(50));
 	IGamepad_List gamepads = zero_struct;
 	gamepads.count = -1;
 
-	Timer hotplug_timer = timer_make(millions(1));
 
 	volatile b8 is_running = true;
 	for (;is_running;) {
 		Temp scr = scratch_begin(0,0);
 
-
-		if (input_check_for_hotplugged_gamepads()) {
-			timer_begin(&hotplug_timer);
-		}
+		if (input_check_for_hotplugged_gamepads()) { timer_begin(&hotplug_timer); }
 		if (gamepads.count == -1 || timer_elapsed(hotplug_timer)) {
 			timer_done(&hotplug_timer);
 
@@ -37,7 +34,7 @@ entry_point(Cmdline cl) {
 			arena_clear(gamepad_arena);
 
 			gamepads = input_connect_gamepads(gamepad_arena);
-			infof("Gamepad count: " TC(255, 0, 0) "%ld" TC_END, gamepads.count);
+			infof("Gamepad count: " TC(255, 255, 255) "%ld" TC_END, gamepads.count);
 			for (each_node(gamepad, gamepads.head, IGamepad)) {
 				infof("Gamepad: " TC(255, 255, 0) "%.*s" TC_END, svarg(gamepad->name));
 			}

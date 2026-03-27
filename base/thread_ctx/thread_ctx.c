@@ -47,14 +47,14 @@ tctx_get_scratch(Arena **conflicts, s64 count) {
 }
 
 proc void
-tctx_set_name(string name) {
+tctx_set_name(string8 name) {
 	Thread_Context *tctx = tctx_get_context();
 	s64 size = clamp_top(name.size, (s64)sizeof(tctx->thread_name));
 	memory_copy(tctx->thread_name, name.m, size);
 	tctx->thread_name_size = size;
 }
 
-proc string
+proc string8
 tctx_get_name(void) {
 	Thread_Context *tctx = tctx_get_context();
 	return make_str(tctx->thread_name, tctx->thread_name_size);

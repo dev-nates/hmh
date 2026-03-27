@@ -58,7 +58,6 @@ enum Window_Event_Kind {
 	Window_Event_Mouse_Button,
 	Window_Event_Keyboard_Scancode,
 	Window_Event_Keyboard_Text,
-
 	// Window events
 	Window_Event_Resize,
 };

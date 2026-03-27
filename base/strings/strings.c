@@ -99,10 +99,10 @@ cstring32_length(cstring32 c) {
 //--------------------------------------------------------------------------------
 // str macros && constructors
 
-proc string
-make_str(u8 *m, s64 size) { return (string){m, size}; }
+proc string8
+make_str(u8 *m, s64 size) { return (string8){m, size}; }
 
-proc string
+proc string8
 str_range(u8 *head, u8 *opl) {
 	s64 size = (s64)(opl - head);
 	assert(size >= 0);
@@ -110,18 +110,18 @@ str_range(u8 *head, u8 *opl) {
 	return make_str(head, size);
 }
 
-proc string
+proc string8
 str_zero(void) {
-	string result = zero_struct;
+	string8 result = zero_struct;
 	return result;
 }
 
-proc string
+proc string8
 str_from_cstring(cstring c) {
 	return make_str(c, cstring_length(c));
 }
 
-proc string
+proc string8
 str_cstring_scan_to_cap(rawptr start, rawptr cap) {
 	assert(cap >= start);
 	u8 *at = (u8*)start;
@@ -130,7 +130,7 @@ str_cstring_scan_to_cap(rawptr start, rawptr cap) {
 	return str_range((u8*)(start), (u8*)(at));
 }
 
-proc string
+proc string8
 str_cstring_scan_backwards_from_pos(rawptr start, rawptr pos) {
 	assert(pos >= start);
 	u8 *at = (u8*)pos;
@@ -222,8 +222,8 @@ str32_cstring_scan_backwards_from_pos(rawptr start, rawptr pos) {
 //--------------------------------------------------------------------------------
 // copy && format
 
-proc string
-push_str_cat(Arena *arena, string a, string b) {
+proc string8
+push_str_cat(Arena *arena, string8 a, string8 b) {
 	assert(a.size >= 0 && b.size >= 0);
 	s64 total_size = a.size + b.size;
 	u8 *mem = push_array_no_zero(arena, u8, total_size + 1);
@@ -233,8 +233,8 @@ push_str_cat(Arena *arena, string a, string b) {
 	return make_str(mem, total_size);
 }
 
-proc string
-push_str_copy(Arena *arena, string str) {
+proc string8
+push_str_copy(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	u8 *mem = push_array_no_zero(arena, u8, str.size + 1);
 	memory_copy(mem, str.m, str.size);
@@ -242,12 +242,12 @@ push_str_copy(Arena *arena, string str) {
 	return make_str(mem, str.size);
 }
 
-proc string
+proc string8
 push_strfv(Arena *arena, cstring fmt, va_list args) {
 	va_list args2;
 	va_copy(args2, args);
 	s32 needed_bytes = base_string_vsnprintf(0, 0, fmt, args) + 1;
-	string result = zero_struct;
+	string8 result = zero_struct;
 	result.m = push_array_no_zero(arena, u8, needed_bytes);
 	result.size = base_string_vsnprintf((cstring)result.m, needed_bytes, fmt, args2);
 	result.m[result.size] = 0;
@@ -255,11 +255,11 @@ push_strfv(Arena *arena, cstring fmt, va_list args) {
 	return result;
 }
 
-proc string
+proc string8
 push_strf(Arena *arena, cstring fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	string result = push_strfv(arena, fmt, args);
+	string8 result = push_strfv(arena, fmt, args);
 	va_end(args);
 	return result;
 }
@@ -267,8 +267,8 @@ push_strf(Arena *arena, cstring fmt, ...) {
 //--------------------------------------------------------------------------------
 // str stylization
 
-proc string
-upper_from_str(Arena *arena, string str) {
+proc string8
+upper_from_str(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 	str = push_str_copy(arena, str);
@@ -278,8 +278,8 @@ upper_from_str(Arena *arena, string str) {
 	return str;
 }
 
-proc string
-lower_from_str(Arena *arena, string str) {
+proc string8
+lower_from_str(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 	str = push_str_copy(arena, str);
@@ -289,8 +289,8 @@ lower_from_str(Arena *arena, string str) {
 	return str;
 }
 
-proc string
-correct_slash_from_str(Arena *arena, string str) {
+proc string8
+correct_slash_from_str(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 	str = push_str_copy(arena, str);
@@ -300,8 +300,8 @@ correct_slash_from_str(Arena *arena, string str) {
 	return str;
 }
 
-proc string
-weak_ass_slash_from_str(Arena *arena, string str) {
+proc string8
+weak_ass_slash_from_str(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 	str = push_str_copy(arena, str);
@@ -315,7 +315,7 @@ weak_ass_slash_from_str(Arena *arena, string str) {
 // str matching
 
 proc b8
-str_match(string a, string b, String_Match_Flags flags) {
+str_match(string8 a, string8 b, String_Match_Flags flags) {
 	assert(a.size >= 0 && b.size >= 0);
 	b8 result = 0;
 	if(a.size == b.size && flags == 0) {
@@ -346,7 +346,7 @@ str_match(string a, string b, String_Match_Flags flags) {
 }
 
 proc s64
-str_find_needle(s64 start_pos, string needle, string haystack, String_Match_Flags flags) {
+str_find_needle(s64 start_pos, string8 needle, string8 haystack, String_Match_Flags flags) {
 	assert(needle.size >= 0 && haystack.size >= 0);
 	assert(start_pos >= 0);
 	u8 *p = haystack.m + start_pos;
@@ -354,7 +354,7 @@ str_find_needle(s64 start_pos, string needle, string haystack, String_Match_Flag
 	u8 *stop_p = haystack.m + stop_offset;
 	if (needle.size > 0) {
 		u8 *string_opl = haystack.m + haystack.size;
-		string needle_tail = str_skip(needle, 1);
+		string8 needle_tail = str_skip(needle, 1);
 		String_Match_Flags adjusted_flags = flags | String_Match_Flag_Right_Side_Sloppy;
 		u8 needle_first_char_adjusted = needle.m[0];
 		if(adjusted_flags & String_Match_Flag_Case_Insensitive) {
@@ -380,7 +380,7 @@ str_find_needle(s64 start_pos, string needle, string haystack, String_Match_Flag
 }
 
 proc s64
-str_find_needle_reverse(s64 start_pos, string needle, string haystack, String_Match_Flags flags) {
+str_find_needle_reverse(s64 start_pos, string8 needle, string8 haystack, String_Match_Flags flags) {
 	assert(needle.size >= 0 && haystack.size >= 0);
 	assert(start_pos >= 0);
 
@@ -430,9 +430,9 @@ str_find_needle_reverse(s64 start_pos, string needle, string haystack, String_Ma
 }
 
 proc b8
-str_ends_with(string str, string end, String_Match_Flags flags) {
+str_ends_with(string8 str, string8 end, String_Match_Flags flags) {
 	assert(str.size >= 0 && end.size >= 0);
-	string postfix = str_postfix(str, end.size);
+	string8 postfix = str_postfix(str, end.size);
 	b8 is_match = str_match(end, postfix, flags);
 	return is_match;
 }
@@ -440,23 +440,23 @@ str_ends_with(string str, string end, String_Match_Flags flags) {
 //--------------------------------------------------------------------------------
 // str slicing
 
-proc string
-str_substr(string str, rng1s64 range) {
+proc string8
+str_substr(string8 str, rng1s64 range) {
 	assert(str.size >= 0);
 	range.min = clamp_bot(0, clamp_top(range.min, str.size));
 	range.max = clamp_bot(0, clamp_top(range.max, str.size));
 	return make_str(str.m + range.min, dim_1s64(range));
 }
 
-proc string
-str_prefix(string str, s64 size) {
+proc string8
+str_prefix(string8 str, s64 size) {
 	assert(str.size >= 0);
 	str.size = clamp_bot(0, clamp_top(size, str.size));
 	return str;
 }
 
-proc string
-str_skip(string str, s64 amt) {
+proc string8
+str_skip(string8 str, s64 amt) {
 	assert(str.size >= 0);
 	amt = clamp_bot(0, clamp_top(amt, str.size));
 	str.m += amt;
@@ -464,8 +464,8 @@ str_skip(string str, s64 amt) {
 	return str;
 }
 
-proc string
-str_postfix(string str, s64 size) {
+proc string8
+str_postfix(string8 str, s64 size) {
 	assert(str.size >= 0);
 	size = clamp_bot(0, clamp_top(size, str.size));
 	str.m = (str.m + str.size) - size;
@@ -473,16 +473,16 @@ str_postfix(string str, s64 size) {
 	return str;
 }
 
-proc string
-str_chop(string str, s64 amt) {
+proc string8
+str_chop(string8 str, s64 amt) {
 	assert(str.size >= 0);
 	amt = clamp_bot(0, clamp_top(amt, str.size));
 	str.size -= amt;
 	return str;
 }
 
-proc string
-str_skip_chop_whitespace(string str) {
+proc string8
+str_skip_chop_whitespace(string8 str) {
 	assert(str.size >= 0);
 	u8 *head = str.m;
 	u8 *opl = head + str.size;
@@ -498,7 +498,7 @@ str_skip_chop_whitespace(string str) {
 			break;
 		}
 	}
-	string result = str_range(head, opl);
+	string8 result = str_range(head, opl);
 	return result;
 }
 
@@ -506,7 +506,7 @@ str_skip_chop_whitespace(string str) {
 // str -> integer
 
 proc s64
-sign_from_str(string str, string *string_tail) {
+sign_from_str(string8 str, string8 *string_tail) {
 	assert(str.size >= 0);
 	s64 neg_count = 0;
 	s64 i = 0;
@@ -524,7 +524,7 @@ sign_from_str(string str, string *string_tail) {
 }
 
 proc b8
-str_is_integer(string str, u32 radix) {
+str_is_integer(string8 str, u32 radix) {
 	assert(str.size > 0);
 	b8 result = 0;
 	if (str.size > 0) {
@@ -543,7 +543,7 @@ str_is_integer(string str, u32 radix) {
 }
 
 proc u64
-u64_from_str(string str, u32 radix) {
+u64_from_str(string8 str, u32 radix) {
 	assert(str.size >= 0);
 	u64 x = 0;
 	if (1 < radix && radix <= 16) {
@@ -561,7 +561,7 @@ u64_from_str(string str, u32 radix) {
 }
 
 proc s64
-s64_from_str(string str, u32 radix) {
+s64_from_str(string8 str, u32 radix) {
 	assert(str.size >= 0);
 	s64 sign = sign_from_str(str, &str);
 	s64 x = (s64)u64_from_str(str, radix) * sign;
@@ -569,7 +569,7 @@ s64_from_str(string str, u32 radix) {
 }
 
 proc u32
-u32_from_str(string str, u32 radix) {
+u32_from_str(string8 str, u32 radix) {
 	assert(str.size >= 0);
 	u64 x64 = u64_from_str(str, radix);
 	u32 x32 = safe_cast_u32(x64);
@@ -577,7 +577,7 @@ u32_from_str(string str, u32 radix) {
 }
 
 proc s32
-s32_from_str(string str, u32 radix) {
+s32_from_str(string8 str, u32 radix) {
 	assert(str.size >= 0);
 	s64 sign = sign_from_str(str, &str);
 	s32 result = (s32)u64_from_str(str, radix) * (s32)sign;
@@ -585,7 +585,7 @@ s32_from_str(string str, u32 radix) {
 }
 
 proc b8
-try_u64_from_str_c_rules(string str, u64 *x) {
+try_u64_from_str_c_rules(string8 str, u64 *x) {
 	assert(str.size >= 0);
 	b8 is_integer = 0;
 	b8 is_decimal = str_is_integer(str, 10);
@@ -607,7 +607,7 @@ try_u64_from_str_c_rules(string str, u64 *x) {
 	return is_integer;
 }
 
-proc b8 try_s64_from_str_c_rules(string str, s64 *x) {
+proc b8 try_s64_from_str_c_rules(string8 str, s64 *x) {
 	assert(str.size >= 0);
 	s64 sign = sign_from_str(str, &str);
 	b8 is_integer = try_u64_from_str_c_rules(str, x);
@@ -615,11 +615,11 @@ proc b8 try_s64_from_str_c_rules(string str, s64 *x) {
 	return is_integer;
 }
 
-proc string
+proc string8
 str_from_memory_size(Arena *arena, s64 size) {
 	if (size < 0) return str_zero();
 
-	string result;
+	string8 result;
 	if (size < kilobytes(1)) {
 		result = push_strf(arena, "%ld bytes", size);
 	} else if (size < megabytes(1)) {
@@ -634,11 +634,11 @@ str_from_memory_size(Arena *arena, s64 size) {
 	return result;
 }
 
-proc string
+proc string8
 str_from_count(Arena *arena, s64 count) {
 	if (count < 0) return str_zero();
 
-	string result;
+	string8 result;
 	if (count < thousands(1)) {
 		result = push_strf(arena, "%ld", count);
 	} else if (count < millions(1)) {
@@ -666,7 +666,7 @@ str_from_count(Arena *arena, s64 count) {
 	return result;
 }
 
-proc string
+proc string8
 str_from_bits_u32(Arena *arena, u32 x) {
 	u8 c0 = ascii_symbol_from_integer[((x & 0xf0000000) >> 28)];
 	u8 c1 = ascii_symbol_from_integer[((x & 0x0f000000) >> 24)];
@@ -676,11 +676,11 @@ str_from_bits_u32(Arena *arena, u32 x) {
 	u8 c5 = ascii_symbol_from_integer[((x & 0x00000f00) >> 8)];
 	u8 c6 = ascii_symbol_from_integer[((x & 0x000000f0) >> 4)];
 	u8 c7 = ascii_symbol_from_integer[((x & 0x0000000f) >> 0)];
-	string result = push_strf(arena, "%c%c%c%c%c%c%c%c", c0, c1, c2, c3, c4, c5, c6, c7);
+	string8 result = push_strf(arena, "%c%c%c%c%c%c%c%c", c0, c1, c2, c3, c4, c5, c6, c7);
 	return result;
 }
 
-proc string
+proc string8
 str_from_bits_u64(Arena *arena, u64 x) {
 	u8 c0 = ascii_symbol_from_integer[((x & 0xf000000000000000) >> 60)];
 	u8 c1 = ascii_symbol_from_integer[((x & 0x0f00000000000000) >> 56)];
@@ -698,15 +698,15 @@ str_from_bits_u64(Arena *arena, u64 x) {
 	u8 cd = ascii_symbol_from_integer[((x & 0x0000000000000f00) >> 8)];
 	u8 ce = ascii_symbol_from_integer[((x & 0x00000000000000f0) >> 4)];
 	u8 cf = ascii_symbol_from_integer[((x & 0x000000000000000f) >> 0)];
-	string result = push_strf(arena, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, ca, cb, cc, cd, ce, cf);
+	string8 result = push_strf(arena, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, ca, cb, cc, cd, ce, cf);
 	return result;
 }
 
-proc string
+proc string8
 str_from_u64(Arena *arena, u64 val, u32 radix, s64 min_digits, u8 separator) {
 	assert(min_digits >= 0);
 
-	string prefix = str_zero();
+	string8 prefix = str_zero();
 	switch (radix) {
 		case 0x10: prefix = S("0x"); break;
 		case 010: prefix = S("0o"); break;
@@ -772,11 +772,11 @@ str_from_u64(Arena *arena, u64 val, u32 radix, s64 min_digits, u8 separator) {
 	assert(buffer_size >= prefix.size);
 	memory_copy(buf, prefix.m, prefix.size);
 
-	string result = make_str(buf, buffer_size);
+	string8 result = make_str(buf, buffer_size);
 	return result;
 }
 
-proc string
+proc string8
 str_from_s64(Arena *arena, s64 val, u32 radix, s64 min_digits, u8 separator) {
 	assert(min_digits >= 0);
 	assert(radix <= 16);
@@ -784,7 +784,7 @@ str_from_s64(Arena *arena, s64 val, u32 radix, s64 min_digits, u8 separator) {
 	b32 has_sign = (val < 0);
 	val = abs_s64(val);
 
-	string prefix = str_zero();
+	string8 prefix = str_zero();
 	switch (radix) {
 		case 0x10: prefix = (has_sign) ? S("-0x") : S("0x"); break;
 		case 010: prefix = (has_sign) ? S("-0o") : S("0o"); break;
@@ -851,12 +851,12 @@ str_from_s64(Arena *arena, s64 val, u32 radix, s64 min_digits, u8 separator) {
 	assert(buffer_size >= prefix.size);
 	memory_copy(buf, prefix.m, prefix.size);
 
-	string result = make_str(buf, buffer_size);
+	string8 result = make_str(buf, buffer_size);
 	return result;
 }
 
 proc f64
-f64_from_str(string str) {
+f64_from_str(string8 str) {
 	f64 result = 0;
 	if (str.size <= 0) { return result; }
 
@@ -941,7 +941,7 @@ str_list_push_node(string_list *list, string_node *node) {
 }
 
 proc string_node*
-str_list_push_node_set_string(string_list *list, string_node *node, string str) {
+str_list_push_node_set_string(string_list *list, string_node *node, string8 str) {
 	assert(str.size >= 0);
 	node->str = str;
 	str_list_push_node(list, node);	
@@ -960,7 +960,7 @@ str_list_push_node_front(string_list *list, string_node *node) {
 }
 
 proc string_node*
-str_list_push_node_front_set_string(string_list *list, string_node *node, string str) {
+str_list_push_node_front_set_string(string_list *list, string_node *node, string8 str) {
 	assert(str.size >= 0);
 	node->str = str;
 
@@ -970,7 +970,7 @@ str_list_push_node_front_set_string(string_list *list, string_node *node, string
 }
 
 proc string_node*
-str_list_push(Arena *arena, string_list *list, string str) {
+str_list_push(Arena *arena, string_list *list, string8 str) {
 	assert(str.size >= 0);
 	string_node *node = push_array_no_zero(arena, string_node, 1);
 	node->str = str;
@@ -979,7 +979,7 @@ str_list_push(Arena *arena, string_list *list, string str) {
 }
 
 proc string_node*
-str_list_push_front(Arena *arena, string_list *list, string str) {
+str_list_push_front(Arena *arena, string_list *list, string8 str) {
 	assert(str.size >= 0);
 	string_node *node = push_array_no_zero(arena, string_node, 1);
 	node->str = str;
@@ -988,20 +988,20 @@ str_list_push_front(Arena *arena, string_list *list, string str) {
 }
 
 proc string_node*
-str_list_push_copy(Arena *arena, string_list *list, string str) {
+str_list_push_copy(Arena *arena, string_list *list, string8 str) {
 	assert(str.size >= 0);
 	string_node *node = push_array_no_zero(arena, string_node, 1);
-	string copy = push_str_copy(arena, str);
+	string8 copy = push_str_copy(arena, str);
 	node->str = copy;
 	str_list_push_node(list, node);
 	return node;
 }
 
 proc string_node*
-str_list_push_front_copy(Arena *arena, string_list *list, string str) {
+str_list_push_front_copy(Arena *arena, string_list *list, string8 str) {
 	assert(str.size >= 0);
 	string_node *node = push_array_no_zero(arena, string_node, 1);
-	string copy = push_str_copy(arena, str);
+	string8 copy = push_str_copy(arena, str);
 	node->str = copy;
 	str_list_push_node_front(list, node);
 	return node;
@@ -1045,7 +1045,7 @@ proc string_node*
 str_list_pushf(Arena *arena, string_list *list, cstring fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	string str = push_strfv(arena, fmt, args);
+	string8 str = push_strfv(arena, fmt, args);
 	va_end(args);
 	string_node *node = push_array_no_zero(arena, string_node, 1);
 	node->str = str;
@@ -1057,7 +1057,7 @@ proc string_node*
 str_list_push_frontf(Arena *arena, string_list *list, cstring fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	string str = push_strfv(arena, fmt, args);
+	string8 str = push_strfv(arena, fmt, args);
 	va_end(args);
 	string_node *node = push_array_no_zero(arena, string_node, 1);
 	node->str = str;
@@ -1070,7 +1070,7 @@ str_list_copy(Arena *arena, string_list *list) {
 	string_list result = zero_struct;
 	for (string_node *at = list->head; at != 0; at = at->next) {
 		string_node *copy = push_array_no_zero(arena, string_node, 1);
-		string copy_str = push_str_copy(arena, at->str);
+		string8 copy_str = push_str_copy(arena, at->str);
 		copy->str = copy_str;
 		str_list_push_node(&result, copy);
 	}
@@ -1081,7 +1081,7 @@ str_list_copy(Arena *arena, string_list *list) {
 // splitting & joining
 
 proc string_list
-str_split(Arena *arena, string str, u8 *split_chars, s32 split_char_count, String_Split_Flags flags) {
+str_split(Arena *arena, string8 str, u8 *split_chars, s32 split_char_count, String_Split_Flags flags) {
 	assert(str.size >= 0);
 	assert(split_char_count >= 0);
 	string_list list = zero_struct;
@@ -1104,7 +1104,7 @@ str_split(Arena *arena, string str, u8 *split_chars, s32 split_char_count, Strin
 			}
 		}
 
-		string substr = str_substr(str, rng);
+		string8 substr = str_substr(str, rng);
 		if (keep_empties || substr.size) {
 			str_list_push(arena, &list, substr);
 		}
@@ -1117,7 +1117,7 @@ str_split(Arena *arena, string str, u8 *split_chars, s32 split_char_count, Strin
 }
 
 proc string_list
-str_split_by_string_chars(Arena *arena, string str, string split_chars, String_Split_Flags flags) {
+str_split_by_string_chars(Arena *arena, string8 str, string8 split_chars, String_Split_Flags flags) {
 	assert(str.size >= 0 && split_chars.size >= 0);
 	string_list list = zero_struct;
 	b32 keep_empties = flags & String_Split_Flag_Keep_Empties;
@@ -1137,7 +1137,7 @@ str_split_by_string_chars(Arena *arena, string str, string split_chars, String_S
 			}
 		}
 
-		string substr = str_substr(str, rng);
+		string8 substr = str_substr(str, rng);
 		if (keep_empties || substr.size) {
 			str_list_push(arena, &list, substr);
 			rng.min = rng.max = ((at+1) - str.m);
@@ -1146,10 +1146,10 @@ str_split_by_string_chars(Arena *arena, string str, string split_chars, String_S
 	return list;
 }
 
-proc string
+proc string8
 str_list_join(Arena *arena, string_list *list, String_Join *optional_params) {
 	String_Join join = (optional_params) ? *optional_params : (String_Join)zero_struct;
-	string str;
+	string8 str;
 	s64 total_size = list->total_size + join.pre.size + join.sep.size*max(0, list->node_count-1) + join.pst.size;
 	u8 *mem = (u8*)push_size(arena, total_size + 1);
 	u8 *at = mem;
@@ -1158,7 +1158,7 @@ str_list_join(Arena *arena, string_list *list, String_Join *optional_params) {
 	at += join.pre.size;
 
 	for (each_node(node, list->head, string_node)) {
-		string node_string = node->str;
+		string8 node_string = node->str;
 		memory_copy(at, node_string.m, node_string.size);
 		at += node_string.size;
 
@@ -1179,7 +1179,7 @@ str_list_join(Arena *arena, string_list *list, String_Join *optional_params) {
 }
 
 proc string_list
-str_list_from_flags(Arena *arena, u32 flags, string *flag_string_table, s32 flag_string_count) {
+str_list_from_flags(Arena *arena, u32 flags, string8 *flag_string_table, s32 flag_string_count) {
 	string_list list = zero_struct;
 	assert(flag_string_count >= 0);
 	for (each_index(i, flag_string_count)) {
@@ -1198,7 +1198,7 @@ proc string_array
 str_array_from_list(Arena *arena, string_list *list) {
 	string_array arr = zero_struct;
 	arr.count = list->node_count;
-	arr.v = push_array_no_zero(arena, string, list->node_count);
+	arr.v = push_array_no_zero(arena, string8, list->node_count);
 	s64 idx = 0;
 	for (each_node(node, list->head, string_node)) {
 		assert(idx < list->node_count);
@@ -1213,15 +1213,15 @@ str_array_reserve(Arena *arena, s64 count) {
 	assert(count >= 0);
 	string_array arr;
 	arr.count = count;
-	arr.v = push_array(arena, string, count);
+	arr.v = push_array(arena, string8, count);
 	return arr;
 }
 
 //--------------------------------------------------------------------------------
 // path helpers
 
-proc string
-str_chop_last_slash(string str) {
+proc string8
+str_chop_last_slash(string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 
@@ -1235,8 +1235,8 @@ str_chop_last_slash(string str) {
 	return str;
 }
 
-proc string
-str_skip_last_slash(string str) {
+proc string8
+str_skip_last_slash(string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 
@@ -1251,8 +1251,8 @@ str_skip_last_slash(string str) {
 	return str;
 }
 
-proc string
-str_chop_last_dot(string str) {
+proc string8
+str_chop_last_dot(string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 
@@ -1266,8 +1266,8 @@ str_chop_last_dot(string str) {
 	return str;
 }
 
-proc string
-str_skip_last_dot(string str) {
+proc string8
+str_skip_last_dot(string8 str) {
 	assert(str.size >= 0);
 	if (str.size <= 0) return str;
 
@@ -1283,7 +1283,7 @@ str_skip_last_dot(string str) {
 }
 
 proc Path_Style
-path_style_from_str(string str) {
+path_style_from_str(string8 str) {
 	assert(str.size >= 0);
 	Path_Style style = Path_Style_Null;
 	assert(str.size >= 0);
@@ -1306,7 +1306,7 @@ path_style_from_str(string str) {
 }
 
 proc string_list
-str_split_path(Arena *arena, string str) {
+str_split_path(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	string_list result = str_split(arena, str, (u8*)"/\\", 2, 0);
 	return result;
@@ -1387,7 +1387,7 @@ str_path_list_resolve_dots_in_place(string_list *path, Path_Style style) {
 	scratch_end(scratch);
 }
 
-proc string
+proc string8
 str_path_list_join_by_style(Arena *arena, string_list *path, Path_Style style) {
 	String_Join params = {0};
 	switch (style)
@@ -1403,12 +1403,12 @@ str_path_list_join_by_style(Arena *arena, string_list *path, Path_Style style) {
 			params.sep = S("/");
 		}break;
 	}
-	string result = str_list_join(arena, path, &params);
+	string8 result = str_list_join(arena, path, &params);
 	return result;
 }
 
-proc string
-str_extension_from_path(string path)
+proc string8
+str_extension_from_path(string8 path)
 {
 	assert(path.size >= 0);
 	if (path.size <= 0) return path;
@@ -1424,12 +1424,12 @@ str_extension_from_path(string path)
 	}
 	pos = clamp(0, pos, path.size);
 
-	string result = str_substr(path, r1s64(pos, path.size));
+	string8 result = str_substr(path, r1s64(pos, path.size));
 	return result;
 }
 
-proc string
-str_remove_extension_from_path(string path) {
+proc string8
+str_remove_extension_from_path(string8 path) {
 	assert(path.size >= 0);
 	if (path.size <= 0) return path;
 	u8 *head = path.m;
@@ -1443,18 +1443,18 @@ str_remove_extension_from_path(string path) {
 	}
 	pos = clamp(0, pos, path.size);
 
-	string result = str_substr(path, r1s64(0, pos));
+	string8 result = str_substr(path, r1s64(0, pos));
 	return result;
 }
 
 proc String_Loc_Pair
-str_loc_pair_from_string(string str) {
+str_loc_pair_from_string(string8 str) {
 	assert(str.size >= 0);
 	String_Loc_Pair pair = {0};
 	{
-		string file_part = {0};
-		string line_part = {0};
-		string col_part = {0};
+		string8 file_part = {0};
+		string8 line_part = {0};
+		string8 col_part = {0};
 		
 		// rjf: grab file part
 		for(s64 idx = 0; idx <= str.size; idx += 1)
@@ -1511,8 +1511,8 @@ utf8_decode(u8 *str, s64 max) {
 			if (2 < max) {
 				u8 cont_byte = str[1];
 				if (utf8_class[cont_byte >> 3] == 0) {
-					result.codepoint = (byte & bitmask5(u32)) << 6;
-					result.codepoint |=  (cont_byte & bitmask6(u32));
+					result.codepoint = (byte & cast(u32)(bitmask5)) << 6;
+					result.codepoint |=  (cont_byte & cast(u32)(bitmask6));
 					result.inc = 2;
 				}
 			}
@@ -1524,9 +1524,9 @@ utf8_decode(u8 *str, s64 max) {
 				if (utf8_class[cont_byte[0] >> 3] == 0 &&
 					utf8_class[cont_byte[1] >> 3] == 0)
 				{
-					result.codepoint = (byte & bitmask4(u32)) << 12;
-					result.codepoint |= ((cont_byte[0] & bitmask6(u32)) << 6);
-					result.codepoint |=  (cont_byte[1] & bitmask6(u32));
+					result.codepoint = (byte & cast(u32)(bitmask4)) << 12;
+					result.codepoint |= ((cont_byte[0] & cast(u32)(bitmask6)) << 6);
+					result.codepoint |=  (cont_byte[1] & cast(u32)(bitmask6));
 					result.inc = 3;
 				}
 			}
@@ -1538,10 +1538,10 @@ utf8_decode(u8 *str, s64 max) {
 					utf8_class[cont_byte[1] >> 3] == 0 &&
 					utf8_class[cont_byte[2] >> 3] == 0)
 				{
-					result.codepoint = (byte & bitmask3(u32)) << 18;
-					result.codepoint |= ((cont_byte[0] & bitmask6(u32)) << 12);
-					result.codepoint |= ((cont_byte[1] & bitmask6(u32)) <<  6);
-					result.codepoint |=  (cont_byte[2] & bitmask6(u32));
+					result.codepoint = (byte & cast(u32)(bitmask3)) << 18;
+					result.codepoint |= ((cont_byte[0] & cast(u32)(bitmask6)) << 12);
+					result.codepoint |= ((cont_byte[1] & cast(u32)(bitmask6)) <<  6);
+					result.codepoint |=  (cont_byte[2] & cast(u32)(bitmask6));
 					result.inc = 4;
 				}
 			}
@@ -1570,21 +1570,21 @@ utf8_encode(u8 *str, u32 codepoint) {
 		inc = 1;
 	}
 	else if (codepoint <= 0x7ff){
-		str[0] = (bitmask2(u32) << 6) | ((codepoint >> 6) & bitmask5(u32));
-		str[1] = bit8 | (codepoint & bitmask6(u32));
+		str[0] = (cast(u32)(bitmask2) << 6) | ((codepoint >> 6) & cast(u32)(bitmask5));
+		str[1] = bit8 | (codepoint & cast(u32)(bitmask6));
 		inc = 2;
 	}
 	else if (codepoint <= 0xffff){
-		str[0] = (bitmask3(u32) << 5) | ((codepoint >> 12) & bitmask4(u32));
-		str[1] = bit8 | ((codepoint >> 6) & bitmask6(u32));
-		str[2] = bit8 | ( codepoint       & bitmask6(u32));
+		str[0] = (cast(u32)(bitmask3) << 5) | ((codepoint >> 12) & cast(u32)(bitmask4));
+		str[1] = bit8 | ((codepoint >> 6) & cast(u32)(bitmask6));
+		str[2] = bit8 | ( codepoint       & cast(u32)(bitmask6));
 		inc = 3;
 	}
 	else if (codepoint <= 0x10ffff){
-		str[0] = (bitmask4(u32) << 4) | ((codepoint >> 18) & bitmask3(u32));
-		str[1] = bit8 | ((codepoint >> 12) & bitmask6(u32));
-		str[2] = bit8 | ((codepoint >>  6) & bitmask6(u32));
-		str[3] = bit8 | ( codepoint        & bitmask6(u32));
+		str[0] = (cast(u32)(bitmask4) << 4) | ((codepoint >> 18) & cast(u32)(bitmask3));
+		str[1] = bit8 | ((codepoint >> 12) & cast(u32)(bitmask6));
+		str[2] = bit8 | ((codepoint >>  6) & cast(u32)(bitmask6));
+		str[3] = bit8 | ( codepoint        & cast(u32)(bitmask6));
 		inc = 4;
 	}
 	else{
@@ -1606,7 +1606,7 @@ utf16_encode(u16 *str, u32 codepoint) {
 	else{
 		u32 v = codepoint - 0x10000;
 		str[0] = safe_cast_u16(0xd800 + (v >> 10));
-		str[1] = safe_cast_u16(0xdc00 + (v & bitmask10(u32)));
+		str[1] = safe_cast_u16(0xdc00 + (v & cast(u32)(bitmask10)));
 		inc = 2;
 	}
 	return inc;
@@ -1621,10 +1621,10 @@ utf8_from_utf32_single(u8 *buffer, u32 character) {
 //--------------------------------------------------------------------------------
 // unicode str conversions
 
-proc string
+proc string8
 str_from_str16(Arena *arena, string16 in) {
 	assert(in.size >= 0);
-	string result = str_zero();
+	string8 result = str_zero();
 	if(in.size)
 	{
 		s64 cap = in.size*3;
@@ -1646,7 +1646,7 @@ str_from_str16(Arena *arena, string16 in) {
 }
 
 proc string16
-str16_from_str(Arena *arena, string in) {
+str16_from_str(Arena *arena, string8 in) {
 	assert(in.size >= 0);
 	string16 result = str16_zero();
 	if(in.size)
@@ -1669,10 +1669,10 @@ str16_from_str(Arena *arena, string in) {
 	return result;
 }
 
-proc string
+proc string8
 str_from_str32(Arena *arena, string32 in) {
 	assert(in.size >= 0);
-	string result = str_zero();
+	string8 result = str_zero();
 	if (in.size) {
 		s64 cap = in.size*4;
 		u8 *str = push_array_no_zero(arena, u8, cap + 1);
@@ -1690,7 +1690,7 @@ str_from_str32(Arena *arena, string32 in) {
 }
 
 proc string32
-str32_from_str(Arena *arena, string in) {
+str32_from_str(Arena *arena, string8 in) {
 	assert(in.size >= 0);
 	string32 result = str32_zero(); 
 	if (in.size) {
@@ -1716,8 +1716,8 @@ str32_from_str(Arena *arena, string in) {
 //--------------------------------------------------------------------------------
 // text indenting
 
-proc string
-indented_from_string(Arena *arena, string str, $indent_params params) {
+proc string8
+indented_from_string(Arena *arena, string8 str, $indent_params params) {
 	assert(str.size >= 0);
 	read_only local_persist u8 spaces[] = "                                                                                                                                                                                                                                                              ";
 	read_only local_persist u8 tabs[]   = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
@@ -1747,7 +1747,7 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 
 		if (c == '\n') {
 			rng1s64 rng = r1s64(line_start, i);
-			string line = str_skip_chop_whitespace(str_substr(str, rng));
+			string8 line = str_skip_chop_whitespace(str_substr(str, rng));
 			if (line.size > 0) {
 				s64 total_indent = depth*(s64)params.width;
 				for (;;) {
@@ -1756,7 +1756,7 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 					str_list_push(scratch.arena, &list, push_strf(scratch.arena, "%.*s", cast(int)(this_indent), table[params.kind]));
 					total_indent -= this_indent;
 				}
-				string indented = push_strf(scratch.arena, "%.*s\n", svarg(line));
+				string8 indented = push_strf(scratch.arena, "%.*s\n", svarg(line));
 				str_list_push(scratch.arena, &list, indented);
 			}
 			if (line.size == 0) {
@@ -1771,7 +1771,7 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 
 	if (line_start < str.size) {
 		rng1s64 rng = r1s64(line_start, str.size);
-		string line = str_skip_chop_whitespace(str_substr(str, rng));
+		string8 line = str_skip_chop_whitespace(str_substr(str, rng));
 
 		s64 total_indent = depth*(s64)params.width;
 		for (;;) {
@@ -1780,11 +1780,11 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 			str_list_push(scratch.arena, &list, push_strf(scratch.arena, "%.*s", cast(int)this_indent, table[params.kind]));
 			total_indent -= this_indent;
 		}
-		string indented = push_strf(scratch.arena, "%.*s\n", svarg(line));
+		string8 indented = push_strf(scratch.arena, "%.*s\n", svarg(line));
 		str_list_push(scratch.arena, &list, indented);
 	}
 
-	string result = str_list_join(arena, &list, 0);
+	string8 result = str_list_join(arena, &list, 0);
 	scratch_end(scratch);
 	return result;
 }
@@ -1792,8 +1792,8 @@ indented_from_string(Arena *arena, string str, $indent_params params) {
 //--------------------------------------------------------------------------------
 // text escaping
 
-proc string
-escaped_from_raw_str(Arena *arena, string str) {
+proc string8
+escaped_from_raw_str(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	Temp scratch = scratch_begin(&arena, 1);
 	u8 *working_mem = push_array_no_zero(scratch.arena, u8, str.size*2);
@@ -1868,8 +1868,8 @@ escaped_from_raw_str(Arena *arena, string str) {
 	return make_str(mem, size);
 }
 
-proc string
-raw_from_escaped_str(Arena *arena, string str) {
+proc string8
+raw_from_escaped_str(Arena *arena, string8 str) {
 	assert(str.size >= 0);
 	Temp scratch = scratch_begin(&arena, 1);
 	u8 *working_mem = push_array_no_zero(scratch.arena, u8, str.size*2);
@@ -1958,14 +1958,14 @@ raw_from_escaped_str(Arena *arena, string str) {
 //--------------------------------------------------------------------------------
 // str <-> color
 
-proc string
+proc string8
 hex_string_from_rgba_4f32(Arena *arena, vec4f32 rgba) {
-	string hex_string = push_strf(arena, "%02x%02x%02x%02x", (u8)(rgba.x*255.f), (u8)(rgba.y*255.f), (u8)(rgba.z*255.f), (u8)(rgba.w*255.f));
+	string8 hex_string = push_strf(arena, "%02x%02x%02x%02x", (u8)(rgba.x*255.f), (u8)(rgba.y*255.f), (u8)(rgba.z*255.f), (u8)(rgba.w*255.f));
 	return hex_string;
 }
 
 proc vec4f32
-rgba_from_hex_string_4f32(string hex_string) {
+rgba_from_hex_string_4f32(string8 hex_string) {
 	assert(hex_string.size >= 0);
 	u8 byte_text[8] = {0};
 	s64 byte_text_idx = 0;
@@ -1988,7 +1988,7 @@ rgba_from_hex_string_4f32(string hex_string) {
 //--------------------------------------------------------------------------------
 // str fuzzy matching
 proc Fuzzy_Match_Range_List
-fuzzy_match_find(Arena *arena, string needle, string haystack) {
+fuzzy_match_find(Arena *arena, string8 needle, string8 haystack) {
 	assert(needle.size >= 0 && haystack.size >= 0);
 	Fuzzy_Match_Range_List result = {0};
 	Temp scratch = scratch_begin(&arena, 1);

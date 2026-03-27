@@ -622,7 +622,7 @@ cl = lg;                                 \
       //
       case 'S':
       {
-        string str = va_arg(va, string);
+        string8 str = va_arg(va, string8);
         s = (char *)str.m;
         l = (u32)str.size;
         lead[0] = 0;

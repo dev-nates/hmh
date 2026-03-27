@@ -2,8 +2,8 @@
 //--------------------------------------------------------------------------------
 // slice 8
 
-typedef struct array array;
-struct array {
+typedef struct array8 array8;
+struct array8 {
 	u8 *m;
 	s64 size;
 };
@@ -11,7 +11,7 @@ struct array {
 typedef struct array_node array_node;
 struct array_node {
 	array_node *next;
-	array arr;
+	array8 arr;
 };
 
 typedef struct array_list array_list;
@@ -23,7 +23,7 @@ struct array_list {
 
 typedef struct meta_array meta_array;
 struct meta_array {
-	array *v;
+	array8 *v;
 	s64 count;
 };
 
@@ -57,10 +57,10 @@ struct array64 {
 #define array_from_struct(s) make_array(s, sizeof(*s))
 #define array_from_count(a, cnt) make_array(a, sizeof(*a)*(cnt))
 #define array_from_fixed(a) make_array((u8*)a, sizeof(a))
-proc array make_array(u8 *m, s64 size);
+proc array8 make_array(u8 *m, s64 size);
 
 proc void array_list_push_node(array_list *list, array_node *node);
-proc void array_list_push(Arena *arena, array_list *list, array arr);
+proc void array_list_push(Arena *arena, array_list *list, array8 arr);
 
 proc meta_array reserve_meta_array(Arena *arena, s64 count);
 proc meta_array meta_array_from_list(Arena *arena, array_list list);

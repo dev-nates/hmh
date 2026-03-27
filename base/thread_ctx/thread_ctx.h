@@ -19,8 +19,8 @@ proc Thread_Context *tctx_get_context(void);
 
 proc Arena* tctx_get_scratch(Arena **conflicts, s64 count);
 
-proc void   tctx_set_name(string name);
-proc string tctx_get_name(void);
+proc void   tctx_set_name(string8 name);
+proc string8 tctx_get_name(void);
 
 proc void tctx_write_src_loc(Source_Code_Location loc);
 

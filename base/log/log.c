@@ -1,7 +1,7 @@
 
 
 proc void
-nil_logger_proc(rawptr data, Logger_Level level, string text, Logger_Options options, Source_Code_Location loc) {
+nil_logger_proc(rawptr data, Logger_Level level, string8 text, Logger_Options options, Source_Code_Location loc) {
 	// Do nothing
 }
 
@@ -16,7 +16,7 @@ logger_set_user_data(Logger *logger, rawptr data) {
 }
 
 proc void
-_log_msg(Source_Code_Location loc, Logger_Level level, string str) {
+_log_msg(Source_Code_Location loc, Logger_Level level, string8 str) {
 	Thread_Context *ctx = tctx_get_context();
 	Logger *logger = ctx->logger;
 	logger->procedure(logger->data, level, str, logger->options, loc);

@@ -9,7 +9,7 @@ disable_warnings_end;
 //--------------------------------------------------------------------------------
 // str types
 
-typedef array string;
+typedef array8 string8;
 typedef array16 string16;
 typedef array32 string32;
 
@@ -19,7 +19,7 @@ typedef array32 string32;
 typedef struct string_node string_node;
 struct string_node {
 	string_node *next;
-	string str;
+	string8 str;
 };
 
 typedef struct string_meta_node string_meta_node;
@@ -39,7 +39,7 @@ struct string_list {
 
 typedef struct string_array string_array;
 struct string_array {
-	string *v;
+	string8 *v;
 	s64 count;
 };
 
@@ -60,9 +60,9 @@ enum String_Split_Flags {
 
 typedef struct String_Join String_Join;
 struct String_Join {
-	string pre;
-	string sep;
-	string pst;
+	string8 pre;
+	string8 sep;
+	string8 pst;
 };
 
 //--------------------------------------------------------------------------------
@@ -84,11 +84,11 @@ typedef enum Path_Style {
 } Path_Style;
 
 //--------------------------------------------------------------------------------
-// string pair
+// string8 pair
 
 typedef struct String_Loc_Pair String_Loc_Pair;
 struct String_Loc_Pair {
-	string str;
+	string8 str;
 	Loc loc;
 };
 
@@ -192,22 +192,22 @@ cstring32_length(cstring32 c);
 #define str_struct(s) make_str((u8*)(s), sizeof(*(s)))
 
 // str8
-proc string
+proc string8
 make_str(u8 *m, s64 size);
 
-proc string
+proc string8
 str_range(u8 *first, u8 *opl);
 
-proc string
+proc string8
 str_zero(void);
 
-proc string
+proc string8
 str_from_cstring(cstring c);
 
-proc string
+proc string8
 str_cstring_scan_to_cap(rawptr start, rawptr cap);
 
-proc string
+proc string8
 str_cstring_scan_backwards_from_pos(rawptr start, rawptr pos);
 
 // str16
@@ -252,34 +252,34 @@ str32_cstring_scan_backwards_from_pos(rawptr start, rawptr pos);
 //--------------------------------------------------------------------------------
 // copy && format
 
-proc string
-push_str_cat(Arena *arena, string a, string b);
+proc string8
+push_str_cat(Arena *arena, string8 a, string8 b);
 
-proc string
-push_str_copy(Arena *arena, string str);
+proc string8
+push_str_copy(Arena *arena, string8 str);
 
-proc string
+proc string8
 push_strfv(Arena *arena, cstring fmt, va_list args);
 
 
 CLANG_FORMAT_WARN(2, 3)
-proc string
+proc string8
 push_strf(Arena *arena, cstring fmt, ...);
 
 //--------------------------------------------------------------------------------
 // str stylization
 
-proc string
-upper_from_str(Arena *arena, string str);
+proc string8
+upper_from_str(Arena *arena, string8 str);
 
-proc string
-lower_from_str(Arena *arena, string str);
+proc string8
+lower_from_str(Arena *arena, string8 str);
 
-proc string
-correct_slash_from_str(Arena *arena, string str);
+proc string8
+correct_slash_from_str(Arena *arena, string8 str);
 
-proc string
-weak_ass_slash_from_str(Arena *arena, string str);
+proc string8
+weak_ass_slash_from_str(Arena *arena, string8 str);
 
 //--------------------------------------------------------------------------------
 // str matching
@@ -287,89 +287,89 @@ weak_ass_slash_from_str(Arena *arena, string str);
 #define str_match_lit(a_lit, b, flags)   str_match(str_lit(a_lit), (b), (flags))
 #define str_match_cstr(a_cstr, b, flags) str_match(str_cstring(a_cstr), (b), (flags))
 proc b8
-str_match(string a, string b, String_Match_Flags flags);
+str_match(string8 a, string8 b, String_Match_Flags flags);
 
 proc s64
-str_find_needle(s64 start_pos, string needle, string haystack, String_Match_Flags flags);
+str_find_needle(s64 start_pos, string8 needle, string8 haystack, String_Match_Flags flags);
 
 proc s64
-str_find_needle_reverse(s64 start_pos, string needle, string haystack, String_Match_Flags flags);
+str_find_needle_reverse(s64 start_pos, string8 needle, string8 haystack, String_Match_Flags flags);
 
 proc b8
-str_ends_with(string str, string end, String_Match_Flags flags);
+str_ends_with(string8 str, string8 end, String_Match_Flags flags);
 #define str_ends_with_lit(str, end_lit, flags) str_ends_with((str), str_lit(end_lit), (flags))
 
 //--------------------------------------------------------------------------------
 // str slicing
 
-proc string
-str_substr(string str, rng1s64 range);
+proc string8
+str_substr(string8 str, rng1s64 range);
 
-proc string
-str_prefix(string str, s64 size);
+proc string8
+str_prefix(string8 str, s64 size);
 
-proc string
-str_skip(string str, s64 amt);
+proc string8
+str_skip(string8 str, s64 amt);
 
-proc string
-str_postfix(string str, s64 size);
+proc string8
+str_postfix(string8 str, s64 size);
 
-proc string
-str_chop(string str, s64 amt);
+proc string8
+str_chop(string8 str, s64 amt);
 
-proc string
-str_skip_chop_whitespace(string str);
+proc string8
+str_skip_chop_whitespace(string8 str);
 
 //--------------------------------------------------------------------------------
 // str -> integer
 proc s64
-sign_from_str(string str, string *string_tail);
+sign_from_str(string8 str, string8 *string_tail);
 
 proc b8
-str_is_integer(string str, u32 radix);
+str_is_integer(string8 str, u32 radix);
 
 proc u64
-u64_from_str(string str, u32 radix);
+u64_from_str(string8 str, u32 radix);
 
 proc s64
-s64_from_str(string str, u32 radix);
+s64_from_str(string8 str, u32 radix);
 
 proc u32
-u32_from_str(string str, u32 radix);
+u32_from_str(string8 str, u32 radix);
 
 proc s32
-s32_from_str(string str, u32 radix);
+s32_from_str(string8 str, u32 radix);
 
 proc b8
-try_u64_from_str_c_rules(string str, u64 *x);
+try_u64_from_str_c_rules(string8 str, u64 *x);
 
 proc b8
-try_s64_from_str_c_rules(string str, s64 *x);
+try_s64_from_str_c_rules(string8 str, s64 *x);
 
 //--------------------------------------------------------------------------------
 // integer -> str
-proc string
+proc string8
 str_from_memory_size(Arena *arena, s64 size);
 
-proc string
+proc string8
 str_from_count(Arena *arena, s64 count);
 
-proc string
+proc string8
 str_from_bits_u32(Arena *arena, u32 x);
 
-proc string
+proc string8
 str_from_bits_u64(Arena *arena, u64 x);
 
-proc string
+proc string8
 str_from_u64(Arena *arena, u64 val, u32 radix, s64 min_digits, u8 digit_group_separator);
 
-proc string
+proc string8
 str_from_s64(Arena *arena, s64 val, u32 radix, s64 min_digits, u8 digit_group_separator);
 
 //--------------------------------------------------------------------------------
 // float <- str
 proc f64
-f64_from_str8(string str);
+f64_from_str8(string8 str);
 
 //--------------------------------------------------------------------------------
 // str list procs
@@ -378,26 +378,26 @@ proc string_node*
 str_list_push_node(string_list *list, string_node *node);
 
 proc string_node*
-str_list_push_node_set_string(string_list *list, string_node *node, string str);
+str_list_push_node_set_string(string_list *list, string_node *node, string8 str);
 
 proc string_node*
 str_list_push_node_front(string_list *list, string_node *node);
 
 proc string_node*
-str_list_push_node_front_set_string(string_list *list, string_node *node, string str);
+str_list_push_node_front_set_string(string_list *list, string_node *node, string8 str);
 
 proc string_node*
-str_list_push(Arena *arena, string_list *list, string str);
+str_list_push(Arena *arena, string_list *list, string8 str);
 
 proc string_node*
-str_list_push_front(Arena *arena, string_list *list, string str);
+str_list_push_front(Arena *arena, string_list *list, string8 str);
 
 
 proc string_node*
-str_list_push_copy(Arena *arena, string_list *list, string str);
+str_list_push_copy(Arena *arena, string_list *list, string8 str);
 
 proc string_node*
-str_list_push_front_copy(Arena *arena, string_list *list, string str);
+str_list_push_front_copy(Arena *arena, string_list *list, string8 str);
 
 
 proc void
@@ -421,19 +421,19 @@ str_list_copy(Arena *arena, string_list *list);
 // splitting & joining
 
 proc string_list
-str_split(Arena *arena, string str, u8 *split_chars, s32 split_char_count, String_Split_Flags flags);
+str_split(Arena *arena, string8 str, u8 *split_chars, s32 split_char_count, String_Split_Flags flags);
 
 proc string_list
-str_split_by_string_chars(Arena *arena, string str, string split_chars, String_Split_Flags flags);
+str_split_by_string_chars(Arena *arena, string8 str, string8 split_chars, String_Split_Flags flags);
 
 proc string_list
-str_list_split_by_string_chars(Arena *arena, string_list list, string split_chars, String_Split_Flags flags);
+str_list_split_by_string_chars(Arena *arena, string_list list, string8 split_chars, String_Split_Flags flags);
 
-proc string
+proc string8
 str_list_join(Arena *arena, string_list *list, String_Join *optional_params);
 
 proc string_list
-str_list_from_flags(Arena *arena, u32 flags, string *flag_string_table, s32 flag_string_count);
+str_list_from_flags(Arena *arena, u32 flags, string8 *flag_string_table, s32 flag_string_count);
 
 //--------------------------------------------------------------------------------
 // str arrays
@@ -447,40 +447,40 @@ str_array_reserve(Arena *arena, s64 count);
 //--------------------------------------------------------------------------------
 // path helpers
 
-proc string
-str_chop_last_slash(string str);
+proc string8
+str_chop_last_slash(string8 str);
 
-proc string
-str_skip_last_slash(string str);
+proc string8
+str_skip_last_slash(string8 str);
 
-proc string
-str_chop_last_dot(string str);
+proc string8
+str_chop_last_dot(string8 str);
 
-proc string
-str_skip_last_dot(string str);
+proc string8
+str_skip_last_dot(string8 str);
 
 
 proc Path_Style
-path_style_from_str(string str);
+path_style_from_str(string8 str);
 
 proc string_list
-str_split_path(Arena *arena, string str);
+str_split_path(Arena *arena, string8 str);
 
 proc void
 str_path_list_resolve_dots_in_place(string_list *path, Path_Style style);
 
-proc string
+proc string8
 str_path_list_join_by_style(Arena *arena, string_list *path, Path_Style style);
 
-proc string
-str_extension_from_path(string path);
+proc string8
+str_extension_from_path(string8 path);
 
-proc string
-str_remove_extension_from_path(string path);
+proc string8
+str_remove_extension_from_path(string8 path);
 
 
 proc String_Loc_Pair
-str_loc_pair_from_string(string str);
+str_loc_pair_from_string(string8 str);
 
 //--------------------------------------------------------------------------------
 // utf-8 / utf-16 encoding / decoding
@@ -503,47 +503,47 @@ utf8_from_utf32_single(u8 *buffer, u32 character);
 //--------------------------------------------------------------------------------
 // unicode str conversions
 
-proc string
+proc string8
 str_from_str16(Arena *arena, string16 in);
 
 proc string16
-str16_from_str(Arena *arena, string in);
+str16_from_str(Arena *arena, string8 in);
 
-proc string
+proc string8
 str_from_str32(Arena *arena, string32 in);
 
 proc string32
-str32_from_str(Arena *arena, string in);
+str32_from_str(Arena *arena, string8 in);
 
 
 //--------------------------------------------------------------------------------
 // text indenting
 
-proc string
-indented_from_string(Arena *arena, string str, $indent_params params);
+proc string8
+indented_from_string(Arena *arena, string8 str, $indent_params params);
 
 //--------------------------------------------------------------------------------
 // text escaping
 
-proc string
-escaped_from_raw_str(Arena *arena, string str);
+proc string8
+escaped_from_raw_str(Arena *arena, string8 str);
 
-proc string
-raw_from_escaped_str(Arena *arena, string str);
+proc string8
+raw_from_escaped_str(Arena *arena, string8 str);
 
 //--------------------------------------------------------------------------------
 // str <-> color
 
-proc string
+proc string8
 hex_string_from_rgba_4f32(Arena *arena, vec4f32 rgba);
 
 proc vec4f32
-rgba_from_hex_string_4f32(string hex_string);
+rgba_from_hex_string_4f32(string8 hex_string);
 
 //--------------------------------------------------------------------------------
 // str fuzzy matching
 proc Fuzzy_Match_Range_List
-fuzzy_match_find(Arena *arena, string needle, string haystack);
+fuzzy_match_find(Arena *arena, string8 needle, string8 haystack);
 
 proc Fuzzy_Match_Range_List
 fuzzy_match_range_list_copy(Arena *arena, Fuzzy_Match_Range_List *src);

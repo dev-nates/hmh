@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 //--------------------------------------------------------------------------------
-//intrinsics
+// Intrinsics
 #if COMPILER_MSVC
 # include <intrin.h>
 #elif COMPILER_CLANG || COMPILER_GCC
@@ -19,7 +19,7 @@
 #endif
 
 //--------------------------------------------------------------------------------
-// keywords
+// Keywords
 
 #define true 1
 #define false 0
@@ -172,6 +172,10 @@
 #endif
 
 // -------------------------------------------------------------------------------------------------
+// Abort
+#define abort_program(status) _exit(status)
+
+// -------------------------------------------------------------------------------------------------
 // Format
 #if COMPILER_CLANG
 #define CLANG_FORMAT_WARN(start, end) __attribute__((__format__(__printf__, start, end)))
@@ -312,71 +316,71 @@ global s32 min_s32 = (s32)0x80000000;
 global s16 min_s16 = (s16)0x8000;
 global s8  min_s8  =  (s8)0x80;
 
-#define bitmask1(type) cast(type)(0x00000001)
-#define bitmask2(type) cast(type)(0x00000003)
-#define bitmask3(type) cast(type)(0x00000007)
-#define bitmask4(type) cast(type)(0x0000000f)
-#define bitmask5(type) cast(type)(0x0000001f)
-#define bitmask6(type) cast(type)(0x0000003f)
-#define bitmask7(type) cast(type)(0x0000007f)
-#define bitmask8(type) cast(type)(0x000000ff)
-#define bitmask9(type) cast(type)(0x000001ff)
-#define bitmask10(type) cast(type)(0x000003ff)
-#define bitmask11(type) cast(type)(0x000007ff)
-#define bitmask12(type) cast(type)(0x00000fff)
-#define bitmask13(type) cast(type)(0x00001fff)
-#define bitmask14(type) cast(type)(0x00003fff)
-#define bitmask15(type) cast(type)(0x00007fff)
-#define bitmask16(type) cast(type)(0x0000ffff)
-#define bitmask17(type) cast(type)(0x0001ffff)
-#define bitmask18(type) cast(type)(0x0003ffff)
-#define bitmask19(type) cast(type)(0x0007ffff)
-#define bitmask20(type) cast(type)(0x000fffff)
-#define bitmask21(type) cast(type)(0x001fffff)
-#define bitmask22(type) cast(type)(0x003fffff)
-#define bitmask23(type) cast(type)(0x007fffff)
-#define bitmask24(type) cast(type)(0x00ffffff)
-#define bitmask25(type) cast(type)(0x01ffffff)
-#define bitmask26(type) cast(type)(0x03ffffff)
-#define bitmask27(type) cast(type)(0x07ffffff)
-#define bitmask28(type) cast(type)(0x0fffffff)
-#define bitmask29(type) cast(type)(0x1fffffff)
-#define bitmask30(type) cast(type)(0x3fffffff)
-#define bitmask31(type) cast(type)(0x7fffffff)
-#define bitmask32(type) cast(type)(0xffffffff)
+#define bitmask1 0x00000001
+#define bitmask2 0x00000003
+#define bitmask3 0x00000007
+#define bitmask4 0x0000000f
+#define bitmask5 0x0000001f
+#define bitmask6 0x0000003f
+#define bitmask7 0x0000007f
+#define bitmask8 0x000000ff
+#define bitmask9 0x000001ff
+#define bitmask10 0x000003ff
+#define bitmask11 0x000007ff
+#define bitmask12 0x00000fff
+#define bitmask13 0x00001fff
+#define bitmask14 0x00003fff
+#define bitmask15 0x00007fff
+#define bitmask16 0x0000ffff
+#define bitmask17 0x0001ffff
+#define bitmask18 0x0003ffff
+#define bitmask19 0x0007ffff
+#define bitmask20 0x000fffff
+#define bitmask21 0x001fffff
+#define bitmask22 0x003fffff
+#define bitmask23 0x007fffff
+#define bitmask24 0x00ffffff
+#define bitmask25 0x01ffffff
+#define bitmask26 0x03ffffff
+#define bitmask27 0x07ffffff
+#define bitmask28 0x0fffffff
+#define bitmask29 0x1fffffff
+#define bitmask30 0x3fffffff
+#define bitmask31 0x7fffffff
+#define bitmask32 0xffffffff
 
-#define bitmask33(type) cast(type)(0x00000001ffffffffull)
-#define bitmask34(type) cast(type)(0x00000003ffffffffull)
-#define bitmask35(type) cast(type)(0x00000007ffffffffull)
-#define bitmask36(type) cast(type)(0x0000000fffffffffull)
-#define bitmask37(type) cast(type)(0x0000001fffffffffull)
-#define bitmask38(type) cast(type)(0x0000003fffffffffull)
-#define bitmask39(type) cast(type)(0x0000007fffffffffull)
-#define bitmask40(type) cast(type)(0x000000ffffffffffull)
-#define bitmask41(type) cast(type)(0x000001ffffffffffull)
-#define bitmask42(type) cast(type)(0x000003ffffffffffull)
-#define bitmask43(type) cast(type)(0x000007ffffffffffull)
-#define bitmask44(type) cast(type)(0x00000fffffffffffull)
-#define bitmask45(type) cast(type)(0x00001fffffffffffull)
-#define bitmask46(type) cast(type)(0x00003fffffffffffull)
-#define bitmask47(type) cast(type)(0x00007fffffffffffull)
-#define bitmask48(type) cast(type)(0x0000ffffffffffffull)
-#define bitmask49(type) cast(type)(0x0001ffffffffffffull)
-#define bitmask50(type) cast(type)(0x0003ffffffffffffull)
-#define bitmask51(type) cast(type)(0x0007ffffffffffffull)
-#define bitmask52(type) cast(type)(0x000fffffffffffffull)
-#define bitmask53(type) cast(type)(0x001fffffffffffffull)
-#define bitmask54(type) cast(type)(0x003fffffffffffffull)
-#define bitmask55(type) cast(type)(0x007fffffffffffffull)
-#define bitmask56(type) cast(type)(0x00ffffffffffffffull)
-#define bitmask57(type) cast(type)(0x01ffffffffffffffull)
-#define bitmask58(type) cast(type)(0x03ffffffffffffffull)
-#define bitmask59(type) cast(type)(0x07ffffffffffffffull)
-#define bitmask60(type) cast(type)(0x0fffffffffffffffull)
-#define bitmask61(type) cast(type)(0x1fffffffffffffffull)
-#define bitmask62(type) cast(type)(0x3fffffffffffffffull)
-#define bitmask63(type) cast(type)(0x7fffffffffffffffull)
-#define bitmask64(type) cast(type)(0xffffffffffffffffull)
+#define bitmask33 0x00000001ffffffffull
+#define bitmask34 0x00000003ffffffffull
+#define bitmask35 0x00000007ffffffffull
+#define bitmask36 0x0000000fffffffffull
+#define bitmask37 0x0000001fffffffffull
+#define bitmask38 0x0000003fffffffffull
+#define bitmask39 0x0000007fffffffffull
+#define bitmask40 0x000000ffffffffffull
+#define bitmask41 0x000001ffffffffffull
+#define bitmask42 0x000003ffffffffffull
+#define bitmask43 0x000007ffffffffffull
+#define bitmask44 0x00000fffffffffffull
+#define bitmask45 0x00001fffffffffffull
+#define bitmask46 0x00003fffffffffffull
+#define bitmask47 0x00007fffffffffffull
+#define bitmask48 0x0000ffffffffffffull
+#define bitmask49 0x0001ffffffffffffull
+#define bitmask50 0x0003ffffffffffffull
+#define bitmask51 0x0007ffffffffffffull
+#define bitmask52 0x000fffffffffffffull
+#define bitmask53 0x001fffffffffffffull
+#define bitmask54 0x003fffffffffffffull
+#define bitmask55 0x007fffffffffffffull
+#define bitmask56 0x00ffffffffffffffull
+#define bitmask57 0x01ffffffffffffffull
+#define bitmask58 0x03ffffffffffffffull
+#define bitmask59 0x07ffffffffffffffull
+#define bitmask60 0x0fffffffffffffffull
+#define bitmask61 0x1fffffffffffffffull
+#define bitmask62 0x3fffffffffffffffull
+#define bitmask63 0x7fffffffffffffffull
+#define bitmask64 0xffffffffffffffffull
 
 #define bit1  (1<<0)
 #define bit2  (1<<1)

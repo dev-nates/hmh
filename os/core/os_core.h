@@ -47,7 +47,7 @@ struct OS_System_Info
   s32 page_size;
   s64 large_page_size;
   s64 allocation_granularity;
-  string machine_name;
+  string8 machine_name;
 };
 
 //--------------------------------------------------------------------------------
@@ -58,9 +58,9 @@ struct OS_Process_Info
 {
   u32 pid;
   b32 large_pages_allowed;
-  string bin_path;
-  string user_path;
-  string current_path;
+  string8 bin_path;
+  string8 user_path;
+  string8 current_path;
 };
 
 //--------------------------------------------------------------------------------
@@ -119,14 +119,14 @@ os_get_system_info(void);
 proc OS_Process_Info
 os_get_process_info(void);
 
-proc string
+proc string8
 os_get_current_path(Arena *arena);
 
 //--------------------------------------------------------------------------------
 // file procs
 
 proc OS_File
-os_file_open(string path, OS_File_Access_Flags flags);
+os_file_open(string8 path, OS_File_Access_Flags flags);
 
 proc void
 os_file_close(OS_File file);
@@ -142,47 +142,47 @@ os_file_get_properties(OS_File file);
 
 
 proc b8
-os_path_remove(string path);
+os_path_remove(string8 path);
 
 proc b8
-os_path_exists(string path);
+os_path_exists(string8 path);
 
 proc b8
-os_path_copy(string dst, string src);
+os_path_copy(string8 dst, string8 src);
 
-proc array
-os_data_from_path(Arena *arena, string path);
-
-proc b8
-os_write_data_to_path(string path, array data);
-
+proc array8
+os_data_from_path(Arena *arena, string8 path);
 
 proc b8
-os_make_directory(string path);
+os_write_data_to_path(string8 path, array8 data);
+
 
 proc b8
-os_directory_exists(string path);
+os_make_directory(string8 path);
+
+proc b8
+os_directory_exists(string8 path);
 
 //--------------------------------------------------------------------------------
 // file iterator
 
 proc b8
-os_file_iter_begin(string path, OS_File_Iter_Flags flags, OS_File_Iter *it);
+os_file_iter_begin(string8 path, OS_File_Iter_Flags flags, OS_File_Iter *it);
 
 proc void
 os_file_iter_end(OS_File_Iter *it);
 
 proc b8
-os_file_iter_next(Arena *arena, OS_File_Iter *it, _ret_ string *path, File_Properties *props);
+os_file_iter_next(Arena *arena, OS_File_Iter *it, _ret_ string8 *path, File_Properties *props);
 
 //--------------------------------------------------------------------------------
 // shared memory
 
 proc OS_Shared_Memory
-os_shared_memory_alloc(string string, s64 size, OS_File_Access_Flags flags);
+os_shared_memory_alloc(string8 string8, s64 size, OS_File_Access_Flags flags);
 
 proc OS_Shared_Memory
-os_shared_memory_open(string string, OS_File_Access_Flags flags);
+os_shared_memory_open(string8 string8, OS_File_Access_Flags flags);
 
 proc void
 os_shared_memory_close(OS_Shared_Memory shared_memory);
@@ -198,7 +198,7 @@ os_shared_memory_view_close(OS_Shared_Memory shared_memory, rawptr ptr, rng1s64 
 // threads
 
 proc OS_Thread
-os_thread_launch(OS_Thread_Proc *procedure, rawptr params, string name);
+os_thread_launch(OS_Thread_Proc *procedure, rawptr params, string8 name);
 
 proc b8
 os_thread_join(OS_Thread handle);
@@ -264,7 +264,7 @@ os_condition_variable_broadcast(OS_CV cv);
 // semaphores
 
 proc OS_Semaphore
-os_semaphore_alloc(s32 initial_count, s32 max_count, string name);
+os_semaphore_alloc(s32 initial_count, s32 max_count, string8 name);
 
 proc void
 os_semaphore_release(OS_Semaphore semaphore);

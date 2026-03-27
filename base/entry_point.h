@@ -2,8 +2,8 @@
 typedef struct Cmdline_Arg Cmdline_Arg;
 struct Cmdline_Arg {
 	Cmdline_Arg *next;
-	string name;
-	string value;
+	string8 name;
+	string8 value;
 };
 
 typedef struct Cmdline Cmdline;
@@ -13,7 +13,7 @@ struct Cmdline {
 };
 
 proc Cmdline base_cmdline_from_args(Arena *arena, s32 argc, cstring *args);
-proc string value_from_cmdline_arg(Cmdline_Arg *arg, string optional_name, String_Match_Flags flags);
+proc string8 value_from_cmdline_arg(Cmdline_Arg *arg, string8 optional_name, String_Match_Flags flags);
 
 /*
 	`base_main_thread_entry` is used for startup initialization for any layer in the codebase.

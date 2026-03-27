@@ -1,7 +1,7 @@
 
-proc array
+proc array8
 make_array(u8 *m, s64 size) {
-	return (array) { m, size };
+	return (array8) { m, size };
 }
 
 proc void
@@ -14,7 +14,7 @@ array_list_push_node(array_list *list, array_node *node) {
 }
 
 proc void
-array_list_push(Arena *arena, array_list *list, array arr) {
+array_list_push(Arena *arena, array_list *list, array8 arr) {
 	array_node *node = push_array(arena, array_node, 1);
 	node->arr = arr;
 	array_list_push_node(list, node);
@@ -22,7 +22,7 @@ array_list_push(Arena *arena, array_list *list, array arr) {
 
 proc meta_array
 reserve_meta_array(Arena *arena, s64 count) {
-	array *v = push_array(arena, array, count);
+	array8 *v = push_array(arena, array8, count);
 	meta_array result = {
 		.v = v,
 		.count = count,
@@ -32,14 +32,14 @@ reserve_meta_array(Arena *arena, s64 count) {
 
 proc meta_array
 meta_array_from_list(Arena *arena, array_list list) {
-	meta_array array = reserve_meta_array(arena, list.count);
+	meta_array arr = reserve_meta_array(arena, list.count);
 	s64 idx = 0;
 	for (each_node(node, list.head, array_node)) {
-		assert(idx < array.count);
-		array.v[idx] = node->arr;
+		assert(idx < arr.count);
+		arr.v[idx] = node->arr;
 		idx += 1;
 	}
-	return array;
+	return arr;
 }
 
 //--------------------------------------------------------------------------------

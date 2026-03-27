@@ -49,7 +49,7 @@ _do_level(Logger_Options options, Logger_Level level) {
 proc void
 _do_loc(Logger_Options options, Source_Code_Location loc) {
 	if (Logger_Option_Filepath & options) {
-		string filename = str_skip_last_slash(str_from_cstring(loc.filename));
+		string8 filename = str_skip_last_slash(str_from_cstring(loc.filename));
 		fprintf(stdout, "[%.*s :%ld:]", svarg(filename), loc.line);
 	}
 
@@ -59,7 +59,7 @@ _do_loc(Logger_Options options, Source_Code_Location loc) {
 }
 
 proc void
-console_logger_proc(rawptr data, Logger_Level level, string text, Logger_Options options, Source_Code_Location loc) {
+console_logger_proc(rawptr data, Logger_Level level, string8 text, Logger_Options options, Source_Code_Location loc) {
 	_do_level(options ,level);
 	_do_loc(options ,loc);
 	fprintf(stdout, ": %.*s\n", svarg(text));

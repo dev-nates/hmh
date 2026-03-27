@@ -5,7 +5,7 @@
 	(--name=value || --name:value) is a name value pair denoted with a double dash prefix and a separator (= || :)
 	(value || -value || --value) is a standalone value with no associated name.
 	--name= is a name without a value
-	--name="quote string" will be passed in as: `--name=quote string`
+	--name="quote string8" will be passed in as: `--name=quote string8`
 */
 proc Cmdline
 base_cmdline_from_args(Arena *arena, s32 argc, cstring *args) {
@@ -16,11 +16,11 @@ base_cmdline_from_args(Arena *arena, s32 argc, cstring *args) {
 
 		cstring arg = args[i];
 		s64 size = cstring_length(arg);
-		string arg_string = make_str(arg, size);
+		string8 arg_string = make_str(arg, size);
 
 		b32 is_double_dash = 0;
 		b32 is_single_dash = 0;
-		string at = arg_string;
+		string8 at = arg_string;
 
 		if (at.size && at.m[0] == '-') {
 			is_single_dash = 1;
@@ -43,8 +43,8 @@ base_cmdline_from_args(Arena *arena, s32 argc, cstring *args) {
 			}
 		}
 
-		string name = str_zero();
-		string value = str_zero();
+		string8 name = str_zero();
+		string8 value = str_zero();
 		if (is_double_dash && seperator_pos != -1) {
 			s64 name_pos = value_pos;
 			value_pos = seperator_pos+1;
@@ -69,9 +69,9 @@ base_cmdline_from_args(Arena *arena, s32 argc, cstring *args) {
 	return cl;
 }
 
-proc string
-value_from_cmdline_arg(Cmdline_Arg *arg, string optional_name, String_Match_Flags flags) {
-	string result = str_zero();
+proc string8
+value_from_cmdline_arg(Cmdline_Arg *arg, string8 optional_name, String_Match_Flags flags) {
+	string8 result = str_zero();
 	if (!optional_name.size || !arg->name.size) { result = arg->value; }
 
 	if (optional_name.size && arg->name.size && str_match(optional_name, arg->name, flags)) {

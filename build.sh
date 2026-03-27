@@ -15,8 +15,8 @@ ignored_warnings="-Wno-format-non-iso -Wno-initializer-overrides -Wno-extra-semi
 # --------------------------------------------------------------------------------------------------
 # Defines
 defines="-DDEBUG=1"
-defines="$defines -DBASE_ENTRY_POINT=1"
-# defines="$defines -DOS_ENTRY_POINT=1"
+# defines="$defines -DBASE_ENTRY_POINT=1"
+defines="$defines -DOS_ENTRY_POINT=1"
 
 # --------------------------------------------------------------------------------------------------
 # Options
@@ -27,8 +27,8 @@ options="$options -I$root_path"
 
 libs="-lm -lwayland-client -lxkbcommon"
 method="build"
-mode="debug"
-scratch_package="logger"
+mode="scratch"
+scratch_package="linux_scratch"
 
 # --------------------------------------------------------------------------------------------------
 # ctags

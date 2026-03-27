@@ -1,11 +1,33 @@
 
 # Current
 
-Fix hotplugging issue.
+Goal: Make a linux specific os layer
+
+[30m] Header
+
+[15m] Utility
+[1h] Files
+[ ] Test files
+
+[ ] Directories
+[ ] File Iterator
+[ ] Shared memory
+[ ] Threads
+
+
+Goal: Base Sync api
+
+[ ] Mutex
+[ ] Rw mutex
+[ ] Condition variables
+[ ] Semaphores
 
 # Bugs
 
 # Todos
+
+Gamepad button and axis events need to expose the button and axis kind
+
 
 Looped live code editing
 

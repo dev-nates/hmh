@@ -22,7 +22,7 @@ typedef struct Linux_File_Iter Linux_File_Iter;
 struct Linux_File_Iter {
 	DIR *dir;
 	OS_File_Iter_Flags flags;
-	string path;
+	string8 path;
 };
 static_assert(size_of(Linux_File_Iter) <= OS_FILE_ITERATOR_OPAQUE_SIZE, os_linux_file_iterator_check_size);
 
@@ -56,7 +56,7 @@ struct Linux_Entity {
 			pthread_t handle;
 			OS_Thread_Proc *procedure;
 			rawptr params;
-			string name;
+			string8 name;
 		} thread;
 	};
 };

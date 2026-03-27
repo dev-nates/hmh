@@ -93,7 +93,7 @@ input_open(void) {
 		errorf("Failed to initialize inotify for /dev/input");
 		return false;
 	}
-	u32 mask = IN_CREATE | IN_DELETE;
+	u32 mask = IN_ATTRIB;
 	cstring directory = "/dev/input";
 	inotify_add_watch(gamepad_notify, directory, mask);
 	return true;
