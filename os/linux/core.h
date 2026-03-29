@@ -4,6 +4,13 @@ struct Linux_File { s64 v[1]; };
 proc Linux_File linux_file_zero(void) { return cast(Linux_File)zero_struct; }
 proc b8 linux_file_match(Linux_File a, Linux_File b) { return cast(b8)(a.v[0] == b.v[0]); }
 
+typedef struct Linux_Shared_Memory Linux_Shared_Memory;
+struct Linux_Shared_Memory {
+	s64 v[1];
+};
+proc Linux_Shared_Memory linux_shared_memory_zero(void) { return cast(Linux_Shared_Memory)zero_struct; }
+proc b8 linux_shared_memory_match(Linux_Shared_Memory a, Linux_Shared_Memory b) { return cast(b8)(a.v[0] == b.v[0]); };
+
 // -------------------------------------------------------------------------------------------------
 // System info
 typedef struct Linux_System_Info Linux_System_Info;
@@ -48,6 +55,19 @@ struct Linux_File_Iter {
 };
 
 // -------------------------------------------------------------------------------------------------
+// Thread
+
+typedef void Linux_Thread_Proc(rawptr data);
+
+typedef struct Linux_Thread Linux_Thread;
+struct Linux_Thread {
+	pthread_t handle;
+	Linux_Thread_Proc *procedure;
+	rawptr data;
+	string8 name;
+};
+
+// -------------------------------------------------------------------------------------------------
 // State
 
 typedef struct Linux_State Linux_State;
@@ -73,6 +93,7 @@ linux_current_path(Arena *arena);
 // -------------------------------------------------------------------------------------------------
 // File procs
 
+// @Note: access_mode && flags are passed to `open`
 proc Linux_File
 linux_file_open(string8 path, int flags, int mode);
 
@@ -110,7 +131,7 @@ linux_write_data_to_path(string8 path, array8 data);
 // Directory
 
 proc b8
-linux_make_directory(string8 path);
+linux_make_directory(string8 path, int mode);
 
 proc b8
 linux_directory_exists(string8 path);
@@ -124,6 +145,39 @@ linux_file_iter_begin(string8 path, Linux_File_Iter_Flags flags, Linux_File_Iter
 proc void
 linux_file_iter_end(Linux_File_Iter *it);
 
-proc void
+proc b8
 linux_file_iter_next(Arena *arena, Linux_File_Iter *it, _ret_ string8 *path, File_Properties *props);
+
+// -------------------------------------------------------------------------------------------------
+// Threads
+
+proc void
+linux_thread_launch(Linux_Thread *thread, Linux_Thread_Proc *procedure, rawptr data, string8 name);
+
+proc b8
+linux_thread_join(Linux_Thread thread);
+
+// -------------------------------------------------------------------------------------------------
+// Shared memory
+
+// @Note: mode && flags are passed to `shm_open`
+// @Note: Name specifies a path from root e.g. "/shared_mem_name" that two processes
+//        use to share memory between each other
+proc Linux_Shared_Memory
+linux_shm_alloc(string8 str, s64 size, int flags, int mode);
+
+proc Linux_Shared_Memory
+linux_shm_open(string8 str, int flags, int mode);
+
+proc void
+linux_shm_close(Linux_Shared_Memory shm);
+
+proc void
+linux_shm_unlink(string8 name);
+
+proc rawptr /*data*/
+linux_shm_view_open(Linux_Shared_Memory shm, rng1s64 range);
+
+proc void
+linux_shm_view_close(Linux_Shared_Memory shm, rawptr ptr, rng1s64 range);
 

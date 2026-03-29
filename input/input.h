@@ -197,7 +197,7 @@ struct IGamepad {
 	b8      has_rumble;
 	IButton btns[IGamepad_Button_Kind_COUNT];
 	IAxis   axes[IGamepad_Axis_Kind_COUNT];
-	string  name;
+	string8  name;
 	u8      name_buffer[128];
 	u8      opaque[IGAMEPAD_OPAQUE_SIZE];
 };

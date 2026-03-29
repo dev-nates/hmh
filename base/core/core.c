@@ -121,24 +121,24 @@ date_time_from_unix_time(u64 unix_time) {
 
 proc u16
 safe_cast_u16(u32 x) {
-	assert_always(x <= max_u16);
+	ensure(x <= max_u16);
 	return (u16)x;
 }
 proc u32
 safe_cast_u32(u64 x) {
-	assert_always(x <= max_u32);
+	ensure(x <= max_u32);
 	return (u32)x;
 }
 
 proc s16
 safe_cast_s16(s32 x) {
-	assert_always(min_s16 <= x && x <= max_s16);
+	ensure(min_s16 <= x && x <= max_s16);
 	return (s16)x;
 }
 
 proc s32
 safe_cast_s32(s64 x) {
-	assert_always(min_s32 <= x && x <= max_s32);
+	ensure(min_s32 <= x && x <= max_s32);
 	return (s32)x;
 }
 

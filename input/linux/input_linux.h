@@ -52,7 +52,7 @@ enum Linux_Gamepad_Button_Kind {
 	Linux_Gamepad_Button_COUNT,
 };
 
-global string linux_gamepad_button_names[Linux_Gamepad_Button_COUNT] = {
+global string8 linux_gamepad_button_names[Linux_Gamepad_Button_COUNT] = {
 	[Linux_Gamepad_Button_0]  = SC("Button0"),
 	[Linux_Gamepad_Button_1]  = SC("Button1"),
 	[Linux_Gamepad_Button_2]  = SC("Button2"),
@@ -126,7 +126,7 @@ enum Linux_Gamepad_Axis_Kind {
 	Linux_Gamepad_Axis_COUNT,
 };
 
-global string linux_gameapad_axis_names[Linux_Gamepad_Axis_COUNT] = {
+global string8 linux_gameapad_axis_names[Linux_Gamepad_Axis_COUNT] = {
 	[Linux_Gamepad_Axis_X]          = SC("X"),
 	[Linux_Gamepad_Axis_Y]          = SC("Y"),
 	[Linux_Gamepad_Axis_Z]          = SC("Z"),

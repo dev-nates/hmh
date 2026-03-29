@@ -96,7 +96,7 @@ struct Wayland_Window {
 	OS_Shared_Memory shared_memory_file;
 
 	vec2s32 dim;
-	b32 closed;
+	b8 closed;
 	string title;
 
 	s32     buffer_count;

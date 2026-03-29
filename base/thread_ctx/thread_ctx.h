@@ -7,9 +7,9 @@ struct Thread_Context {
 	Logger *logger;
 
 	s64 thread_name_size;
-	u8 thread_name[32];
+	u8 thread_name[64];
 
-	Source_Code_Location loc;
+	Code_Location loc;
 };
 c_linkage global per_thread Thread_Context* tctx_thread_global = 0;
 
@@ -22,9 +22,8 @@ proc Arena* tctx_get_scratch(Arena **conflicts, s64 count);
 proc void   tctx_set_name(string8 name);
 proc string8 tctx_get_name(void);
 
-proc void tctx_write_src_loc(Source_Code_Location loc);
-
-proc void tctx_read_src_loc(_ret_ Source_Code_Location *loc);
+proc void tctx_write_src_loc(Code_Location loc);
+proc void tctx_read_src_loc(_ret_ Code_Location *loc);
 #define tctx_write_this_src_loc() tctx_write_src_loc(code_location)
 
 #define scratch_begin(conflicts, count) temp_begin(tctx_get_scratch((conflicts), (count)))

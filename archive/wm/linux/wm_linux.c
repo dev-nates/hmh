@@ -31,9 +31,11 @@ _wayland_registry_establish_interface(
 		registered_interface = 1;
 	}
 
+#if LOG_WINDOW_BACKEND
 	if (registered_interface) {
-		printf("registered interface: %.*s [v: %u n: %u]\n", svarg(interface_string), version, name);
+		infof(WINDOW_BACKEND_LOG_COLOR "Registered interface: " TC_END "%.*s [v: %u n: %u]", svarg(interface_string), version, name);
 	}
+#endif
 }
 
 proc void

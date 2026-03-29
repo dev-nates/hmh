@@ -18,6 +18,10 @@ defines="-DDEBUG=1"
 # defines="$defines -DBASE_ENTRY_POINT=1"
 defines="$defines -DOS_ENTRY_POINT=1"
 
+
+# WINDOW_BACKEND: { WAYLAND, XCB, WIN32 }
+defines="$defines -DWINDOW_BACKEND=WAYLAND"
+
 # --------------------------------------------------------------------------------------------------
 # Options
 options="-std=c99 -Weverything -Werror $disable_unused_funcs $disable_no_shadowing $disable_conditional_uninitialized $ignored_warnings"
@@ -27,7 +31,8 @@ options="$options -I$root_path"
 
 libs="-lm -lwayland-client -lxkbcommon"
 method="build"
-mode="scratch"
+mode="debug"
+main_file="linux_main"
 scratch_package="linux_scratch"
 
 # --------------------------------------------------------------------------------------------------
@@ -39,7 +44,7 @@ ctags --exclude="@$root_path/.ignore_tags" --recurse $root_path
 
 if [ "$mode" == "debug" ]; then
 	defines="$defines -DDEBUG=1"
-	clang -g -O0 $defines $options $libs $root_path/main.c -o "$bin_path/p"
+	clang -g -O0 $defines $options $libs $root_path/$main_file.c -o "$bin_path/p"
 	if [ "$?" -ne 0 ]; then
 		exit 1
 	fi
@@ -50,7 +55,7 @@ if [ "$mode" == "debug" ]; then
 fi
 
 if [ "$mode" == "opt" ]; then
-	clang -O3 $defines $options $libs $root_path/main.c -o "$bin_path/p"
+	clang -O3 $defines $options $libs $root_path/$main_file.c -o "$bin_path/p"
 	if [ "$?" -ne 0 ]; then
 		exit 1
 	fi

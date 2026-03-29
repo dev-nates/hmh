@@ -143,9 +143,9 @@
 # error Unknown trap intrinsic for this compiler.
 #endif
 
-#define assert_always(x) do{if(!(x)) {debug_trap();}}while(0)
+#define ensure(x) do{if(!(x)) {debug_trap();}}while(0)
 #if BUILD_DEBUG
-# define assert(x) assert_always(x)
+# define assert(x) ensure(x)
 #else
 # define assert(x) (void)(x)
 #endif
@@ -450,13 +450,13 @@ global s8  min_s8  =  (s8)0x80;
 
 // -------------------------------------------------------------------------------------------------
 // Code location
-typedef struct Source_Code_Location Source_Code_Location;
-struct Source_Code_Location {
+typedef struct Code_Location Code_Location;
+struct Code_Location {
 	cstring filename;
 	cstring procedure;
 	s64 line;
 };
-#define code_location (Source_Code_Location){this_file_name, this_function_name, this_line_number}
+#define code_location (Code_Location){this_file_name, this_function_name, this_line_number}
 
 //--------------------------------------------------------------------------------
 // basic types
@@ -613,7 +613,7 @@ proc s32 safe_cast_s32(s64 x);
 
 proc u128 u128_zero(void);
 proc u128 u128_make(u64 v0, u64 v1);
-proc b8 u128_match(u128 a, u128 b);
+proc b8   u128_match(u128 a, u128 b);
 
 //--------------------------------------------------------------------------------
 // bit patterns

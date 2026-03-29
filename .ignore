@@ -2,3 +2,6 @@
 .git
 bin
 third_party
+archive
+scratch/intro_to_c
+scratch/linux_scratch

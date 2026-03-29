@@ -10,4 +10,4 @@ proc Logger
 make_console_logger(Logger_Level lowest, Logger_Options options);
 
 proc void
-console_logger_proc(rawptr data, Logger_Level level, string8 text, Logger_Options options, Source_Code_Location loc);
+console_logger_proc(rawptr data, Logger_Level level, string8 text, Logger_Options options, Code_Location loc);

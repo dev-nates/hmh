@@ -9,6 +9,7 @@
 #if OS_LINUX
 	#include "time/linux/time_linux.c"
 	#include "memory/linux/memory_linux.c"
+	#include "sync/linux/sync_linux.c"
 #else
 	#error missing memory sublayer implementation
 #endif

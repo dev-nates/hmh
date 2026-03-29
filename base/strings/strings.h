@@ -406,9 +406,11 @@ str_list_concat_in_place(string_list *list, string_list *to_push);
 proc string_node*
 str_list_push_aligner(Arena *arena, string_list *list, s64 min, s64 align);
 
+CLANG_FORMAT_WARN(3, 4)
 proc string_node*
 str_list_pushf(Arena *arena, string_list *list, cstring fmt, ...);
 
+CLANG_FORMAT_WARN(3, 4)
 proc string_node*
 str_list_push_frontf(Arena *arena, string_list *list, cstring fmt, ...);
 

@@ -61,12 +61,12 @@ tctx_get_name(void) {
 }
 
 proc void
-tctx_write_src_loc(Source_Code_Location loc) {
+tctx_write_src_loc(Code_Location loc) {
 	Thread_Context *tctx = tctx_get_context();
 	tctx->loc = loc;
 }
 
-proc void tctx_read_src_loc(Source_Code_Location *loc) {
+proc void tctx_read_src_loc(Code_Location *loc) {
 	Thread_Context *tctx = tctx_get_context();
 	*loc = tctx->loc;
 }

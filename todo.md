@@ -1,33 +1,25 @@
 
 # Current
 
-Goal: Make a linux specific os layer
+## Goal: Wayland software rendered window
+[1h] Wayland open window
+[2h] Shared memory buffers
 
-[30m] Header
+## Goal: Input
+Wayland keyboard input
+Wayland mouse input
+Gamepad input w/o abstraction
 
-[15m] Utility
-[1h] Files
-[ ] Test files
+## Goal: Simple buffer to write sound to
 
-[ ] Directories
-[ ] File Iterator
-[ ] Shared memory
-[ ] Threads
-
-
-Goal: Base Sync api
-
-[ ] Mutex
-[ ] Rw mutex
-[ ] Condition variables
-[ ] Semaphores
+## Goal: Game code
+Game code
 
 # Bugs
 
 # Todos
 
 Gamepad button and axis events need to expose the button and axis kind
-
 
 Looped live code editing
 
@@ -53,3 +45,8 @@ Control cursor
 Nonactive app handling
 Hardware acceleration
 Keyboard layout (fench keyboard, international wasd)
+
+Test RW Mutex
+Test Cond Vars
+Test semaphores
+

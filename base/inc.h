@@ -6,7 +6,24 @@
 
 #if OS_LINUX
 	#define _DEFAULT_SOURCE
+	#define _GNU_SOURCE
+
+	#include <errno.h>
+	#define _LOG_ERRNO(name) \
+	if (errno != 0) { \
+		errorf(TC(255,0,0) "ERRNO" TC_END "[%s]: " TC(255,255,255) "%s" TC_END, name, strerror(errno)); \
+		invalid_path; \
+	}
+	#define _LOG_ERRNO_COND(name, cond) \
+	if (cond) { \
+		errorf(TC(255,0,0) "ERRNO" TC_END "[%s]: " TC(255,255,255) "%s" TC_END, name, strerror(errno)); \
+		invalid_path; \
+	}
+
+	#include <pthread.h>
+	#include <semaphore.h>
 #endif
+
 #include "core/core.h"
 #include "time/time.h"
 
@@ -28,6 +45,7 @@
 #include "terminal/console_logger.h"
 
 #include "thread_ctx/thread_ctx.h"
+#include "sync/sync.h"
 #include "random/random.h"
 #include "entry_point.h"
 
