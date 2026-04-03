@@ -1,6 +1,6 @@
 
 //--------------------------------------------------------------------------------
-// slice 8
+// array8
 
 typedef struct array8 array8;
 struct array8 {
@@ -28,7 +28,7 @@ struct meta_array {
 };
 
 //--------------------------------------------------------------------------------
-// slice 16
+// array 16
 
 typedef struct array16 array16;
 struct array16 {
@@ -37,7 +37,7 @@ struct array16 {
 };
 
 //--------------------------------------------------------------------------------
-// slice32
+// array 32
 
 typedef struct array32 array32;
 struct array32 {
@@ -46,7 +46,7 @@ struct array32 {
 };
 
 //--------------------------------------------------------------------------------
-// slice64
+// array 64
 
 typedef struct array64 array64;
 struct array64 {

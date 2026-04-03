@@ -551,10 +551,11 @@ proc vec4f32
 rgba_from_u32(u32 hex)
 {
 	vec4f32 result = v4f32(
-		((hex&0xff000000)>>24)/255.f,
 		((hex&0x00ff0000)>>16)/255.f,
 		((hex&0x0000ff00)>> 8)/255.f,
-		((hex&0x000000ff)>> 0)/255.f);
+		((hex&0x000000ff)>> 0)/255.f,
+		((hex&0xff000000)>>24)/255.f
+	);
 	return result;
 }
 
@@ -562,10 +563,10 @@ proc u32
 u32_from_rgba(vec4f32 rgba)
 {
 	u32 result = 0;
-	result |= ((u32)((u8)(rgba.x*255.f))) << 24;
-	result |= ((u32)((u8)(rgba.y*255.f))) << 16;
-	result |= ((u32)((u8)(rgba.z*255.f))) <<  8;
-	result |= ((u32)((u8)(rgba.w*255.f))) <<  0;
+	result |= ((u32)((u8)(rgba.w*255.f))) << 24;
+	result |= ((u32)((u8)(rgba.x*255.f))) << 16;
+	result |= ((u32)((u8)(rgba.y*255.f))) <<  8;
+	result |= ((u32)((u8)(rgba.z*255.f))) <<  0;
 	return result;
 }
 

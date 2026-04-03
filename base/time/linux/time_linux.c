@@ -55,11 +55,16 @@ return result;
 // time procs
 
 proc u64
-time_us(void) {
+time_ns(void) {
 	struct timespec t;
 	clock_gettime(CLOCK_MONOTONIC, &t);
-	u64 result = (u64)t.tv_sec*millions(1) + ((u64)t.tv_nsec/thousands(1));
+	u64 result = cast(u64)t.tv_sec*billions(1) + cast(u64)t.tv_nsec;
 	return result;
+}
+
+proc u64
+time_us(void) {
+	return time_ns()/thousands(1);
 }
 
 proc u64
@@ -69,20 +74,20 @@ time_ms(void) {
 }
 
 proc void
-sleep_us(u64 us) {
-	usleep(cast(__useconds_t)(us));
+sleep_ns(u64 time) {
+	usleep(cast(__useconds_t)(time/1000));
 }
 
 proc void
-time_wait_us(u64 start, u64 duration) {
-	u64 now = time_us();
+time_wait_ns(u64 start, u64 duration) {
+	u64 now = time_ns();
 	u64 target = start + duration;
 	if (now > target) { return; }
 
-	usleep(cast(__useconds_t)(target - now));
+	usleep(cast(__useconds_t)((target - now) / 1000));
 
 	do {
-		now = time_us();
+		now = time_ns();
 	} while (target > now);
 }
 

@@ -156,6 +156,15 @@ char_is_slash(u8 c);
 proc b8
 char_is_digit(u8 c, u32 base);
 
+proc b8
+char_is_symbol(u8 c);
+
+proc b8
+char_is_alpha_numeric(u8 c);
+
+proc b8
+char_is_alpha_numeric_symbol(u8 c);
+
 proc u8
 char_to_lower(u8 c);
 

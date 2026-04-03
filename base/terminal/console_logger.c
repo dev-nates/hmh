@@ -1,9 +1,6 @@
 
 proc Logger
 make_console_logger(Logger_Level lowest, Logger_Options options) {
-	if (options == 0) {
-		options = default_console_logger_options;
-	}
 	Logger logger = {
 		.procedure = console_logger_proc,
 		.options = options,
@@ -64,7 +61,11 @@ console_logger_proc(rawptr data, Logger_Level level, string8 text, Logger_Option
 	
 	String_Join join = zero_struct;
 	string8 joined = str_list_join(scr.arena, &list, &join);
-	fprintf(stdout, "%.*s: %.*s\n", svarg(joined), svarg(text));
+	if (joined.size > 0) {
+		fprintf(stdout, "%.*s: %.*s\n", svarg(joined), svarg(text));
+	} else {
+		fprintf(stdout, "%.*s\n", svarg(text));
+	}
 
 	scratch_end(scr);
 }

@@ -8,7 +8,7 @@ struct Linux_Gamepad_Data {
 	s16 rumble_effect_id;
 	int file;
 };
-static_assert(size_of(Linux_Gamepad_Data) <= IGAMEPAD_OPAQUE_SIZE, check_linux_gamepad_data_size);
+static_assert(size_of(Linux_Gamepad_Data) <= GAMEPAD_OPAQUE_SIZE, check_linux_gamepad_data_size);
 
 global int gamepad_notify = -1;
 
@@ -161,9 +161,9 @@ global string8 linux_gameapad_axis_names[Linux_Gamepad_Axis_COUNT] = {
 	[Linux_Gamepad_Axis_TOOL_WIDTH] = SC("TOOL_WIDTH"),
 };
 
-proc IGamepad_Button_Kind
+proc Gamepad_Button_Kind
 _gamepad_btn_from_linux_btn(Linux_Gamepad_Button_Kind kind);
 
-proc IGamepad_Axis_Kind
+proc Gamepad_Axis_Kind
 _gamepad_axis_from_linux_axis(Linux_Gamepad_Axis_Kind kind);
 

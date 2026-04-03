@@ -150,7 +150,7 @@
 # define assert(x) (void)(x)
 #endif
 #define invalid_path assert(0)
-#define not_implemented assert(0)
+#define unimplemented assert(0)
 #define static_assert(C, ID) global u8 glue(ID, __LINE__)[(C)?1:-1]
 
 //--------------------------------------------------------------------------------
@@ -768,13 +768,13 @@ proc s64 ring_read(rawptr ring_base, s64 ring_size, s64 ring_pos, rawptr dst_dat
 #define defer_loop(begin, end)         for(int _i_ = ((begin), 0); !_i_; _i_ += 1, (end))
 #define defer_loop_checked(begin, end) for(int _i_ = 2 * !(begin); (_i_ == 2 ? ((end), 0) : !_i_); _i_ += 1, (end))
 
-#define each_index(it, count) s64 it = 0; it < (count); it += 1
-#define each_index_rng(it, rng) s64 it = (rng).min; it < (rng).max; it += 1
-#define each_element(it, array) s64 it = 0; it < array_count(array); it += 1
-#define each_enum_val(it, type) type it = (type)0; it < type##_count; it = (type)(it+1)
-#define each_non_zero_enum_val(it, type) type it = (type)1; it < type##_count; it = (type)(it+1)
+#define each_index(it, count) (s64 it = 0; it < (count); it += 1)
+#define each_index_rng(it, rng) (s64 it = (rng).min; it < (rng).max; it += 1)
+#define each_element(it, array) (s64 it = 0; it < array_count(array); it += 1)
+#define each_enum_val(it, type) (type it = (type)0; it < type##_COUNT; it = (type)(it+1))
+#define each_non_zero_enum_val(it, type) (type it = (type)1; it < type##_COUNT; it = (type)(it+1))
 
-#define each_node_nz(it, head, type, nilv, next) type *it = head; !check_nil(it, nilv); it = it->next
+#define each_node_nz(it, head, type, nilv, next) (type *it = head; !check_nil(it, nilv); it = it->next)
 #define each_node_nil(it, head, type, nilv) each_node_nz(it, head, type, nilv, next)
 #define each_node(it, head, type) each_node_nz(it, head, type, nil, next)
 #define each_node_reverse_nil(it, head, type, nilv) each_node_nz(it, head, type, nilv, prev)

@@ -11,12 +11,12 @@
 	#include <errno.h>
 	#define _LOG_ERRNO(name) \
 	if (errno != 0) { \
-		errorf(TC(255,0,0) "ERRNO" TC_END "[%s]: " TC(255,255,255) "%s" TC_END, name, strerror(errno)); \
+		errorf(TC_START(255,0,0) "ERRNO" TC_END "[%s]: " TC_START(255,255,255) "%s" TC_END, name, strerror(errno)); \
 		invalid_path; \
 	}
 	#define _LOG_ERRNO_COND(name, cond) \
 	if (cond) { \
-		errorf(TC(255,0,0) "ERRNO" TC_END "[%s]: " TC(255,255,255) "%s" TC_END, name, strerror(errno)); \
+		errorf(TC_START(255,0,0) "ERRNO" TC_END "[%s]: " TC_START(255,255,255) "%s" TC_END, name, strerror(errno)); \
 		invalid_path; \
 	}
 

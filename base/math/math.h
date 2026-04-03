@@ -650,7 +650,7 @@ proc rng2f32 rng_2f32(vec2f32 min, vec2f32 max);
 proc rng2f32 shift_2f32(rng2f32 r, vec2f32 x);
 proc rng2f32 pad_2f32(rng2f32 r, f32 x);
 proc vec2f32 center_2f32(rng2f32 r);
-proc b8     contains_2f32(rng2f32 r, vec2f32 x);
+proc b8      contains_2f32(rng2f32 r, vec2f32 x);
 proc vec2f32 dim_2f32(rng2f32 r);
 proc rng2f32 union_2f32(rng2f32 a, rng2f32 b);
 proc rng2f32 intersect_2f32(rng2f32 a, rng2f32 b);

@@ -1,44 +1,31 @@
 
 # Current
 
-## Goal: Wayland software rendered window
-[1h] Wayland open window
-[2h] Shared memory buffers
+### Goal: Basic sound working
 
-## Goal: Input
-Wayland keyboard input
-Wayland mouse input
-Gamepad input w/o abstraction
+### Goal Live code editing
+Looped live code editing
+Hot reloading
 
-## Goal: Simple buffer to write sound to
-
-## Goal: Game code
-Game code
+### HMH!!
 
 # Bugs
 
 # Todos
 
-Gamepad button and axis events need to expose the button and axis kind
-
-Looped live code editing
-
-Hot reloading
-
-Implement gfx layer
+Gamepad rumble
 
 Sound
 
-Time for logging
-
-Scope logger
+Window cursor
 
 Obfuscate source code locations
 
+Raw mouse input
 Saved game locations
 Asset loading path
 Threading
-Multiple-keyboard support
+Multiple-keyboard support @Maybe
 Multi-monitor support
 Fullscreen support
 Control cursor
@@ -46,7 +33,8 @@ Nonactive app handling
 Hardware acceleration
 Keyboard layout (fench keyboard, international wasd)
 
-Test RW Mutex
-Test Cond Vars
-Test semaphores
+Test Multi-threading primitives
+    Test RW Mutex
+    Test Cond Vars
+    Test Semaphores
 

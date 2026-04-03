@@ -22,17 +22,61 @@ read_only global u8 ascii_symbol_from_integer[16] = {
 	'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
 };
 
+#define ASCII_CHECK_BIT_TABLE(table, c) cast(b8)((table[((c)/8)]) & (1<<((c)&7)))
+
+read_only global u8 ascii_integer_bit_table[16] = {
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0xff, 0x03,
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+};
+
+read_only global u8 ascii_symbol_bit_table[16] = {
+	0x00, 0x00, 0x00, 0x00,
+	0xfe, 0xff, 0x00, 0xfc,
+	0x01, 0x00, 0x00, 0xf8,
+	0x01, 0x00, 0x00, 0x78,
+};
+
+read_only global u8 ascii_upper_alpha_bit_table[16] = {
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+	0xfe, 0xff, 0xff, 0x07,
+	0x00, 0x00, 0x00, 0x00,
+};
+
+read_only global u8 ascii_lower_alpha_bit_table[16] = {
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+	0xfe, 0xff, 0xff, 0x07,
+};
+
+read_only global u8 ascii_alpha_bit_table[16] = {
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+	0xfe, 0xff, 0xff, 0x07,
+	0xfe, 0xff, 0xff, 0x07,
+};
+
+read_only global u8 ascii_whitespace_bit_table[16] = {
+	0x00, 0x3e, 0x00, 0x00,
+	0x01, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00,
+};
+
 proc b8 char_is_space(u8 c) {
-	return (c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == '\v' || c == '\f');
+	return ASCII_CHECK_BIT_TABLE(ascii_whitespace_bit_table, c);
 }
 proc b8 char_is_upper(u8 c) {
-	return ('A' <= c && c <= 'Z');
+	return ASCII_CHECK_BIT_TABLE(ascii_upper_alpha_bit_table, c);
 }
 proc b8 char_is_lower(u8 c) {
-	return ('a' <= c && c <= 'z');
+	return ASCII_CHECK_BIT_TABLE(ascii_lower_alpha_bit_table, c);
 }
 proc b8 char_is_alpha(u8 c) {
-	return (char_is_lower(c) || char_is_upper(c));
+	return ASCII_CHECK_BIT_TABLE(ascii_alpha_bit_table, c);
 }
 proc b8 char_is_slash(u8 c) {
 	return (c == '/' || c == '\\');
@@ -47,6 +91,25 @@ proc b8 char_is_digit(u8 c, u32 base) {
 	}
 	return result;
 }
+
+proc b8
+char_is_symbol(u8 c) {
+	b8 result = ASCII_CHECK_BIT_TABLE(ascii_symbol_bit_table, c);
+	return result;
+}
+
+proc b8
+char_is_alpha_numeric(u8 c) {
+	b8 result = char_is_alpha(c) || ASCII_CHECK_BIT_TABLE(ascii_integer_bit_table, c);;
+	return result;
+}
+
+proc b8
+char_is_alpha_numeric_symbol(u8 c) {
+	b8 result = char_is_alpha_numeric(c) || char_is_symbol(c);
+	return result;
+}
+
 proc u8 char_to_lower(u8 c) {
 	if (char_is_upper(c)) {
 		c += 'a' - 'A';
@@ -1157,7 +1220,7 @@ str_list_join(Arena *arena, string_list *list, String_Join *optional_params) {
 	memory_copy(at, join.pre.m, join.pre.size);
 	at += join.pre.size;
 
-	for (each_node(node, list->head, string_node)) {
+	for each_node(node, list->head, string_node) {
 		string8 node_string = node->str;
 		memory_copy(at, node_string.m, node_string.size);
 		at += node_string.size;
@@ -1182,7 +1245,7 @@ proc string_list
 str_list_from_flags(Arena *arena, u32 flags, string8 *flag_string_table, s32 flag_string_count) {
 	string_list list = zero_struct;
 	assert(flag_string_count >= 0);
-	for (each_index(i, flag_string_count)) {
+	for each_index(i, flag_string_count) {
 		u32 flag = (1<<i);
 		if ((flag&flags) != 0) {
 			str_list_push_copy(arena, &list, flag_string_table[i]);
@@ -1200,7 +1263,7 @@ str_array_from_list(Arena *arena, string_list *list) {
 	arr.count = list->node_count;
 	arr.v = push_array_no_zero(arena, string8, list->node_count);
 	s64 idx = 0;
-	for (each_node(node, list->head, string_node)) {
+	for each_node(node, list->head, string_node) {
 		assert(idx < list->node_count);
 		arr.v[idx] = node->str;
 		idx += 1;
@@ -1994,12 +2057,12 @@ fuzzy_match_find(Arena *arena, string8 needle, string8 haystack) {
 	Temp scratch = scratch_begin(&arena, 1);
 	string_list needles = str_split(scratch.arena, needle, (u8*)" ", 1, 0);
 	result.needle_part_count = needles.node_count;
-	for (each_node(needle_n, needles.head, string_node)) {
+	for each_node(needle_n, needles.head, string_node) {
 		s64 find_pos = 0;
 		for(;find_pos < haystack.size;) {
 			find_pos = str_find_needle(find_pos, needle_n->str, haystack, String_Match_Flag_Case_Insensitive);
 			b32 is_in_gathered_ranges = 0;
-			for (each_node(n, result.head, Fuzzy_Match_Range_Node)) {
+			for each_node(n, result.head, Fuzzy_Match_Range_Node) {
 				if(n->range.min <= find_pos && find_pos < n->range.max) {
 					is_in_gathered_ranges = 1;
 					find_pos = n->range.max;
@@ -2029,7 +2092,7 @@ fuzzy_match_find(Arena *arena, string8 needle, string8 haystack) {
 proc Fuzzy_Match_Range_List
 fuzzy_match_range_list_copy(Arena *arena, Fuzzy_Match_Range_List *src) {
 	Fuzzy_Match_Range_List dst = zero_struct;
-	for (each_node(node, src->head, Fuzzy_Match_Range_Node)) {
+	for each_node(node, src->head, Fuzzy_Match_Range_Node) {
 		Fuzzy_Match_Range_Node *dstn = push_array(arena, Fuzzy_Match_Range_Node, 1);
 
 		Fuzzy_Match_Range_Node **ptr = check_nil(dst.head, nil) ? &dst.head : &dst.tail->next;
